@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 理疗治疗</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e5e7eb;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #1d4ed8;
+        }
+        
+        .sidebar-menu-item.active {
+            background-color: #e0f2fe;
+            color: #1d4ed8;
+            border-right: 3px solid #1d4ed8;
+        }
+        
+        .sidebar-menu-item i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+        
+        .device-card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .device-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .patient-card {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: move;
+            transition: all 0.2s;
+        }
+        
+        .patient-card:hover {
+            border-color: #93c5fd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .device-slot {
+            border: 2px dashed #e5e7eb;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .device-slot:hover {
+            border-color: #93c5fd;
+            background-color: #f0f9ff;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-menu-item span {
+                display: none;
+            }
+            
+            .sidebar-menu-item i {
+                margin-right: 0;
+                font-size: 1.25rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
+                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-home"></i>
+                <span>工作台</span>
+            </a>
+            <a href="patients.html" class="sidebar-menu-item">
+                <i class="fas fa-user-injured"></i>
+                <span>患者管理</span>
+            </a>
+            <a href="orders.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>医嘱管理</span>
+            </a>
+            <a href="assessment.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-check"></i>
+                <span>康复评定</span>
+            </a>
+            <a href="scheduling.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>治疗排班</span>
+            </a>
+            <a href="treatment.html" class="sidebar-menu-item">
+                <i class="fas fa-procedures"></i>
+                <span>治疗执行</span>
+            </a>
+            <a href="billing.html" class="sidebar-menu-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>费用管理</span>
+            </a>
+            <a href="documents.html" class="sidebar-menu-item">
+                <i class="fas fa-file-medical-alt"></i>
+                <span>电子文书</span>
+            </a>
+            <a href="workload.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>工作量统计</span>
+            </a>
+            <a href="equipment.html" class="sidebar-menu-item">
+                <i class="fas fa-medkit"></i>
+                <span>设备管理</span>
+            </a>
+            <a href="outpatient.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital-user"></i>
+                <span>门诊治疗</span>
+            </a>
+            <a href="external.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital"></i>
+                <span>外病区治疗</span>
+            </a>
+            <a href="physical.html" class="sidebar-menu-item active">
+                <i class="fas fa-hand-holding-medical"></i>
+                <span>理疗治疗</span>
+            </a>
+            <a href="reports.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>数据报表</span>
+            </a>
+            <a href="insurance.html" class="sidebar-menu-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>医保风控</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>系统设置</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部栏 -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">理疗治疗</h2>
+                <p class="text-gray-600">管理理疗设备和治疗进度</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    添加患者
+                </button>
+                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
+                    <i class="fas fa-print mr-2"></i>
+                    打印记录
+                </button>
+            </div>
+        </div>
+
+        <!-- 时间选择和筛选 -->
+        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div class="flex flex-wrap items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">上午</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">下午</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">晚上</button>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg">
+                        <option>所有设备</option>
+                        <option>中频治疗</option>
+                        <option>超声波</option>
+                        <option>红外线</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索患者姓名/住院号" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-64">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
+                        <i class="fas fa-filter mr-2"></i>
+                        高级筛选
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设备和患者区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 待分配患者列表 -->
+            <div class="bg-white rounded-lg shadow-sm p-4">
+                <h3 class="text-lg font-semibold mb-4">待分配患者</h3>
+                <div class="space-y-4">
+                    <div class="patient-card p-4" draggable="true">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/6.jpg" alt="患者头像" class="w-10 h-10 rounded-full">
+                                <div class="ml-3">
+                                    <div class="font-semibold">吴十</div>
+                                    <div class="text-sm text-gray-500">住院号: 2024030108</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">
+                                待分配
+                            </span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-procedures w-5"></i>
+                                <span>中频治疗 20分钟</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-user-md w-5"></i>
+                                <span>王治疗师</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="patient-card p-4" draggable="true">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/6.jpg" alt="患者头像" class="w-10 h-10 rounded-full">
+                                <div class="ml-3">
+                                    <div class="font-semibold">郑十一</div>
+                                    <div class="text-sm text-gray-500">住院号: 2024030109</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">
+                                待分配
+                            </span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-procedures w-5"></i>
+                                <span>超声波治疗 15分钟</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-user-md w-5"></i>
+                                <span>李治疗师</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设备状态区域 -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- 中频治疗设备 -->
+                <div class="device-card p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-wave-square text-blue-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <div class="font-semibold">中频治疗</div>
+                                <div class="text-sm text-gray-500">设备编号: PT001</div>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
+                            运行中
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="device-slot p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/7.jpg" alt="患者头像" class="w-10 h-10 rounded-full">
+                                    <div class="ml-3">
+                                        <div class="font-semibold">王十二</div>
+                                        <div class="text-sm text-gray-500">剩余 8 分钟</div>
+                                    </div>
+                                </div>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-stop-circle"></i>
+                                </button>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full mt-2">
+                                <div class="w-3/5 h-full bg-blue-600 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="device-slot p-4 flex items-center justify-center text-gray-400">
+                            <div class="text-center">
+                                <i class="fas fa-plus-circle text-2xl mb-2"></i>
+                                <div>拖放患者至此</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 超声波治疗设备 -->
+                <div class="device-card p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-broadcast-tower text-purple-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <div class="font-semibold">超声波治疗</div>
+                                <div class="text-sm text-gray-500">设备编号: PT002</div>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 rounded-full">
+                            空闲
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="device-slot p-4 flex items-center justify-center text-gray-400">
+                            <div class="text-center">
+                                <i class="fas fa-plus-circle text-2xl mb-2"></i>
+                                <div>拖放患者至此</div>
+                            </div>
+                        </div>
+                        <div class="device-slot p-4 flex items-center justify-center text-gray-400">
+                            <div class="text-center">
+                                <i class="fas fa-plus-circle text-2xl mb-2"></i>
+                                <div>拖放患者至此</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 红外线治疗设备 -->
+                <div class="device-card p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-fire text-red-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <div class="font-semibold">红外线治疗</div>
+                                <div class="text-sm text-gray-500">设备编号: PT003</div>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">
+                            维护中
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="device-slot p-4 bg-gray-50">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-tools text-2xl mb-2"></i>
+                                <div>设备维护中</div>
+                                <div class="text-sm">预计 14:30 完成</div>
+                            </div>
+                        </div>
+                        <div class="device-slot p-4 bg-gray-50">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-tools text-2xl mb-2"></i>
+                                <div>设备维护中</div>
+                                <div class="text-sm">预计 14:30 完成</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 评估量表</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e5e7eb;
+            z-index: 1;
+        }
+        
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .step-circle.active {
+            border-color: #3b82f6;
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .step-circle.completed {
+            border-color: #10b981;
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .step-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .step-text.active {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        
+        .step-text.completed {
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        .media-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .media-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 0.375rem;
+            overflow: hidden;
+        }
+        
+        .media-item img, .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .media-remove {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- 返回按钮和标题 -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-4">
+                <a href="assessment.html" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-900">Barthel指数评定量表</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600">显示模式：</span>
+                    <button id="view-mode-simple" class="px-3 py-1 text-sm bg-blue-600 text-white rounded-l hover:bg-blue-700">简洁</button>
+                    <button id="view-mode-detailed" class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-r hover:bg-gray-300">详细</button>
+                </div>
+                <button class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-history mr-2"></i>历史记录
+                </button>
+                <div class="relative" id="action-dropdown">
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+                        <i class="fas fa-save mr-2"></i>保存评估
+                        <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden" id="action-menu">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">保存并继续</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">保存并生成报告</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">导出评估结果</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">重置评估</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 患者信息和评估信息 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div>
+                    <p class="text-gray-500">患者姓名</p>
+                    <p class="font-semibold">张三</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">住院号</p>
+                    <p class="font-semibold">2024030101</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">评估日期</p>
+                    <div class="flex items-center space-x-2">
+                        <p class="font-semibold" id="assessment-date">2024-03-01</p>
+                        <button id="edit-date-btn" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                    <input type="date" id="date-picker" class="mt-1 w-full px-2 py-1 border border-gray-300 rounded hidden" value="2024-03-01">
+                </div>
+                <div>
+                    <p class="text-gray-500">评估医师</p>
+                    <p class="font-semibold">王医生</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 评估进度条 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4">评估进度</h3>
+            <div class="progress-steps">
+                <div class="progress-step">
+                    <div class="step-circle completed">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span class="step-text completed">基本活动</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle active">2</div>
+                    <span class="step-text active">移动能力</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle">3</div>
+                    <span class="step-text">个人卫生</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle">4</div>
+                    <span class="step-text">排泄控制</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle">5</div>
+                    <span class="step-text">评估总结</span>
+                </div>
+            </div>
+            <div class="flex justify-between mt-6">
+                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center" id="prev-step-btn">
+                    <i class="fas fa-arrow-left mr-2"></i>上一步
+                </button>
+                <div class="text-center">
+                    <span class="text-sm text-gray-600">已完成 <span class="font-semibold text-blue-600">4</span> / 10 项评估</span>
+                    <div class="w-32 h-2 bg-gray-200 rounded-full mt-2">
+                        <div class="h-full bg-blue-600 rounded-full" style="width: 40%"></div>
+                    </div>
+                </div>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center" id="next-step-btn">
+                    下一步 <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 评估量表内容 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="mb-4 border-b pb-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold">移动能力评估</h3>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-blue-600 hover:text-blue-800" id="add-media-btn">
+                            <i class="fas fa-paperclip mr-1"></i>添加附件
+                        </button>
+                        <input type="file" id="media-upload" class="hidden" accept="image/*,video/*" multiple>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- 评估项目 -->
+                <div class="tab-content active" id="mobility-assessment">
+                    <!-- 上下楼梯 -->
+                    <div class="border-b pb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">3. 上下楼梯</h3>
+                            <div class="flex items-center space-x-2 text-sm text-gray-500">
+                                <span>上次评分：5分</span>
+                                <i class="fas fa-arrow-up text-green-500"></i>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="stairs" value="10" class="w-4 h-4 text-blue-600">
+                                <span>10分 - 独立上下楼梯，可使用扶手、拐杖或其他支撑物</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="stairs" value="5" class="w-4 h-4 text-blue-600">
+                                <span>5分 - 需要帮助或监督</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="stairs" value="0" class="w-4 h-4 text-blue-600">
+                                <span>0分 - 不能上下楼梯</span>
+                            </label>
+                        </div>
+                        
+                        <!-- 附件预览区 -->
+                        <div class="mt-4">
+                            <div class="text-sm text-gray-600 mb-2">附件 (2)</div>
+                            <div class="media-preview">
+                                <div class="media-item">
+                                    <img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="上下楼梯评估图片">
+                                    <div class="media-remove"><i class="fas fa-times"></i></div>
+                                </div>
+                                <div class="media-item">
+                                    <video src="#" poster="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"></video>
+                                    <div class="media-remove"><i class="fas fa-times"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 备注 -->
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
+                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg" rows="2" placeholder="添加评估备注..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 行走 -->
+                    <div class="border-b pb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">4. 行走</h3>
+                            <div class="flex items-center space-x-2 text-sm text-gray-500">
+                                <span>上次评分：10分</span>
+                                <i class="fas fa-minus text-gray-500"></i>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="walking" value="15" class="w-4 h-4 text-blue-600">
+                                <span>15分 - 独立行走50米以上，可使用辅助器械但不包括轮椅</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="walking" value="10" class="w-4 h-4 text-blue-600">
+                                <span>10分 - 在一人帮助下可行走50米</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="walking" value="5" class="w-4 h-4 text-blue-600">
+                                <span>5分 - 可独立操作轮椅，包括转弯、进门等</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="walking" value="0" class="w-4 h-4 text-blue-600">
+                                <span>0分 - 不能行走或需要2人以上帮助</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 转移 -->
+                    <div class="pb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">5. 转移（床椅之间）</h3>
+                            <div class="flex items-center space-x-2 text-sm text-gray-500">
+                                <span>上次评分：10分</span>
+                                <i class="fas fa-arrow-up text-green-500"></i>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="transfer" value="15" class="w-4 h-4 text-blue-600">
+                                <span>15分 - 独立完成，包括锁轮椅、抬脚板等</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="transfer" value="10" class="w-4 h-4 text-blue-600">
+                                <span>10分 - 需要最小程度帮助或监督</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="transfer" value="5" class="w-4 h-4 text-blue-600">
+                                <span>5分 - 能坐起，但需要较大帮助才能转移</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="radio" name="transfer" value="0" class="w-4 h-4 text-blue-600">
+                                <span>0分 - 不能配合，需要两人抬</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 其他评估项目标签页... -->
+            </div>
+        </div>
+
+        <!-- 评估总结 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4">评估总结</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <textarea class="w-full h-32 p-3 border rounded-lg" placeholder="请输入评估总结..."></textarea>
+                    
+                    <!-- 引用上次评估 -->
+                    <div class="mt-4">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
+                            <i class="fas fa-copy mr-2"></i>引用上次评估
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-semibold">总分：75分</span>
+                        <span class="text-green-500">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            较上次提升10分
+                        </span>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="text-sm font-medium text-gray-700 mb-1">依赖程度</div>
+                            <div class="text-sm bg-blue-50 text-blue-800 p-2 rounded">中度依赖（60-80分）</div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-700 mb-1">评估结论</div>
+                            <div class="text-sm text-gray-600">患者在日常生活活动中需要中等程度的帮助，特别是在个人卫生和移动方面。</div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-700 mb-1">康复建议</div>
+                            <div class="text-sm text-gray-600">
+                                <ul class="list-disc pl-5 space-y-1">
+                                    <li>继续加强日常生活能力训练</li>
+                                    <li>重点改善上下楼梯和行走能力</li>
+                                    <li>建议使用辅助器具提高独立性</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史评估趋势 -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">评估趋势</h3>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
+                        <i class="fas fa-print mr-1"></i>打印报告
+                    </button>
+                    <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
+                        <i class="fas fa-file-export mr-1"></i>导出数据
+                    </button>
+                </div>
+            </div>
+            <div class="h-64">
+                <canvas id="assessmentChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化评估趋势图表
+        const ctx = document.getElementById('assessmentChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1月15日', '1月30日', '2月15日', '2月28日', '3月1日'],
+                datasets: [{
+                    label: 'Barthel指数评分',
+                    data: [45, 55, 60, 65, 75],
+                    borderColor: 'rgb(59, 130, 246)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+        
+        // 显示模式切换
+        document.getElementById('view-mode-simple').addEventListener('click', function() {
+            this.classList.remove('bg-gray-200', 'text-gray-700');
+            this.classList.add('bg-blue-600', 'text-white');
+            
+            document.getElementById('view-mode-detailed').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('view-mode-detailed').classList.add('bg-gray-200', 'text-gray-700');
+            
+            // 切换到简洁模式的逻辑
+            document.querySelectorAll('.detailed-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+        });
+        
+        document.getElementById('view-mode-detailed').addEventListener('click', function() {
+            this.classList.remove('bg-gray-200', 'text-gray-700');
+            this.classList.add('bg-blue-600', 'text-white');
+            
+            document.getElementById('view-mode-simple').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('view-mode-simple').classList.add('bg-gray-200', 'text-gray-700');
+            
+            // 切换到详细模式的逻辑
+            document.querySelectorAll('.detailed-content').forEach(el => {
+                el.classList.remove('hidden');
+            });
+        });
+        
+        // 下拉菜单
+        document.getElementById('action-dropdown').addEventListener('click', function(e) {
+            document.getElementById('action-menu').classList.toggle('hidden');
+            e.stopPropagation();
+        });
+        
+        document.addEventListener('click', function() {
+            document.getElementById('action-menu').classList.add('hidden');
+        });
+        
+        // 评估日期编辑
+        document.getElementById('edit-date-btn').addEventListener('click', function() {
+            document.getElementById('assessment-date').classList.add('hidden');
+            document.getElementById('edit-date-btn').classList.add('hidden');
+            document.getElementById('date-picker').classList.remove('hidden');
+        });
+        
+        document.getElementById('date-picker').addEventListener('change', function() {
+            document.getElementById('assessment-date').textContent = this.value;
+            document.getElementById('assessment-date').classList.remove('hidden');
+            document.getElementById('edit-date-btn').classList.remove('hidden');
+            document.getElementById('date-picker').classList.add('hidden');
+        });
+        
+        // 附件上传
+        document.getElementById('add-media-btn').addEventListener('click', function() {
+            document.getElementById('media-upload').click();
+        });
+        
+        document.getElementById('media-upload').addEventListener('change', function(e) {
+            // 处理文件上传逻辑
+            if (e.target.files.length > 0) {
+                console.log('文件已选择:', e.target.files);
+                // 这里可以添加预览和上传逻辑
+            }
+        });
+        
+        // 移除附件
+        document.querySelectorAll('.media-remove').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.remove();
+            });
+        });
+        
+        // 步骤导航
+        document.getElementById('next-step-btn').addEventListener('click', function() {
+            // 模拟下一步逻辑
+            alert('进入下一步评估');
+        });
+        
+        document.getElementById('prev-step-btn').addEventListener('click', function() {
+            // 模拟上一步逻辑
+            alert('返回上一步评估');
+        });
+    </script>
+</body>
+</html> 

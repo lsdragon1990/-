@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 工作台</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e5e7eb;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #1d4ed8;
+        }
+        
+        .sidebar-menu-item.active {
+            background-color: #e0f2fe;
+            color: #1d4ed8;
+            border-right: 3px solid #1d4ed8;
+        }
+        
+        .sidebar-menu-item i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+        
+        .dashboard-card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .task-item {
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .task-item:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .task-item.urgent {
+            border-left-color: #ef4444;
+        }
+        
+        .task-item.normal {
+            border-left-color: #3b82f6;
+        }
+        
+        .task-item.low {
+            border-left-color: #10b981;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-menu-item span {
+                display: none;
+            }
+            
+            .sidebar-menu-item i {
+                margin-right: 0;
+                font-size: 1.25rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
+                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item active">
+                <i class="fas fa-home"></i>
+                <span>工作台</span>
+            </a>
+            <a href="patients.html" class="sidebar-menu-item">
+                <i class="fas fa-user-injured"></i>
+                <span>患者管理</span>
+            </a>
+            <a href="orders.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>医嘱管理</span>
+            </a>
+            <a href="assessment.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-check"></i>
+                <span>康复评定</span>
+            </a>
+            <a href="scheduling.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>治疗排班</span>
+            </a>
+            <a href="treatment.html" class="sidebar-menu-item">
+                <i class="fas fa-procedures"></i>
+                <span>治疗执行</span>
+            </a>
+            <a href="billing.html" class="sidebar-menu-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>费用管理</span>
+            </a>
+            <a href="documents.html" class="sidebar-menu-item">
+                <i class="fas fa-file-medical-alt"></i>
+                <span>电子文书</span>
+            </a>
+            <a href="workload.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>工作量统计</span>
+            </a>
+            <a href="equipment.html" class="sidebar-menu-item">
+                <i class="fas fa-medkit"></i>
+                <span>设备管理</span>
+            </a>
+            <a href="outpatient.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital-user"></i>
+                <span>门诊治疗</span>
+            </a>
+            <a href="external.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital"></i>
+                <span>外病区治疗</span>
+            </a>
+            <a href="physical.html" class="sidebar-menu-item">
+                <i class="fas fa-hand-holding-medical"></i>
+                <span>理疗治疗</span>
+            </a>
+            <a href="reports.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>数据报表</span>
+            </a>
+            <a href="insurance.html" class="sidebar-menu-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>医保风控</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>系统设置</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部栏 -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">工作台</h2>
+                <p class="text-gray-600">欢迎回来，张医生</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="location.href='/patients/add'" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    新增患者
+                </button>
+                <button onclick="location.href='/orders/new'" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center">
+                    <i class="fas fa-file-medical mr-2"></i>
+                    开具医嘱
+                </button>
+                <button onclick="location.href='/schedule/today'" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center">
+                    <i class="fas fa-calendar-day mr-2"></i>
+                    今日排班
+                </button>
+            </div>
+        </div>
+
+        <!-- 数据概览卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="dashboard-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">今日待治疗</div>
+                    <i class="fas fa-user-injured text-blue-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">28</div>
+                <div class="text-sm text-gray-500 mt-2">较昨日 +3</div>
+            </div>
+            <div class="dashboard-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">已完成治疗</div>
+                    <i class="fas fa-check-circle text-green-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">16</div>
+                <div class="text-sm text-gray-500 mt-2">完成率 57.1%</div>
+            </div>
+            <div class="dashboard-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">待评估患者</div>
+                    <i class="fas fa-clipboard-check text-yellow-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">8</div>
+                <div class="text-sm text-gray-500 mt-2">较昨日 -2</div>
+            </div>
+            <div class="dashboard-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">设备使用率</div>
+                    <i class="fas fa-medkit text-purple-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">85.6%</div>
+                <div class="text-sm text-gray-500 mt-2">较昨日 +5.2%</div>
+            </div>
+        </div>
+
+        <!-- 主要内容区 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 左侧：待办事项 -->
+            <div class="dashboard-card">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">待办事项</h3>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-4">
+                        <div class="task-item urgent p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="font-semibold">评估新入院患者</div>
+                                <span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">
+                                    紧急
+                                </span>
+                            </div>
+                            <div class="text-sm text-gray-600">王小明 - 3-512床</div>
+                            <div class="text-sm text-gray-500 mt-1">10:30 截止</div>
+                        </div>
+                        <div class="task-item normal p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="font-semibold">复查患者进展</div>
+                                <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
+                                    普通
+                                </span>
+                            </div>
+                            <div class="text-sm text-gray-600">李四 - 3-516床</div>
+                            <div class="text-sm text-gray-500 mt-1">14:00 截止</div>
+                        </div>
+                        <div class="task-item low p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="font-semibold">更新治疗记录</div>
+                                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
+                                    低优先级
+                                </span>
+                            </div>
+                            <div class="text-sm text-gray-600">张三 - 3-508床</div>
+                            <div class="text-sm text-gray-500 mt-1">今日内</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中间：今日治疗安排 -->
+            <div class="dashboard-card">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold">今日治疗安排</h3>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 bg-blue-50 rounded-lg">
+                            <div class="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <div class="ml-3 flex-grow">
+                                <div class="flex items-center justify-between">
+                                    <div class="font-semibold">运动疗法</div>
+                                    <div class="text-sm text-gray-500">09:30-10:00</div>
+                                </div>
+                                <div class="text-sm text-gray-600">王小明 - 3-512床</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                            <div class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></div>
+                            <div class="ml-3 flex-grow">
+                                <div class="flex items-center justify-between">
+                                    <div class="font-semibold">作业疗法</div>
+                                    <div class="text-sm text-gray-500">10:30-11:00</div>
+                                </div>
+                                <div class="text-sm text-gray-600">李四 - 3-516床</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-purple-50 rounded-lg">
+                            <div class="flex-shrink-0 w-2 h-2 bg-purple-500 rounded-full"></div>
+                            <div class="ml-3 flex-grow">
+                                <div class="flex items-center justify-between">
+                                    <div class="font-semibold">物理治疗</div>
+                                    <div class="text-sm text-gray-500">14:00-14:30</div>
+                                </div>
+                                <div class="text-sm text-gray-600">张三 - 3-508床</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：重要提醒 -->
+            <div class="space-y-6">
+                <!-- 重要提醒 -->
+                <div class="dashboard-card">
+                    <div class="p-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold">重要提醒</h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3 p-3 bg-red-50 rounded-lg">
+                                <i class="fas fa-exclamation-circle text-red-500"></i>
+                                <div>
+                                    <div class="font-semibold">医嘱变更提醒</div>
+                                    <div class="text-sm text-gray-600">王小明的治疗方案已更新</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
+                                <i class="fas fa-clock text-yellow-500"></i>
+                                <div>
+                                    <div class="font-semibold">评估到期提醒</div>
+                                    <div class="text-sm text-gray-600">李四需要进行复查评估</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                                <i class="fas fa-calendar-check text-blue-500"></i>
+                                <div>
+                                    <div class="font-semibold">科室会议提醒</div>
+                                    <div class="text-sm text-gray-600">今日15:00例会</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 工作量统计 -->
+                <div class="dashboard-card">
+                    <div class="p-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold">本周工作量</h3>
+                    </div>
+                    <div class="p-4">
+                        <canvas id="workloadChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 工作量统计图表
+        const ctx = document.getElementById('workloadChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                datasets: [{
+                    label: '治疗人次',
+                    data: [25, 28, 32, 30, 35, 20, 15],
+                    borderColor: '#1d4ed8',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

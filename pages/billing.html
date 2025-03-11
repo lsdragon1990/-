@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 费用管理</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e5e7eb;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #1d4ed8;
+        }
+        
+        .sidebar-menu-item.active {
+            background-color: #e0f2fe;
+            color: #1d4ed8;
+            border-right: 3px solid #1d4ed8;
+        }
+        
+        .sidebar-menu-item i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+        
+        .billing-card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .billing-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge-need {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .status-badge-paid {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        .status-badge-refund {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-menu-item span {
+                display: none;
+            }
+            
+            .sidebar-menu-item i {
+                margin-right: 0;
+                font-size: 1.25rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
+                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-home"></i>
+                <span>工作台</span>
+            </a>
+            <a href="patients.html" class="sidebar-menu-item">
+                <i class="fas fa-user-injured"></i>
+                <span>患者管理</span>
+            </a>
+            <a href="orders.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>医嘱管理</span>
+            </a>
+            <a href="assessment.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-check"></i>
+                <span>康复评定</span>
+            </a>
+            <a href="scheduling.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>治疗排班</span>
+            </a>
+            <a href="treatment.html" class="sidebar-menu-item">
+                <i class="fas fa-procedures"></i>
+                <span>治疗执行</span>
+            </a>
+            <a href="billing.html" class="sidebar-menu-item active">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>费用管理</span>
+            </a>
+            <a href="documents.html" class="sidebar-menu-item">
+                <i class="fas fa-file-medical-alt"></i>
+                <span>电子文书</span>
+            </a>
+            <a href="workload.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>工作量统计</span>
+            </a>
+            <a href="equipment.html" class="sidebar-menu-item">
+                <i class="fas fa-medkit"></i>
+                <span>设备管理</span>
+            </a>
+            <a href="outpatient.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital-user"></i>
+                <span>门诊治疗</span>
+            </a>
+            <a href="external.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital"></i>
+                <span>外病区治疗</span>
+            </a>
+            <a href="physical.html" class="sidebar-menu-item">
+                <i class="fas fa-hand-holding-medical"></i>
+                <span>理疗治疗</span>
+            </a>
+            <a href="reports.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>数据报表</span>
+            </a>
+            <a href="insurance.html" class="sidebar-menu-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>医保风控</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>系统设置</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部栏 -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">费用管理</h2>
+                <p class="text-gray-600">管理康复治疗费用和对账</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+                    <i class="fas fa-print mr-2"></i>
+                    打印对账单
+                </button>
+                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
+                    <i class="fas fa-download mr-2"></i>
+                    导出费用清单
+                </button>
+            </div>
+        </div>
+
+        <!-- 费用统计卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="billing-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">今日待收费</div>
+                    <i class="fas fa-clock text-yellow-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">¥ 12,580.00</div>
+                <div class="text-sm text-gray-500 mt-2">较昨日 +15.2%</div>
+            </div>
+            <div class="billing-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">今日已收费</div>
+                    <i class="fas fa-check-circle text-green-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">¥ 8,920.00</div>
+                <div class="text-sm text-gray-500 mt-2">较昨日 -5.8%</div>
+            </div>
+            <div class="billing-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">待退费</div>
+                    <i class="fas fa-undo text-red-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">¥ 1,260.00</div>
+                <div class="text-sm text-gray-500 mt-2">3笔待处理</div>
+            </div>
+            <div class="billing-card p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-gray-600">本月总收入</div>
+                    <i class="fas fa-chart-line text-blue-500"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-800">¥ 156,800.00</div>
+                <div class="text-sm text-gray-500 mt-2">完成目标 78.4%</div>
+            </div>
+        </div>
+
+        <!-- 筛选和搜索 -->
+        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div class="flex flex-wrap justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">全部</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">待收费</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">已收费</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">待退费</button>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索患者姓名或住院号..." class="w-64 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <i class="fas fa-filter mr-2"></i>
+                        高级筛选
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 费用列表 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">患者信息</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">费用项目</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金额</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作时间</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">王小明</div>
+                                    <div class="text-sm text-gray-500">住院号: 2024030101</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">运动疗法</div>
+                            <div class="text-sm text-gray-500">下肢功能训练</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">¥ 280.00</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge status-badge-need">待收费</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            2024-03-01 09:15
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-blue-600 hover:text-blue-900 mr-3">收费</button>
+                            <button class="text-gray-600 hover:text-gray-900">详情</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/1.jpg" alt="">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">李芳</div>
+                                    <div class="text-sm text-gray-500">住院号: 2024030102</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">作业疗法</div>
+                            <div class="text-sm text-gray-500">手功能训练</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">¥ 320.00</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge status-badge-paid">已收费</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            2024-03-01 10:30
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-blue-600 hover:text-blue-900 mr-3">打印</button>
+                            <button class="text-gray-600 hover:text-gray-900">详情</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">张伟</div>
+                                    <div class="text-sm text-gray-500">住院号: 2024030103</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">物理治疗</div>
+                            <div class="text-sm text-gray-500">电疗</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">¥ 160.00</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge status-badge-refund">待退费</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            2024-03-01 08:45
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-red-600 hover:text-red-900 mr-3">退费</button>
+                            <button class="text-gray-600 hover:text-gray-900">详情</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 费用统计图表 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="billing-card p-4">
+                <h3 class="text-lg font-semibold mb-4">收费趋势</h3>
+                <canvas id="revenueChart" height="200"></canvas>
+            </div>
+            <div class="billing-card p-4">
+                <h3 class="text-lg font-semibold mb-4">费用类型分布</h3>
+                <canvas id="categoryChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 收费趋势图表
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                datasets: [{
+                    label: '日收费金额',
+                    data: [15800, 12600, 14200, 16500, 13800, 11200, 9800],
+                    borderColor: '#1d4ed8',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '¥' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 费用类型分布图表
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['运动疗法', '作业疗法', '物理治疗', '言语治疗', '其他'],
+                datasets: [{
+                    data: [35, 25, 20, 15, 5],
+                    backgroundColor: [
+                        '#1d4ed8',
+                        '#15803d',
+                        '#0369a1',
+                        '#854d0e',
+                        '#6b7280'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

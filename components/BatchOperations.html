@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量操作</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" id="modal-backdrop"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                <!-- 标题和关闭按钮 -->
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold">批量操作</h3>
+                    <button class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- 已选项目 -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
+                        <span>已选择 3 个项目</span>
+                        <button class="text-blue-600 hover:text-blue-700">清除选择</button>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span>张三（2024030101）</span>
+                            <button class="text-gray-400 hover:text-gray-500">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>李四（2024030102）</span>
+                            <button class="text-gray-400 hover:text-gray-500">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>王五（2024030103）</span>
+                            <button class="text-gray-400 hover:text-gray-500">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 操作类型选择 -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">选择操作类型</label>
+                        <select class="w-full rounded-lg border-gray-300 shadow-sm">
+                            <option>批量排班</option>
+                            <option>批量转科</option>
+                            <option>批量分配治疗师</option>
+                            <option>批量修改状态</option>
+                        </select>
+                    </div>
+
+                    <!-- 批量排班选项 -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">治疗师</label>
+                            <select class="w-full rounded-lg border-gray-300 shadow-sm">
+                                <option>李治疗师</option>
+                                <option>张治疗师</option>
+                                <option>王治疗师</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">治疗时间</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="date" class="w-full rounded-lg border-gray-300 shadow-sm">
+                                <select class="w-full rounded-lg border-gray-300 shadow-sm">
+                                    <option>上午</option>
+                                    <option>下午</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">治疗项目</label>
+                            <select class="w-full rounded-lg border-gray-300 shadow-sm">
+                                <option>运动疗法</option>
+                                <option>作业疗法</option>
+                                <option>物理因子治疗</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 高级选项 -->
+                    <div>
+                        <button class="flex items-center text-sm text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-cog mr-2"></i>
+                            高级选项
+                            <i class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                        <div class="mt-2 space-y-2 pl-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2 text-sm">自动分配床位</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2 text-sm">生成治疗计划</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2 text-sm">发送通知</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button onclick="location.href='/patients/list'" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+                        返回患者列表
+                    </button>
+                    <button onclick="handleBatchOperation()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        确认操作
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 关闭按钮事件处理
+        document.querySelector('.text-gray-400').addEventListener('click', function() {
+            window.location.href = 'patients.html';
+        });
+
+        // 清除选择按钮事件处理
+        document.querySelector('.text-blue-600').addEventListener('click', function() {
+            const selectedItems = document.querySelectorAll('.bg-gray-50 .flex');
+            selectedItems.forEach(item => item.remove());
+            document.querySelector('.text-gray-500 span').textContent = '已选择 0 个项目';
+        });
+
+        // 删除单个选择项
+        document.querySelectorAll('.bg-gray-50 .text-gray-400').forEach(button => {
+            button.addEventListener('click', function() {
+                const item = this.parentElement;
+                item.remove();
+                updateSelectedCount();
+            });
+        });
+
+        // 更新选择数量
+        function updateSelectedCount() {
+            const count = document.querySelectorAll('.bg-gray-50 .flex').length;
+            document.querySelector('.text-gray-500 span').textContent = `已选择 ${count} 个项目`;
+        }
+
+        // 批量操作处理函数
+        function handleBatchOperation() {
+            // 获取操作类型
+            const operationType = document.querySelector('select').value;
+            
+            // 获取选中的项目
+            const selectedItems = Array.from(document.querySelectorAll('.bg-gray-50 .flex'))
+                .map(item => item.firstElementChild.textContent.trim());
+
+            // 获取治疗师、时间和项目（如果是排班操作）
+            const therapist = document.querySelector('select:nth-of-type(2)')?.value;
+            const date = document.querySelector('input[type="date"]')?.value;
+            const period = document.querySelector('select:nth-of-type(3)')?.value;
+            const treatment = document.querySelector('select:nth-of-type(4)')?.value;
+
+            // 获取高级选项
+            const advancedOptions = Array.from(document.querySelectorAll('.pl-6 input[type="checkbox"]:checked'))
+                .map(cb => cb.nextElementSibling.textContent.trim());
+
+            // 这里可以添加批量操作逻辑
+            console.log('批量操作：', {
+                operationType,
+                selectedItems,
+                therapist,
+                date,
+                period,
+                treatment,
+                advancedOptions
+            });
+
+            // 操作完成后返回对应的一级页面
+            setTimeout(() => {
+                switch(operationType) {
+                    case '批量排班':
+                        location.href = '/schedule/list';
+                        break;
+                    case '批量转科':
+                        location.href = '/patients/list';
+                        break;
+                    case '批量分配治疗师':
+                        location.href = '/treatment/list';
+                        break;
+                    default:
+                        location.href = '/patients/list';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html> 

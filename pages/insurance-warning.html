@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 医保预警详情</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- 返回按钮和标题 -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-4">
+                <a href="insurance.html" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-900">医保预警详情</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-print mr-2"></i>打印报告
+                </button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-check mr-2"></i>处理预警
+                </button>
+            </div>
+        </div>
+
+        <!-- 预警基本信息 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="flex items-start">
+                <div class="flex-grow grid grid-cols-4 gap-6">
+                    <div>
+                        <p class="text-gray-500">患者姓名</p>
+                        <p class="font-semibold">张三</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">住院号</p>
+                        <p class="font-semibold">2024030101</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">医保类型</p>
+                        <p class="font-semibold">城镇职工医保</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">预警时间</p>
+                        <p class="font-semibold">2024-03-01 10:30</p>
+                    </div>
+                </div>
+                <div class="ml-6">
+                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">
+                        超限预警
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 预警详细信息 -->
+        <div class="grid grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">预警信息</h3>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-gray-500">预警类型</p>
+                        <p class="font-semibold">单项治疗费用超限</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">超限项目</p>
+                        <p class="font-semibold">运动疗法</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">当前金额</p>
+                        <p class="font-semibold text-red-600">¥180/次</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">限额标准</p>
+                        <p class="font-semibold">¥120/次</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">超限比例</p>
+                        <p class="font-semibold text-red-600">+50%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">费用明细</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <span>基础治疗费</span>
+                        <span>¥100</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span>辅助器材费</span>
+                        <span>¥50</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span>耗材费用</span>
+                        <span>¥30</span>
+                    </div>
+                    <div class="border-t pt-2 flex items-center justify-between font-semibold">
+                        <span>合计</span>
+                        <span>¥180</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <canvas id="costChart" height="150"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">处理建议</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-semibold">调整治疗方案</p>
+                            <p class="text-sm text-gray-600">建议将部分辅助器材更换为基础型号，可降低20%费用</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-semibold">优化治疗频次</p>
+                            <p class="text-sm text-gray-600">可考虑调整为每周3次，减少总体费用支出</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-semibold">申请医保特批</p>
+                            <p class="text-sm text-gray-600">如确需维持现有方案，建议申请特殊病种报销</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史记录和审批流程 -->
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">历史预警记录</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 w-16 text-center">
+                            <div class="text-sm font-semibold">2-15</div>
+                            <div class="text-xs text-gray-500">已处理</div>
+                        </div>
+                        <div class="ml-4 flex-grow">
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <div class="flex justify-between items-center mb-1">
+                                    <div class="font-semibold">单日治疗费用超限</div>
+                                    <span class="text-sm text-gray-500">¥560/¥500</span>
+                                </div>
+                                <p class="text-sm text-gray-600">通过调整治疗方案解决</p>
+                                <div class="text-sm text-gray-500 mt-2">处理人：王医生</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 w-16 text-center">
+                            <div class="text-sm font-semibold">1-30</div>
+                            <div class="text-xs text-gray-500">已处理</div>
+                        </div>
+                        <div class="ml-4 flex-grow">
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <div class="flex justify-between items-center mb-1">
+                                    <div class="font-semibold">治疗频次超限</div>
+                                    <span class="text-sm text-gray-500">6次/5次</span>
+                                </div>
+                                <p class="text-sm text-gray-600">申请医保特批通过</p>
+                                <div class="text-sm text-gray-500 mt-2">处理人：李医生</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">审批流程</h3>
+                <div class="relative">
+                    <div class="absolute h-full w-0.5 bg-gray-200 left-6"></div>
+                    <div class="space-y-6 relative">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-file-alt text-blue-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="font-semibold">提交预警处理</p>
+                                <p class="text-sm text-gray-500">等待科室主任审批</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center opacity-50">
+                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-md text-gray-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="font-semibold">科室主任审批</p>
+                                <p class="text-sm text-gray-500">待处理</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center opacity-50">
+                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-gray-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="font-semibold">医保科审核</p>
+                                <p class="text-sm text-gray-500">待处理</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化费用构成图表
+        const ctx = document.getElementById('costChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['基础治疗费', '辅助器材费', '耗材费用'],
+                datasets: [{
+                    data: [100, 50, 30],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.5)',
+                        'rgba(16, 185, 129, 0.5)',
+                        'rgba(245, 158, 11, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(16, 185, 129)',
+                        'rgb(245, 158, 11)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+</body>
+</html> 

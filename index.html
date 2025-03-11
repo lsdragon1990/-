@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统原型</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .prototype-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .prototype-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .prototype-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .prototype-card-header {
+            padding: 1.25rem;
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .prototype-card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .prototype-card-body {
+            padding: 0;
+            position: relative;
+            width: 100%;
+            height: 600px;
+        }
+        
+        .prototype-card iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        
+        .prototype-card-footer {
+            padding: 1rem 1.25rem;
+            background-color: #f8fafc;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .prototype-card-footer a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background-color: #eff6ff;
+            transition: all 0.2s ease;
+        }
+        
+        .prototype-card-footer a:hover {
+            background-color: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .prototype-card-footer a i {
+            margin-left: 0.5rem;
+        }
+
+        .system-overview {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            padding: 1.25rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-card i {
+            font-size: 1.5rem;
+        }
+
+        .feature-card.blue {
+            background-color: #eff6ff;
+        }
+
+        .feature-card.green {
+            background-color: #f0fdf4;
+        }
+
+        .feature-card.purple {
+            background-color: #faf5ff;
+        }
+
+        .feature-card.yellow {
+            background-color: #fefce8;
+        }
+
+        @media (max-width: 768px) {
+            .prototype-card-body {
+                height: 400px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold text-gray-800">康复信息系统原型</h1>
+                </div>
+                <div>
+                    <span class="text-sm text-gray-600">高保真UI原型展示</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="prototype-container">
+        <div class="system-overview">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">系统概述</h2>
+            <p class="text-gray-600 mb-4">
+                本原型展示了康复信息系统的主要界面，包括患者管理、医嘱管理、康复评定、治疗排班、治疗执行等核心功能模块。
+                每个界面都采用了现代化的UI设计，符合医疗行业特点，提供良好的用户体验。
+            </p>
+            <div class="features-grid">
+                <div class="feature-card blue">
+                    <i class="fas fa-users text-blue-500"></i>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">多角色支持</h3>
+                        <p class="text-sm text-gray-600">医生、治疗师、护士、管理员</p>
+                    </div>
+                </div>
+                <div class="feature-card green">
+                    <i class="fas fa-tasks text-green-500"></i>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">工作流导向</h3>
+                        <p class="text-sm text-gray-600">医嘱→排班→执行→记录→统计</p>
+                    </div>
+                </div>
+                <div class="feature-card purple">
+                    <i class="fas fa-mobile-alt text-purple-500"></i>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">响应式设计</h3>
+                        <p class="text-sm text-gray-600">支持大屏和移动设备</p>
+                    </div>
+                </div>
+                <div class="feature-card yellow">
+                    <i class="fas fa-chart-bar text-yellow-500"></i>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">数据可视化</h3>
+                        <p class="text-sm text-gray-600">直观展示统计数据</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-6">界面原型</h2>
+        
+        <!-- 登录界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>登录界面</h3>
+                <span class="text-sm text-gray-500">用户身份验证</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/login.html" title="登录界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">用户登录与身份认证</span>
+                <a href="pages/login.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 系统首页/工作台 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>系统首页/工作台</h3>
+                <span class="text-sm text-gray-500">个人工作中心</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/dashboard.html" title="系统首页/工作台"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">工作台与数据概览</span>
+                <a href="pages/dashboard.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 患者管理界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>患者管理</h3>
+                <span class="text-sm text-gray-500">患者信息管理</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/patients.html" title="患者管理界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">患者信息管理</span>
+                <a href="pages/patients.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 患者详情界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>患者详情</h3>
+                <span class="text-sm text-gray-500">患者详细信息</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/patient-detail.html" title="患者详情界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">患者详细信息</span>
+                <a href="pages/patient-detail.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 医嘱管理界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>医嘱管理</h3>
+                <span class="text-sm text-gray-500">医嘱管理与转换</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/orders.html" title="医嘱管理界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">医嘱管理与转换</span>
+                <a href="pages/orders.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 康复评定界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>康复评定</h3>
+                <span class="text-sm text-gray-500">量表评估管理</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/assessment.html" title="康复评定界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">量表评估管理</span>
+                <a href="pages/assessment.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 量表评估界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>量表评估</h3>
+                <span class="text-sm text-gray-500">评估表单填写</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/assessment-form.html" title="量表评估界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">评估表单填写</span>
+                <a href="pages/assessment-form.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 治疗排班界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>治疗排班</h3>
+                <span class="text-sm text-gray-500">治疗日程安排</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/scheduling.html" title="治疗排班界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">治疗日程安排</span>
+                <a href="pages/scheduling.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 治疗执行界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>治疗执行</h3>
+                <span class="text-sm text-gray-500">治疗任务执行</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/treatment.html" title="治疗执行界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">治疗任务执行</span>
+                <a href="pages/treatment.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 费用管理界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>费用管理</h3>
+                <span class="text-sm text-gray-500">费用查询与对账</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/billing.html" title="费用管理界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">费用查询与对账</span>
+                <a href="pages/billing.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 电子文书界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>电子文书</h3>
+                <span class="text-sm text-gray-500">文书生成与管理</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/documents.html" title="电子文书界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">文书生成与管理</span>
+                <a href="pages/documents.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 工作量统计界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>工作量统计</h3>
+                <span class="text-sm text-gray-500">工作量数据分析</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/workload.html" title="工作量统计界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">工作量数据分析</span>
+                <a href="pages/workload.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 设备管理界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>设备管理</h3>
+                <span class="text-sm text-gray-500">设备使用与统计</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/equipment.html" title="设备管理界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">设备使用与统计</span>
+                <a href="pages/equipment.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 门诊治疗界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>门诊治疗</h3>
+                <span class="text-sm text-gray-500">门诊患者管理</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/outpatient.html" title="门诊治疗界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">门诊患者管理</span>
+                <a href="pages/outpatient.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 外病区治疗界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>外病区治疗</h3>
+                <span class="text-sm text-gray-500">外病区患者管理</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/external.html" title="外病区治疗界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">外病区患者管理</span>
+                <a href="pages/external.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 理疗治疗界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>理疗治疗</h3>
+                <span class="text-sm text-gray-500">理疗设备与治疗</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/physical.html" title="理疗治疗界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">理疗设备与治疗</span>
+                <a href="pages/physical.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 数据报表界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>数据报表</h3>
+                <span class="text-sm text-gray-500">统计报表生成</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/reports.html" title="数据报表界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">统计报表生成</span>
+                <a href="pages/reports.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 医保风控界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>医保风控</h3>
+                <span class="text-sm text-gray-500">医保限额与提醒</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/insurance.html" title="医保风控界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">医保限额与提醒</span>
+                <a href="pages/insurance.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        
+        <!-- 系统设置界面 -->
+        <div class="prototype-card">
+            <div class="prototype-card-header">
+                <h3>系统设置</h3>
+                <span class="text-sm text-gray-500">系统参数配置</span>
+            </div>
+            <div class="prototype-card-body">
+                <iframe src="pages/settings.html" title="系统设置界面"></iframe>
+            </div>
+            <div class="prototype-card-footer">
+                <span class="text-sm text-gray-600">系统参数配置</span>
+                <a href="pages/settings.html" target="_blank">查看全屏 <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-lg font-semibold mb-2">康复信息系统原型</h3>
+                    <p class="text-gray-400 text-sm">高保真UI设计 · 现代化界面 · 专业医疗系统</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fas fa-envelope text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-6 pt-6 border-t border-gray-700 text-center text-gray-500 text-sm">
+                © 2023 康复信息系统原型. 保留所有权利.
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

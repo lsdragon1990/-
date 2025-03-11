@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 治疗师排班</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- 返回按钮和标题 -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-4">
+                <a href="workload.html" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-900">治疗师排班</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-print mr-2"></i>打印排班表
+                </button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-edit mr-2"></i>编辑排班
+                </button>
+            </div>
+        </div>
+
+        <!-- 治疗师基本信息 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="flex items-start">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="治疗师头像" class="w-24 h-24 rounded-lg">
+                <div class="ml-6 flex-grow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold">李治疗师</h2>
+                            <p class="text-gray-500">工号：T2024001</p>
+                        </div>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                            在岗
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4 mt-4">
+                        <div>
+                            <p class="text-gray-500">科室</p>
+                            <p class="font-semibold">康复科</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">专业方向</p>
+                            <p class="font-semibold">运动治疗</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">工作年限</p>
+                            <p class="font-semibold">5年</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">联系电话</p>
+                            <p class="font-semibold">138****5678</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 工作量统计 -->
+        <div class="grid grid-cols-4 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="text-sm text-gray-500 mb-1">今日治疗人次</div>
+                <div class="text-2xl font-bold">12</div>
+                <div class="text-sm text-green-500">
+                    <i class="fas fa-arrow-up mr-1"></i>较昨日 +2
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="text-sm text-gray-500 mb-1">本周工作时长</div>
+                <div class="text-2xl font-bold">32h</div>
+                <div class="text-sm text-gray-500">标准：40h</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="text-sm text-gray-500 mb-1">治疗完成率</div>
+                <div class="text-2xl font-bold">96.8%</div>
+                <div class="text-sm text-green-500">
+                    <i class="fas fa-arrow-up mr-1"></i>较上周 +1.2%
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="text-sm text-gray-500 mb-1">患者满意度</div>
+                <div class="text-2xl font-bold">4.8</div>
+                <div class="flex items-center text-yellow-400 text-sm">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 排班日历和今日安排 -->
+        <div class="grid grid-cols-3 gap-6">
+            <div class="col-span-2 bg-white rounded-lg shadow-sm p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold">排班日历</h3>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="font-semibold">2024年3月</span>
+                        <button class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-7 gap-4">
+                    <!-- 星期标题 -->
+                    <div class="text-center text-gray-500 font-medium">日</div>
+                    <div class="text-center text-gray-500 font-medium">一</div>
+                    <div class="text-center text-gray-500 font-medium">二</div>
+                    <div class="text-center text-gray-500 font-medium">三</div>
+                    <div class="text-center text-gray-500 font-medium">四</div>
+                    <div class="text-center text-gray-500 font-medium">五</div>
+                    <div class="text-center text-gray-500 font-medium">六</div>
+
+                    <!-- 日期格子 -->
+                    <div class="text-center p-2 text-gray-400">25</div>
+                    <div class="text-center p-2 text-gray-400">26</div>
+                    <div class="text-center p-2 text-gray-400">27</div>
+                    <div class="text-center p-2 text-gray-400">28</div>
+                    <div class="text-center p-2 text-gray-400">29</div>
+                    <div class="text-center p-2">1</div>
+                    <div class="text-center p-2">2</div>
+
+                    <div class="text-center p-2">3</div>
+                    <div class="text-center p-2">4</div>
+                    <div class="text-center p-2">5</div>
+                    <div class="text-center p-2">6</div>
+                    <div class="text-center p-2">7</div>
+                    <div class="text-center p-2">8</div>
+                    <div class="text-center p-2">9</div>
+
+                    <div class="text-center p-2">10</div>
+                    <div class="text-center p-2 bg-blue-50 rounded-lg border border-blue-200">11</div>
+                    <div class="text-center p-2">12</div>
+                    <div class="text-center p-2">13</div>
+                    <div class="text-center p-2">14</div>
+                    <div class="text-center p-2">15</div>
+                    <div class="text-center p-2">16</div>
+
+                    <div class="text-center p-2">17</div>
+                    <div class="text-center p-2">18</div>
+                    <div class="text-center p-2">19</div>
+                    <div class="text-center p-2">20</div>
+                    <div class="text-center p-2">21</div>
+                    <div class="text-center p-2">22</div>
+                    <div class="text-center p-2">23</div>
+
+                    <div class="text-center p-2">24</div>
+                    <div class="text-center p-2">25</div>
+                    <div class="text-center p-2">26</div>
+                    <div class="text-center p-2">27</div>
+                    <div class="text-center p-2">28</div>
+                    <div class="text-center p-2">29</div>
+                    <div class="text-center p-2">30</div>
+
+                    <div class="text-center p-2">31</div>
+                    <div class="text-center p-2 text-gray-400">1</div>
+                    <div class="text-center p-2 text-gray-400">2</div>
+                    <div class="text-center p-2 text-gray-400">3</div>
+                    <div class="text-center p-2 text-gray-400">4</div>
+                    <div class="text-center p-2 text-gray-400">5</div>
+                    <div class="text-center p-2 text-gray-400">6</div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">今日安排</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 w-16 text-center">
+                            <div class="text-sm font-semibold">09:00</div>
+                            <div class="text-xs text-blue-500">进行中</div>
+                        </div>
+                        <div class="ml-4 flex-grow">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <div class="font-semibold mb-1">张三（3-512）</div>
+                                <p class="text-sm text-gray-600">运动疗法 - 下肢功能训练</p>
+                                <div class="text-xs text-gray-500 mt-1">45分钟</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 w-16 text-center">
+                            <div class="text-sm font-semibold">10:00</div>
+                            <div class="text-xs text-gray-500">待开始</div>
+                        </div>
+                        <div class="ml-4 flex-grow">
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <div class="font-semibold mb-1">李四（3-508）</div>
+                                <p class="text-sm text-gray-600">运动疗法 - 平衡训练</p>
+                                <div class="text-xs text-gray-500 mt-1">30分钟</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 w-16 text-center">
+                            <div class="text-sm font-semibold">11:00</div>
+                            <div class="text-xs text-gray-500">待开始</div>
+                        </div>
+                        <div class="ml-4 flex-grow">
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <div class="font-semibold mb-1">王五（3-515）</div>
+                                <p class="text-sm text-gray-600">运动疗法 - 上肢功能训练</p>
+                                <div class="text-xs text-gray-500 mt-1">45分钟</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

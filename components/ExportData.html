@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据导出</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" id="modal-backdrop"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                <!-- 标题和关闭按钮 -->
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold">数据导出</h3>
+                    <button class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- 导出选项 -->
+                <div class="space-y-4">
+                    <!-- 时间范围选择 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">时间范围</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <input type="date" class="w-full rounded-lg border-gray-300 shadow-sm">
+                            </div>
+                            <div>
+                                <input type="date" class="w-full rounded-lg border-gray-300 shadow-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 数据类型选择 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">数据类型</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2">治疗记录</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2">评估记录</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2">患者信息</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2">统计数据</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 导出格式选择 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">导出格式</label>
+                        <div class="grid grid-cols-3 gap-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="format" class="text-blue-600">
+                                <span class="ml-2">Excel</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="format" class="text-blue-600">
+                                <span class="ml-2">PDF</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="format" class="text-blue-600">
+                                <span class="ml-2">CSV</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 高级选项 -->
+                    <div>
+                        <button class="flex items-center text-sm text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-cog mr-2"></i>
+                            高级选项
+                            <i class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                        <div class="mt-2 space-y-2 pl-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2 text-sm">包含删除的记录</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2 text-sm">导出图片附件</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2 text-sm">生成数据摘要</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="mt-6 flex justify-end space-x-4">
+                    <a href="dashboard.html" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+                        取消
+                    </a>
+                    <button onclick="handleExport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        开始导出
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 关闭按钮事件处理
+        document.querySelector('.text-gray-400').addEventListener('click', function() {
+            window.location.href = 'dashboard.html';
+        });
+
+        // 导出处理函数
+        function handleExport() {
+            // 获取选中的数据类型
+            const selectedTypes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(cb => cb.nextElementSibling.textContent.trim());
+            
+            // 获取选中的导出格式
+            const format = document.querySelector('input[name="format"]:checked')
+                ?.nextElementSibling.textContent.trim();
+
+            // 获取时间范围
+            const startDate = document.querySelector('input[type="date"]:first-of-type').value;
+            const endDate = document.querySelector('input[type="date"]:last-of-type').value;
+
+            // 获取高级选项
+            const advancedOptions = Array.from(document.querySelectorAll('.pl-6 input[type="checkbox"]:checked'))
+                .map(cb => cb.nextElementSibling.textContent.trim());
+
+            // 这里可以添加导出逻辑
+            console.log('导出数据：', {
+                selectedTypes,
+                format,
+                dateRange: { startDate, endDate },
+                advancedOptions
+            });
+
+            // 导出完成后返回仪表板
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+    </script>
+</body>
+</html> 

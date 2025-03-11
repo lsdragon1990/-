@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 打印模板</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .print-content {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- 标题和打印按钮 -->
+        <div class="flex items-center justify-between mb-6 no-print">
+            <div class="flex items-center">
+                <a href="dashboard.html" class="text-gray-600 hover:text-gray-900 mr-4">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-900">打印模板</h1>
+            </div>
+            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <i class="fas fa-print mr-2"></i>打印
+            </button>
+        </div>
+
+        <!-- 模板选择 -->
+        <div class="grid grid-cols-3 gap-6 mb-6 no-print">
+            <a href="treatment-record-print.html" class="bg-white rounded-lg shadow-sm p-6 cursor-pointer hover:shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">治疗记录单</h3>
+                    <i class="fas fa-file-medical text-blue-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm">包含患者基本信息、治疗过程记录和效果评估</p>
+            </a>
+            <a href="assessment-report-print.html" class="bg-white rounded-lg shadow-sm p-6 cursor-pointer hover:shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">评估报告</h3>
+                    <i class="fas fa-clipboard-check text-green-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm">包含评估量表结果、历史对比和建议</p>
+            </a>
+            <a href="treatment-plan-print.html" class="bg-white rounded-lg shadow-sm p-6 cursor-pointer hover:shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">治疗计划</h3>
+                    <i class="fas fa-calendar-alt text-purple-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm">包含治疗目标、计划安排和注意事项</p>
+            </a>
+            <a href="treatment-schedule-print.html" class="bg-white rounded-lg shadow-sm p-6 cursor-pointer hover:shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">康复治疗项目安排表</h3>
+                    <i class="fas fa-calendar-week text-indigo-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm">包含患者一周康复治疗项目安排，便于患者了解治疗计划</p>
+            </a>
+            <a href="treatment-notification-print.html" class="bg-white rounded-lg shadow-sm p-6 cursor-pointer hover:shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">治疗通知单</h3>
+                    <i class="fas fa-bell text-amber-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm">用于通知患者治疗时间、地点和注意事项</p>
+            </a>
+            <a href="discharge-summary-print.html" class="bg-white rounded-lg shadow-sm p-6 cursor-pointer hover:shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">出院小结</h3>
+                    <i class="fas fa-hospital-user text-red-600 text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm">包含患者出院时的康复治疗总结和后续建议</p>
+            </a>
+        </div>
+
+        <!-- 打印内容预览 - 康复治疗项目安排表 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 print-content">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold">康复治疗项目安排表</h2>
+                <p class="text-gray-500 mt-2">2024年3月4日 - 3月10日</p>
+            </div>
+
+            <!-- 患者信息 -->
+            <div class="border-b pb-4 mb-6">
+                <div class="grid grid-cols-4 gap-4">
+                    <div>
+                        <p class="text-gray-500">姓名</p>
+                        <p class="font-semibold">张三</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">性别</p>
+                        <p class="font-semibold">男</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">年龄</p>
+                        <p class="font-semibold">45岁</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">住院号</p>
+                        <p class="font-semibold">2024030101</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">病区床号</p>
+                        <p class="font-semibold">3-512</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">主治医师</p>
+                        <p class="font-semibold">王医生</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">主管治疗师</p>
+                        <p class="font-semibold">李治疗师</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">打印日期</p>
+                        <p class="font-semibold">2024-03-03</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 周安排表 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">每周治疗安排</h3>
+                <table class="min-w-full border">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                时间段
+                            </th>
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                周一 (3/4)
+                            </th>
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                周二 (3/5)
+                            </th>
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                周三 (3/6)
+                            </th>
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                周四 (3/7)
+                            </th>
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                周五 (3/8)
+                            </th>
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                周六 (3/9)
+                            </th>
+                            <th class="py-2 px-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                周日 (3/10)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="py-3 px-3 border text-sm text-gray-500">
+                                上午<br>08:00-12:00
+                            </td>
+                            <td class="py-3 px-3 border">
+                                <div class="text-xs">
+                                    <div class="font-semibold">运动疗法</div>
+                                    <div>09:30-10:15</div>
+                                    <div>李治疗师</div>
+                                    <div>康复中心1号厅</div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-3 border">
+                                <div class="text-xs">
+                                    <div class="font-semibold">物理治疗</div>
+                                    <div>10:00-10:30</div>
+                                    <div>赵治疗师</div>
+                                    <div>康复中心3号厅</div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-3 border">
+                                <div class="text-xs">
+                                    <div class="font-semibold">运动疗法</div>
+                                    <div>09:30-10:15</div>
+                                    <div>李治疗师</div>
+                                    <div>康复中心1号厅</div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-3 border"></td>
+                            <td class="py-3 px-3 border">
+                                <div class="text-xs">
+                                    <div class="font-semibold">运动疗法</div>
+                                    <div>09:30-10:15</div>
+                                    <div>李治疗师</div>
+                                    <div>康复中心1号厅</div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-3 border"></td>
+                            <td class="py-3 px-3 border"></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-3 border text-sm text-gray-500">
+                                下午<br>13:00-17:00
+                            </td>
+                            <td class="py-3 px-3 border"></td>
+                            <td class="py-3 px-3 border">
+                                <div class="text-xs">
+                                    <div class="font-semibold">作业疗法</div>
+                                    <div>14:00-14:45</div>
+                                    <div>张治疗师</div>
+                                    <div>康复中心2号厅</div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-3 border"></td>
+                            <td class="py-3 px-3 border">
+                                <div class="text-xs">
+                                    <div class="font-semibold">作业疗法</div>
+                                    <div>15:30-16:15</div>
+                                    <div>张治疗师</div>
+                                    <div>康复中心2号厅</div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-3 border"></td>
+                            <td class="py-3 px-3 border">
+                                <div class="text-xs">
+                                    <div class="font-semibold">物理治疗</div>
+                                    <div>14:00-14:30</div>
+                                    <div>赵治疗师</div>
+                                    <div>康复中心3号厅</div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-3 border"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 治疗项目说明 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">治疗项目说明</h3>
+                <div class="space-y-4">
+                    <div class="border-l-4 border-blue-500 pl-4 py-2">
+                        <p class="font-semibold">运动疗法</p>
+                        <p class="text-sm text-gray-600">主要内容：下肢功能训练、平衡训练</p>
+                        <p class="text-sm text-gray-600">治疗师：李治疗师</p>
+                        <p class="text-sm text-gray-600">频次：每周3次</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4 py-2">
+                        <p class="font-semibold">作业疗法</p>
+                        <p class="text-sm text-gray-600">主要内容：手功能训练、日常生活活动训练</p>
+                        <p class="text-sm text-gray-600">治疗师：张治疗师</p>
+                        <p class="text-sm text-gray-600">频次：每周2次</p>
+                    </div>
+                    <div class="border-l-4 border-purple-500 pl-4 py-2">
+                        <p class="font-semibold">物理治疗</p>
+                        <p class="text-sm text-gray-600">主要内容：电刺激、超声波治疗</p>
+                        <p class="text-sm text-gray-600">治疗师：赵治疗师</p>
+                        <p class="text-sm text-gray-600">频次：每周2次</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 注意事项 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">治疗注意事项</h3>
+                <div class="space-y-2 text-sm text-gray-600">
+                    <p>1. 请患者按时参加治疗，如有特殊情况无法按时参加，请提前通知治疗师。</p>
+                    <p>2. 治疗前请穿着宽松舒适的衣物，便于进行康复训练。</p>
+                    <p>3. 治疗过程中如有不适，请立即告知治疗师。</p>
+                    <p>4. 治疗结束后请按医嘱进行自我训练，有助于康复效果的巩固。</p>
+                    <p>5. 如对治疗安排有任何疑问，请联系主管治疗师。</p>
+                </div>
+            </div>
+            
+            <!-- 签名区域 -->
+            <div class="grid grid-cols-3 gap-4 mt-8">
+                <div>
+                    <p class="text-sm text-gray-500 mb-4">主治医师签名：</p>
+                    <div class="border-b border-gray-300 h-8"></div>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 mb-4">主管治疗师签名：</p>
+                    <div class="border-b border-gray-300 h-8"></div>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 mb-4">患者/家属签名：</p>
+                    <div class="border-b border-gray-300 h-8"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

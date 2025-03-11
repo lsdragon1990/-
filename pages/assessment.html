@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 康复评定</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e5e7eb;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #1d4ed8;
+        }
+        
+        .sidebar-menu-item.active {
+            background-color: #e0f2fe;
+            color: #1d4ed8;
+            border-right: 3px solid #1d4ed8;
+        }
+        
+        .sidebar-menu-item i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+        
+        .assessment-card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .assessment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.completed {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        .status-badge.in-progress {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .status-badge.pending {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .status-badge.overdue {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .scale-type {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .scale-type.function {
+            background-color: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .scale-type.activity {
+            background-color: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
+        }
+        
+        .scale-type.cognitive {
+            background-color: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-bar-fill.green {
+            background-color: #10b981;
+        }
+        
+        .progress-bar-fill.yellow {
+            background-color: #f59e0b;
+        }
+        
+        .progress-bar-fill.red {
+            background-color: #ef4444;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-menu-item span {
+                display: none;
+            }
+            
+            .sidebar-menu-item i {
+                margin-right: 0;
+                font-size: 1.25rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
+                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-home"></i>
+                <span>工作台</span>
+            </a>
+            <a href="patients.html" class="sidebar-menu-item">
+                <i class="fas fa-user-injured"></i>
+                <span>患者管理</span>
+            </a>
+            <a href="orders.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>医嘱管理</span>
+            </a>
+            <a href="assessment.html" class="sidebar-menu-item active">
+                <i class="fas fa-clipboard-check"></i>
+                <span>康复评定</span>
+            </a>
+            <a href="scheduling.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>治疗排班</span>
+            </a>
+            <a href="treatment.html" class="sidebar-menu-item">
+                <i class="fas fa-procedures"></i>
+                <span>治疗执行</span>
+            </a>
+            <a href="billing.html" class="sidebar-menu-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>费用管理</span>
+            </a>
+            <a href="documents.html" class="sidebar-menu-item">
+                <i class="fas fa-file-medical-alt"></i>
+                <span>电子文书</span>
+            </a>
+            <a href="workload.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>工作量统计</span>
+            </a>
+            <a href="equipment.html" class="sidebar-menu-item">
+                <i class="fas fa-medkit"></i>
+                <span>设备管理</span>
+            </a>
+            <a href="outpatient.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital-user"></i>
+                <span>门诊治疗</span>
+            </a>
+            <a href="external.html" class="sidebar-menu-item">
+                <i class="fas fa-hospital"></i>
+                <span>外病区治疗</span>
+            </a>
+            <a href="physical.html" class="sidebar-menu-item">
+                <i class="fas fa-hand-holding-medical"></i>
+                <span>理疗治疗</span>
+            </a>
+            <a href="reports.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>数据报表</span>
+            </a>
+            <a href="insurance.html" class="sidebar-menu-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>医保风控</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>系统设置</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部栏 -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">康复评定</h2>
+                <p class="text-gray-600">管理患者康复评定量表和评估结果</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    新建评定
+                </button>
+                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
+                    <i class="fas fa-file-export mr-2"></i>
+                    导出结果
+                </button>
+            </div>
+        </div>
+
+        <!-- 筛选栏 -->
+        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div class="flex flex-wrap gap-4">
+                <div class="flex items-center space-x-2 flex-1">
+                    <div class="relative flex-1">
+                        <input type="text" placeholder="搜索患者姓名、评定量表..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <i class="fas fa-filter mr-2"></i>
+                        高级筛选
+                    </button>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="tab-button active">全部评定</button>
+                    <button class="tab-button">功能评定</button>
+                    <button class="tab-button">活动评定</button>
+                    <button class="tab-button">认知评定</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 评定列表 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 评定卡片 1 -->
+            <div class="assessment-card">
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="患者头像" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-semibold text-gray-800">王小明</h3>
+                                    <span class="text-sm text-gray-500">ID: P202403001</span>
+                                </div>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-sm text-gray-500">康复一区</span>
+                                    <span class="text-gray-300">|</span>
+                                    <span class="text-sm text-gray-500">1-2-3床</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="status-badge completed">
+                            <i class="fas fa-check-circle mr-1"></i>
+                            已完成
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="scale-type function">
+                                <i class="fas fa-walking mr-1"></i>
+                                功能评定
+                            </span>
+                            <span class="text-sm text-gray-500">2024-03-01</span>
+                        </div>
+                        <h4 class="font-semibold text-gray-800 mb-1">Fugl-Meyer运动功能评定</h4>
+                        <p class="text-sm text-gray-600">评估上肢运动功能恢复情况</p>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-semibold text-gray-600">评定进度</span>
+                            <span class="text-sm text-gray-500">100%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill green" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-500">评定人：张医生</span>
+                            <span class="text-sm text-gray-500">得分：86分</span>
+                        </div>
+                        <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                            <a href="assessment-form.html" class="text-white">查看详情</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评定卡片 2 -->
+            <div class="assessment-card">
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="患者头像" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-semibold text-gray-800">李芳</h3>
+                                    <span class="text-sm text-gray-500">ID: P202403002</span>
+                                </div>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-sm text-gray-500">康复门诊</span>
+                                    <span class="text-gray-300">|</span>
+                                    <span class="text-sm text-gray-500">门诊号: M220301</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="status-badge in-progress">
+                            <i class="fas fa-clock mr-1"></i>
+                            进行中
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="scale-type activity">
+                                <i class="fas fa-running mr-1"></i>
+                                活动评定
+                            </span>
+                            <span class="text-sm text-gray-500">2024-03-02</span>
+                        </div>
+                        <h4 class="font-semibold text-gray-800 mb-1">Barthel指数评定</h4>
+                        <p class="text-sm text-gray-600">评估日常生活活动能力</p>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-semibold text-gray-600">评定进度</span>
+                            <span class="text-sm text-gray-500">60%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill yellow" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-500">评定人：王医生</span>
+                            <span class="text-sm text-gray-500">进行中</span>
+                        </div>
+                        <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                            继续评定
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评定卡片 3 -->
+            <div class="assessment-card">
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="患者头像" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-semibold text-gray-800">张伟</h3>
+                                    <span class="text-sm text-gray-500">ID: P202403003</span>
+                                </div>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-sm text-gray-500">骨科</span>
+                                    <span class="text-gray-300">|</span>
+                                    <span class="text-sm text-gray-500">3-4-2床</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="status-badge pending">
+                            <i class="fas fa-hourglass-start mr-1"></i>
+                            待评定
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="scale-type cognitive">
+                                <i class="fas fa-brain mr-1"></i>
+                                认知评定
+                            </span>
+                            <span class="text-sm text-gray-500">2024-03-03</span>
+                        </div>
+                        <h4 class="font-semibold text-gray-800 mb-1">MMSE认知功能评定</h4>
+                        <p class="text-sm text-gray-600">评估认知功能状态</p>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-semibold text-gray-600">评定进度</span>
+                            <span class="text-sm text-gray-500">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-500">评定人：李医生</span>
+                            <span class="text-sm text-gray-500">待开始</span>
+                        </div>
+                        <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                            开始评定
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评定卡片 4 -->
+            <div class="assessment-card">
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="患者头像" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-semibold text-gray-800">赵敏</h3>
+                                    <span class="text-sm text-gray-500">ID: P202403004</span>
+                                </div>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="text-sm text-gray-500">康复二区</span>
+                                    <span class="text-gray-300">|</span>
+                                    <span class="text-sm text-gray-500">2-1-4床</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="status-badge overdue">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            已逾期
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="scale-type function">
+                                <i class="fas fa-walking mr-1"></i>
+                                功能评定
+                            </span>
+                            <span class="text-sm text-gray-500">2024-03-01</span>
+                        </div>
+                        <h4 class="font-semibold text-gray-800 mb-1">Berg平衡功能评定</h4>
+                        <p class="text-sm text-gray-600">评估平衡功能状态</p>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-semibold text-gray-600">评定进度</span>
+                            <span class="text-sm text-gray-500">30%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill red" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-500">评定人：陈医生</span>
+                            <span class="text-sm text-red-500">逾期2天</span>
+                        </div>
+                        <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                            继续评定
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页 -->
+        <div class="flex justify-between items-center mt-6">
+            <div class="text-sm text-gray-600">
+                显示 1 到 4 条记录，共 24 条
+            </div>
+            <div class="flex space-x-2">
+                <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    上一页
+                </button>
+                <button class="px-3 py-1 rounded border border-blue-600 bg-blue-600 text-white">
+                    1
+                </button>
+                <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
+                    2
+                </button>
+                <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
+                    3
+                </button>
+                <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">
+                    下一页
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

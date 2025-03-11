@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 治疗记录</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- 返回按钮和标题 -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-4">
+                <a href="patient-detail.html" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-900">治疗记录</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-print mr-2"></i>打印记录
+                </button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-edit mr-2"></i>编辑记录
+                </button>
+            </div>
+        </div>
+
+        <!-- 治疗基本信息 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-4 gap-6">
+                <div>
+                    <p class="text-gray-500">患者姓名</p>
+                    <p class="font-semibold">张三</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">住院号</p>
+                    <p class="font-semibold">2024030101</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">治疗日期</p>
+                    <p class="font-semibold">2024-03-01 09:30</p>
+                </div>
+                <div>
+                    <p class="text-gray-500">治疗师</p>
+                    <p class="font-semibold">李治疗师</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 治疗详细信息 -->
+        <div class="grid grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">治疗项目</h3>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-gray-500">项目名称</p>
+                        <p class="font-semibold">运动疗法</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">治疗部位</p>
+                        <p class="font-semibold">下肢</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">治疗时长</p>
+                        <p class="font-semibold">45分钟</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">治疗频次</p>
+                        <p class="font-semibold">每日1次</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">治疗过程</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center text-sm">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span>关节活动度训练（15分钟）</span>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span>肌力训练（20分钟）</span>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span>平衡功能训练（10分钟）</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">治疗效果</h3>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-gray-500">患者配合度</p>
+                        <div class="flex items-center text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">治疗效果</p>
+                        <p class="font-semibold">良好</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">备注</p>
+                        <p class="font-semibold">患者对治疗反应积极，建议继续现有治疗方案。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 治疗记录详情 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4">治疗记录详情</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-gray-500 mb-2">治疗目标</p>
+                    <p>1. 提高下肢肌力，目标达到4级以上</p>
+                    <p>2. 改善步态，减少代偿动作</p>
+                    <p>3. 提高平衡能力，减少跌倒风险</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 mb-2">治疗内容</p>
+                    <p>1. 下肢主动辅助运动训练（15分钟）</p>
+                    <p>2. 抗阻力训练（20分钟）</p>
+                    <p>3. 平衡板训练（10分钟）</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 mb-2">患者反馈</p>
+                    <p>患者表示训练过程中感觉良好，无明显不适。训练后感觉腿部力量有所增强，行走更加稳定。</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 mb-2">治疗师评价</p>
+                    <p>患者配合度高，完成了全部计划训练内容。肌力测试显示右下肢肌力从3+级提升至4-级，平衡能力有所改善。建议继续现有训练方案，并适当增加训练强度。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 多媒体记录 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">多媒体记录</h3>
+                <div class="flex space-x-3">
+                    <button class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm flex items-center" id="upload-image-btn">
+                        <i class="fas fa-image mr-1"></i>
+                        上传图片
+                    </button>
+                    <button class="px-3 py-1.5 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm flex items-center" id="upload-video-btn">
+                        <i class="fas fa-video mr-1"></i>
+                        上传视频
+                    </button>
+                    <input type="file" id="image-upload" accept="image/*" class="hidden" multiple>
+                    <input type="file" id="video-upload" accept="video/*" class="hidden">
+                </div>
+            </div>
+            
+            <!-- 图片对比区域 -->
+            <div class="mb-6">
+                <h4 class="font-medium text-gray-700 mb-3">治疗前后对比</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <div class="border rounded-lg overflow-hidden">
+                            <div class="bg-gray-50 px-3 py-2 border-b">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-medium">治疗前 (2024-02-28)</span>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-expand-alt"></i>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <img src="https://via.placeholder.com/400x300?text=治疗前图片" alt="治疗前" class="w-full h-auto">
+                            </div>
+                            <div class="px-3 py-2 border-t bg-gray-50">
+                                <p class="text-sm text-gray-600">下肢功能评估 - 初始状态</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="border rounded-lg overflow-hidden">
+                            <div class="bg-gray-50 px-3 py-2 border-b">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-medium">治疗后 (2024-03-01)</span>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-expand-alt"></i>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <img src="https://via.placeholder.com/400x300?text=治疗后图片" alt="治疗后" class="w-full h-auto">
+                            </div>
+                            <div class="px-3 py-2 border-t bg-gray-50">
+                                <p class="text-sm text-gray-600">下肢功能评估 - 治疗一周后</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 视频记录 -->
+            <div>
+                <h4 class="font-medium text-gray-700 mb-3">治疗视频记录</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="border rounded-lg overflow-hidden">
+                        <div class="bg-gray-50 px-3 py-2 border-b">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium">步态训练视频 (2024-03-01)</span>
+                                <div class="flex space-x-2">
+                                    <button class="text-gray-500 hover:text-gray-700">
+                                        <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <button class="text-gray-500 hover:text-gray-700">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-2">
+                            <video controls class="w-full h-auto">
+                                <source src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放
+                            </video>
+                        </div>
+                        <div class="px-3 py-2 border-t bg-gray-50">
+                            <p class="text-sm text-gray-600">平行杠内步态训练过程记录</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 批注和标记 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4">批注和标记</h3>
+            <div class="space-y-4">
+                <div class="border-l-4 border-blue-500 pl-4 py-2">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-medium">关于步态训练的注意事项</p>
+                            <p class="text-sm text-gray-600 mt-1">患者右侧髋关节外展代偿明显，需重点纠正。建议下次训练增加髋外展肌的针对性训练。</p>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            李治疗师 - 2024-03-01
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-l-4 border-green-500 pl-4 py-2">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-medium">训练强度调整建议</p>
+                            <p class="text-sm text-gray-600 mt-1">患者耐力良好，可适当增加训练时间，从目前的45分钟增加到60分钟。</p>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            王医生 - 2024-03-01
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 添加新批注 -->
+            <div class="mt-4 pt-4 border-t">
+                <h4 class="font-medium text-gray-700 mb-3">添加批注</h4>
+                <div class="space-y-3">
+                    <div>
+                        <label for="note-title" class="block text-sm font-medium text-gray-700 mb-1">标题</label>
+                        <input type="text" id="note-title" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="note-content" class="block text-sm font-medium text-gray-700 mb-1">内容</label>
+                        <textarea id="note-content" rows="3" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            保存批注
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 图片上传功能
+        document.getElementById('upload-image-btn').addEventListener('click', function() {
+            document.getElementById('image-upload').click();
+        });
+        
+        // 视频上传功能
+        document.getElementById('upload-video-btn').addEventListener('click', function() {
+            document.getElementById('video-upload').click();
+        });
+        
+        // 处理图片上传
+        document.getElementById('image-upload').addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                // 这里可以添加图片上传处理逻辑
+                alert(`已选择 ${files.length} 张图片，准备上传`);
+                // 实际项目中这里应该调用API上传图片
+            }
+        });
+        
+        // 处理视频上传
+        document.getElementById('video-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // 这里可以添加视频上传处理逻辑
+                alert(`已选择视频: ${file.name}，准备上传`);
+                // 实际项目中这里应该调用API上传视频
+            }
+        });
+    </script>
+</body>
+</html> 
