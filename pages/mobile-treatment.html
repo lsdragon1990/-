@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 移动端治疗执行</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            touch-action: manipulation;
+        }
+        
+        .mobile-container {
+            max-width: 100%;
+            padding: 1rem;
+        }
+        
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .mobile-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e40af;
+        }
+        
+        .mobile-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .mobile-user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: #e0f2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #0369a1;
+            font-size: 1.25rem;
+        }
+        
+        .mobile-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mobile-user-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .mobile-user-role {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .mobile-tabs {
+            display: flex;
+            background-color: #fff;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-tab {
+            flex: 1;
+            padding: 1rem 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #6b7280;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .mobile-tab.active {
+            color: #1e40af;
+            border-bottom-color: #1e40af;
+        }
+        
+        .mobile-content {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .mobile-section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mobile-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .mobile-badge-blue {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .mobile-badge-green {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        .mobile-badge-yellow {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .mobile-badge-red {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .mobile-card {
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+        
+        .mobile-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .mobile-card:active {
+            background-color: #f1f5f9;
+            transform: scale(0.98);
+        }
+        
+        .mobile-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .mobile-card-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.125rem;
+        }
+        
+        .mobile-card-time {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .mobile-card-content {
+            margin-bottom: 0.75rem;
+        }
+        
+        .mobile-card-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .mobile-card-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #4b5563;
+            font-size: 0.875rem;
+        }
+        
+        .mobile-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .mobile-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .mobile-btn-primary {
+            background-color: #1e40af;
+            color: #fff;
+        }
+        
+        .mobile-btn-primary:active {
+            background-color: #1e3a8a;
+        }
+        
+        .mobile-btn-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+        
+        .mobile-btn-secondary:active {
+            background-color: #e2e8f0;
+        }
+        
+        .mobile-btn-success {
+            background-color: #10b981;
+            color: #fff;
+        }
+        
+        .mobile-btn-success:active {
+            background-color: #059669;
+        }
+        
+        .mobile-btn-danger {
+            background-color: #ef4444;
+            color: #fff;
+        }
+        
+        .mobile-btn-danger:active {
+            background-color: #dc2626;
+        }
+        
+        .mobile-btn i {
+            margin-right: 0.25rem;
+        }
+        
+        .mobile-form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .mobile-form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .mobile-form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .mobile-form-control:focus {
+            outline: none;
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.5);
+        }
+        
+        .mobile-form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        
+        .mobile-form-textarea {
+            min-height: 6rem;
+            resize: vertical;
+        }
+        
+        .mobile-form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mobile-form-check-input {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        .mobile-form-check-label {
+            font-weight: 500;
+            color: #4b5563;
+        }
+        
+        .mobile-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .mobile-footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6b7280;
+            font-size: 0.75rem;
+        }
+        
+        .mobile-footer-item.active {
+            color: #1e40af;
+        }
+        
+        .mobile-footer-item i {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .mobile-floating-btn {
+            position: fixed;
+            bottom: 5rem;
+            right: 1rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background-color: #1e40af;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .mobile-floating-btn:active {
+            transform: scale(0.95);
+            background-color: #1e3a8a;
+        }
+        
+        .mobile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            padding: 1rem;
+        }
+        
+        .mobile-modal-content {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            width: 100%;
+            max-width: 28rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .mobile-modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mobile-modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .mobile-modal-close {
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+        
+        .mobile-modal-body {
+            padding: 1rem;
+        }
+        
+        .mobile-modal-footer {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        
+        .mobile-progress {
+            height: 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mobile-progress-bar {
+            height: 100%;
+            background-color: #1e40af;
+        }
+        
+        .mobile-progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .mobile-signature-pad {
+            border: 1px dashed #d1d5db;
+            border-radius: 0.5rem;
+            height: 10rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container pb-20">
+        <div class="mobile-header">
+            <div class="mobile-title">
+                <i class="fas fa-heartbeat mr-2"></i> 治疗执行
+            </div>
+            <div class="mobile-user">
+                <div class="mobile-user-info">
+                    <div class="mobile-user-name">王医生</div>
+                    <div class="mobile-user-role">运动治疗师</div>
+                </div>
+                <div class="mobile-user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mobile-tabs">
+            <div class="mobile-tab active">待执行</div>
+            <div class="mobile-tab">进行中</div>
+            <div class="mobile-tab">已完成</div>
+        </div>
+        
+        <div class="mobile-content">
+            <div class="mobile-section-title">
+                今日任务
+                <div class="mobile-badge mobile-badge-blue">8/12</div>
+            </div>
+            
+            <div class="mobile-card">
+                <div class="mobile-card-header">
+                    <div class="mobile-card-title">张三 - 运动治疗</div>
+                    <div class="mobile-card-time">10:30 - 11:00</div>
+                </div>
+                <div class="mobile-card-content">
+                    <div class="mobile-card-info">
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-bed text-blue-500"></i>
+                            <span>床号: 3-12</span>
+                        </div>
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-map-marker-alt text-red-500"></i>
+                            <span>治疗室A</span>
+                        </div>
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-clipboard-list text-green-500"></i>
+                            <span>下肢功能训练</span>
+                        </div>
+                    </div>
+                    <div class="mobile-progress">
+                        <div class="mobile-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="mobile-progress-text">
+                        <div>未开始</div>
+                        <div>0/30分钟</div>
+                    </div>
+                </div>
+                <div class="mobile-card-actions">
+                    <button class="mobile-btn mobile-btn-primary flex-1">
+                        <i class="fas fa-play"></i> 开始治疗
+                    </button>
+                    <button class="mobile-btn mobile-btn-secondary">
+                        <i class="fas fa-info-circle"></i> 详情
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mobile-card">
+                <div class="mobile-card-header">
+                    <div class="mobile-card-title">李四 - 作业治疗</div>
+                    <div class="mobile-card-time">11:15 - 11:45</div>
+                </div>
+                <div class="mobile-card-content">
+                    <div class="mobile-card-info">
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-bed text-blue-500"></i>
+                            <span>床号: 2-08</span>
+                        </div>
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-map-marker-alt text-red-500"></i>
+                            <span>治疗室B</span>
+                        </div>
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-clipboard-list text-green-500"></i>
+                            <span>手功能训练</span>
+                        </div>
+                    </div>
+                    <div class="mobile-progress">
+                        <div class="mobile-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="mobile-progress-text">
+                        <div>未开始</div>
+                        <div>0/30分钟</div>
+                    </div>
+                </div>
+                <div class="mobile-card-actions">
+                    <button class="mobile-btn mobile-btn-primary flex-1">
+                        <i class="fas fa-play"></i> 开始治疗
+                    </button>
+                    <button class="mobile-btn mobile-btn-secondary">
+                        <i class="fas fa-info-circle"></i> 详情
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mobile-content">
+            <div class="mobile-section-title">
+                治疗记录
+                <div class="mobile-badge mobile-badge-green">快速记录</div>
+            </div>
+            
+            <div class="mobile-form-group">
+                <label class="mobile-form-label">治疗项目</label>
+                <select class="mobile-form-control mobile-form-select">
+                    <option>下肢功能训练</option>
+                    <option>上肢功能训练</option>
+                    <option>平衡训练</option>
+                    <option>步态训练</option>
+                    <option>日常生活活动训练</option>
+                </select>
+            </div>
+            
+            <div class="mobile-form-group">
+                <label class="mobile-form-label">治疗内容</label>
+                <textarea class="mobile-form-control mobile-form-textarea" placeholder="请输入治疗内容..."></textarea>
+            </div>
+            
+            <div class="mobile-form-group">
+                <label class="mobile-form-label">治疗效果</label>
+                <div class="mobile-form-check">
+                    <input type="radio" name="effect" id="effect1" class="mobile-form-check-input" checked>
+                    <label for="effect1" class="mobile-form-check-label">良好</label>
+                </div>
+                <div class="mobile-form-check">
+                    <input type="radio" name="effect" id="effect2" class="mobile-form-check-input">
+                    <label for="effect2" class="mobile-form-check-label">一般</label>
+                </div>
+                <div class="mobile-form-check">
+                    <input type="radio" name="effect" id="effect3" class="mobile-form-check-input">
+                    <label for="effect3" class="mobile-form-check-label">较差</label>
+                </div>
+            </div>
+            
+            <div class="mobile-form-group">
+                <label class="mobile-form-label">患者签名</label>
+                <div class="mobile-signature-pad">
+                    <div>点击此处进行签名</div>
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <button class="mobile-btn mobile-btn-secondary flex-1">
+                    <i class="fas fa-camera"></i> 添加照片
+                </button>
+                <button class="mobile-btn mobile-btn-success flex-1">
+                    <i class="fas fa-save"></i> 保存记录
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mobile-floating-btn">
+        <i class="fas fa-plus"></i>
+    </div>
+    
+    <div class="mobile-footer">
+        <div class="mobile-footer-item active">
+            <i class="fas fa-tasks"></i>
+            <span>任务</span>
+        </div>
+        <div class="mobile-footer-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>日程</span>
+        </div>
+        <div class="mobile-footer-item">
+            <i class="fas fa-user-injured"></i>
+            <span>患者</span>
+        </div>
+        <div class="mobile-footer-item">
+            <i class="fas fa-clipboard-list"></i>
+            <span>记录</span>
+        </div>
+        <div class="mobile-footer-item">
+            <i class="fas fa-cog"></i>
+            <span>设置</span>
+        </div>
+    </div>
+    
+    <!-- 治疗详情模态框 -->
+    <div class="mobile-modal" style="display: none;">
+        <div class="mobile-modal-content">
+            <div class="mobile-modal-header">
+                <div class="mobile-modal-title">治疗详情</div>
+                <div class="mobile-modal-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="mobile-modal-body">
+                <div class="mobile-form-group">
+                    <label class="mobile-form-label">患者信息</label>
+                    <div class="mobile-card-info mb-3">
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-user text-blue-500"></i>
+                            <span>张三，男，65岁</span>
+                        </div>
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-bed text-blue-500"></i>
+                            <span>床号: 3-12</span>
+                        </div>
+                        <div class="mobile-card-info-item">
+                            <i class="fas fa-stethoscope text-blue-500"></i>
+                            <span>脑卒中后遗症</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mobile-form-group">
+                    <label class="mobile-form-label">医嘱信息</label>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <div class="text-sm text-gray-700 mb-1">运动治疗 30分钟/次 每日1次</div>
+                        <div class="text-sm text-gray-700 mb-1">下肢功能训练，重点加强患侧肌力</div>
+                        <div class="text-sm text-gray-700">注意患者血压控制，运动量适中</div>
+                    </div>
+                </div>
+                
+                <div class="mobile-form-group">
+                    <label class="mobile-form-label">上次治疗记录</label>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <div class="text-sm text-gray-700 mb-1">时间: 2023-09-24 10:30</div>
+                        <div class="text-sm text-gray-700 mb-1">内容: 下肢功能训练，包括髋关节、膝关节活动度训练，患侧肌力训练</div>
+                        <div class="text-sm text-gray-700">效果: 患者配合良好，患侧肌力较前有所提高</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile-modal-footer">
+                <button class="mobile-btn mobile-btn-secondary">
+                    关闭
+                </button>
+                <button class="mobile-btn mobile-btn-primary">
+                    <i class="fas fa-play"></i> 开始治疗
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

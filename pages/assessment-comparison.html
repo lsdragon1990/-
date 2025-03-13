@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康复信息系统 - 评估结果对比</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e5e7eb;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #1d4ed8;
+        }
+        
+        .sidebar-menu-item.active {
+            background-color: #e0f2fe;
+            color: #1d4ed8;
+            border-right: 3px solid #1d4ed8;
+        }
+        
+        .sidebar-menu-item i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-blue {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .badge-green {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        .badge-yellow {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .badge-red {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #1d4ed8;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1e40af;
+        }
+        
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.5);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            text-align: left;
+            color: #4b5563;
+        }
+        
+        .table tr:hover {
+            background-color: #f9fafb;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            color: #1d4ed8;
+            border-bottom-color: #1d4ed8;
+        }
+        
+        .tab:hover:not(.active) {
+            color: #4b5563;
+        }
+        
+        .comparison-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comparison-column {
+            flex: 1;
+        }
+        
+        .comparison-header {
+            background-color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            border: 1px solid #e5e7eb;
+            border-bottom: none;
+        }
+        
+        .comparison-content {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0 0 0.5rem 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .comparison-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .comparison-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .comparison-label {
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comparison-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .comparison-change {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+        }
+        
+        .comparison-change.positive {
+            color: #15803d;
+        }
+        
+        .comparison-change.negative {
+            color: #b91c1c;
+        }
+        
+        .comparison-change.neutral {
+            color: #6b7280;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        
+        .timeline-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 2rem;
+            position: relative;
+            min-width: 100px;
+        }
+        
+        .timeline-item:last-child {
+            margin-right: 0;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 1.5rem;
+            right: -1.5rem;
+            width: 1rem;
+            height: 2px;
+            background-color: #e5e7eb;
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .timeline-dot {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-item.active .timeline-dot {
+            background-color: #1d4ed8;
+        }
+        
+        .timeline-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            color: #4b5563;
+            text-align: center;
+        }
+        
+        .timeline-item.active .timeline-title {
+            color: #1d4ed8;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            margin-right: 0.5rem;
+        }
+        
+        .progress-value {
+            height: 100%;
+            background-color: #1d4ed8;
+        }
+        
+        .progress-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            min-width: 2.5rem;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-blue-600 text-xl mr-3"></i>
+                <h1 class="text-lg font-bold text-gray-800">康复信息系统</h1>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-home"></i>
+                <span>工作台</span>
+            </a>
+            <a href="patients.html" class="sidebar-menu-item">
+                <i class="fas fa-user-injured"></i>
+                <span>患者管理</span>
+            </a>
+            <a href="orders.html" class="sidebar-menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>医嘱管理</span>
+            </a>
+            <a href="assessment.html" class="sidebar-menu-item active">
+                <i class="fas fa-clipboard-check"></i>
+                <span>康复评定</span>
+            </a>
+            <a href="scheduling.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>治疗排班</span>
+            </a>
+            <a href="treatment.html" class="sidebar-menu-item">
+                <i class="fas fa-procedures"></i>
+                <span>治疗执行</span>
+            </a>
+            <a href="billing.html" class="sidebar-menu-item">
+                <i class="fas fa-yuan-sign"></i>
+                <span>费用管理</span>
+            </a>
+            <a href="documents.html" class="sidebar-menu-item">
+                <i class="fas fa-file-medical"></i>
+                <span>电子文书</span>
+            </a>
+            <a href="workload.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>工作量统计</span>
+            </a>
+            <a href="equipment.html" class="sidebar-menu-item">
+                <i class="fas fa-toolbox"></i>
+                <span>设备管理</span>
+            </a>
+            <a href="reports.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>数据报表</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>系统设置</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h2 class="text-xl font-bold text-gray-800">评估结果对比</h2>
+                <p class="text-sm text-gray-600">比较患者不同时间的评估结果，追踪康复进展</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="搜索患者..." class="form-control pl-10">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <button class="btn btn-primary">
+                    <i class="fas fa-file-export"></i>
+                    <span>导出报告</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800">张三 - 脑卒中后遗症</h3>
+                    <p class="text-sm text-gray-600">男 | 65岁 | 住院号: 20230915001 | 床号: 3-12</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="badge badge-blue">住院患者</span>
+                    <span class="badge badge-green">治疗中</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">选择评估量表</label>
+                <select class="form-control">
+                    <option>Barthel指数 (BI)</option>
+                    <option>Fugl-Meyer运动功能评定量表 (FMA)</option>
+                    <option>Berg平衡量表 (BBS)</option>
+                    <option>功能独立性评定量表 (FIM)</option>
+                    <option>改良Ashworth痉挛评定量表 (MAS)</option>
+                </select>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2023-09-15</div>
+                    <div class="timeline-title">入院评估</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2023-09-22</div>
+                    <div class="timeline-title">第一周评估</div>
+                </div>
+                <div class="timeline-item active">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2023-09-29</div>
+                    <div class="timeline-title">第二周评估</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2023-10-06</div>
+                    <div class="timeline-title">第三周评估</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2023-10-13</div>
+                    <div class="timeline-title">第四周评估</div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active">图表对比</div>
+                <div class="tab">详细数据</div>
+                <div class="tab">评估报告</div>
+                <div class="tab">多量表对比</div>
+                <div class="tab">康复趋势</div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+                <div class="flex justify-end mt-2">
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                        <button type="button" class="px-3 py-1 text-sm font-medium text-blue-700 bg-white border border-blue-300 rounded-l-lg hover:bg-blue-50 focus:z-10 focus:ring-2 focus:ring-blue-300 chart-type-btn active" data-type="line">
+                            <i class="fas fa-chart-line mr-1"></i>折线图
+                        </button>
+                        <button type="button" class="px-3 py-1 text-sm font-medium text-blue-700 bg-white border-t border-b border-blue-300 hover:bg-blue-50 focus:z-10 focus:ring-2 focus:ring-blue-300 chart-type-btn" data-type="bar">
+                            <i class="fas fa-chart-bar mr-1"></i>柱状图
+                        </button>
+                        <button type="button" class="px-3 py-1 text-sm font-medium text-blue-700 bg-white border border-blue-300 rounded-r-lg hover:bg-blue-50 focus:z-10 focus:ring-2 focus:ring-blue-300 chart-type-btn" data-type="radar">
+                            <i class="fas fa-chart-pie mr-1"></i>雷达图
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-container">
+                <div class="comparison-column">
+                    <div class="comparison-header">
+                        <div class="flex justify-between items-center">
+                            <div class="font-semibold text-gray-700">入院评估 (2023-09-15)</div>
+                            <div class="text-sm text-gray-500">基线</div>
+                        </div>
+                    </div>
+                    <div class="comparison-content">
+                        <div class="comparison-item">
+                            <div class="comparison-label">总分</div>
+                            <div class="comparison-value">45/100</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">进食</div>
+                            <div class="comparison-value">5/10</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">洗澡</div>
+                            <div class="comparison-value">0/5</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">个人卫生</div>
+                            <div class="comparison-value">0/5</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">穿衣</div>
+                            <div class="comparison-value">5/10</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">控制大便</div>
+                            <div class="comparison-value">5/10</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">控制小便</div>
+                            <div class="comparison-value">5/10</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">如厕</div>
+                            <div class="comparison-value">5/10</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">床椅转移</div>
+                            <div class="comparison-value">5/15</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">平地行走</div>
+                            <div class="comparison-value">10/15</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">上下楼梯</div>
+                            <div class="comparison-value">5/10</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-column">
+                    <div class="comparison-header">
+                        <div class="flex justify-between items-center">
+                            <div class="font-semibold text-gray-700">当前评估 (2023-09-29)</div>
+                            <div class="text-sm text-gray-500">第二周</div>
+                        </div>
+                    </div>
+                    <div class="comparison-content">
+                        <div class="comparison-item">
+                            <div class="comparison-label">总分</div>
+                            <div class="comparison-value">65/100
+                                <span class="comparison-change positive">
+                                    <i class="fas fa-arrow-up mr-1"></i>+20
+                                </span>
+                            </div>
+                            <div class="progress-indicator">
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: 65%"></div>
+                                </div>
+                                <div class="progress-text">65%</div>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">进食</div>
+                            <div class="comparison-value">10/10
+                                <span class="comparison-change positive">
+                                    <i class="fas fa-arrow-up mr-1"></i>+5
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">洗澡</div>
+                            <div class="comparison-value">0/5
+                                <span class="comparison-change neutral">
+                                    <i class="fas fa-equals mr-1"></i>0
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">个人卫生</div>
+                            <div class="comparison-value">5/5
+                                <span class="comparison-change positive">
+                                    <i class="fas fa-arrow-up mr-1"></i>+5
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">穿衣</div>
+                            <div class="comparison-value">5/10
+                                <span class="comparison-change neutral">
+                                    <i class="fas fa-equals mr-1"></i>0
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">控制大便</div>
+                            <div class="comparison-value">10/10
+                                <span class="comparison-change positive">
+                                    <i class="fas fa-arrow-up mr-1"></i>+5
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">控制小便</div>
+                            <div class="comparison-value">5/10
+                                <span class="comparison-change neutral">
+                                    <i class="fas fa-equals mr-1"></i>0
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">如厕</div>
+                            <div class="comparison-value">5/10
+                                <span class="comparison-change neutral">
+                                    <i class="fas fa-equals mr-1"></i>0
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">床椅转移</div>
+                            <div class="comparison-value">10/15
+                                <span class="comparison-change positive">
+                                    <i class="fas fa-arrow-up mr-1"></i>+5
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">平地行走</div>
+                            <div class="comparison-value">10/15
+                                <span class="comparison-change neutral">
+                                    <i class="fas fa-equals mr-1"></i>0
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">上下楼梯</div>
+                            <div class="comparison-value">5/10
+                                <span class="comparison-change neutral">
+                                    <i class="fas fa-equals mr-1"></i>0
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">评估结论</h4>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-gray-700">患者Barthel指数从入院时的45分提升至当前的65分，总体功能改善明显。主要进步项目包括：进食、个人卫生、控制大便和床椅转移。建议继续加强平地行走、上下楼梯和穿衣训练，同时开始洗澡和如厕的辅助训练。</p>
+                </div>
+                
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h5 class="font-semibold text-green-800 mb-2"><i class="fas fa-check-circle mr-2"></i>改善显著的项目</h5>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>进食能力 (+5分): 从需要帮助进步到完全独立</li>
+                            <li>个人卫生 (+5分): 从完全依赖进步到独立完成</li>
+                            <li>控制大便 (+5分): 从偶尔失禁进步到完全控制</li>
+                            <li>床椅转移 (+5分): 从需要大量帮助进步到需要少量帮助</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <h5 class="font-semibold text-yellow-800 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>需要关注的项目</h5>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>洗澡 (0分): 仍然完全依赖，建议开始辅助训练</li>
+                            <li>穿衣 (5分): 进展缓慢，建议增加训练频率</li>
+                            <li>控制小便 (5分): 无改善，建议进行膀胱训练</li>
+                            <li>上下楼梯 (5分): 无改善，建议增加针对性训练</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-4 bg-blue-50 p-4 rounded-lg">
+                    <h5 class="font-semibold text-blue-800 mb-2"><i class="fas fa-lightbulb mr-2"></i>康复建议</h5>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-1">
+                        <li>增加下肢力量训练，重点改善上下楼梯能力</li>
+                        <li>开始洗澡辅助训练，使用防滑垫和扶手</li>
+                        <li>增加穿衣训练频率，从简单衣物开始</li>
+                        <li>进行膀胱训练，建立规律如厕时间表</li>
+                        <li>继续维持已改善项目的训练，防止功能退化</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="flex justify-between mt-4">
+                <button class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>上一次评估</span>
+                </button>
+                <div>
+                    <button class="btn btn-secondary mr-2">
+                        <i class="fas fa-print"></i>
+                        <span>打印报告</span>
+                    </button>
+                    <div class="relative inline-block" id="exportDropdown">
+                        <button class="btn btn-secondary mr-2" id="exportButton">
+                            <i class="fas fa-file-export"></i>
+                            <span>导出数据</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden" id="exportMenu">
+                            <div class="py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">导出为PDF</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">导出为Excel</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">导出为图片</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">导出原始数据</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-share-alt"></i>
+                        <span>分享结果</span>
+                    </button>
+                </div>
+                <button class="btn btn-secondary">
+                    <span>下一次评估</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 多量表对比模块 -->
+        <div class="card mt-6 hidden" id="multiScaleComparisonCard">
+            <div class="card-header">
+                <h3 class="text-lg font-bold text-gray-800">多量表综合分析</h3>
+                <p class="text-sm text-gray-600">通过多种评估量表的综合分析，全面了解患者康复状况</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div class="form-group">
+                    <label class="form-label">选择主要量表</label>
+                    <select class="form-control">
+                        <option>Barthel指数 (BI)</option>
+                        <option>Fugl-Meyer运动功能评定量表 (FMA)</option>
+                        <option>Berg平衡量表 (BBS)</option>
+                        <option>功能独立性评定量表 (FIM)</option>
+                        <option>改良Ashworth痉挛评定量表 (MAS)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">选择对比量表</label>
+                    <select class="form-control">
+                        <option>功能独立性评定量表 (FIM)</option>
+                        <option>Barthel指数 (BI)</option>
+                        <option>Fugl-Meyer运动功能评定量表 (FMA)</option>
+                        <option>Berg平衡量表 (BBS)</option>
+                        <option>改良Ashworth痉挛评定量表 (MAS)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="chart-container mt-4">
+                <canvas id="multiScaleChart"></canvas>
+            </div>
+            
+            <div class="mt-4 bg-blue-50 p-4 rounded-lg">
+                <h5 class="font-semibold text-blue-800 mb-2">多量表综合分析</h5>
+                <p class="text-gray-700">通过Barthel指数和FIM量表的对比分析，患者在日常生活活动能力方面有明显改善，但在认知功能和社会交往方面仍需加强。FIM量表显示患者在解决问题和记忆方面存在困难，建议增加认知训练。</p>
+            </div>
+        </div>
+        
+        <!-- 康复趋势预测模块 -->
+        <div class="card mt-6 hidden" id="rehabilitationTrendCard">
+            <div class="card-header">
+                <h3 class="text-lg font-bold text-gray-800">康复趋势预测</h3>
+                <p class="text-sm text-gray-600">基于历史评估数据，预测患者未来康复趋势</p>
+            </div>
+            
+            <div class="chart-container mt-4">
+                <canvas id="trendPredictionChart"></canvas>
+            </div>
+            
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h5 class="font-semibold text-blue-800 mb-2">短期预测 (1-2周)</h5>
+                    <p class="text-gray-700">预计Barthel指数将提高至75-80分，主要改善项目包括穿衣和如厕能力。</p>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h5 class="font-semibold text-blue-800 mb-2">中期预测 (3-4周)</h5>
+                    <p class="text-gray-700">预计Barthel指数将提高至85-90分，洗澡和上下楼梯能力将有明显改善。</p>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h5 class="font-semibold text-blue-800 mb-2">长期预测 (1-2月)</h5>
+                    <p class="text-gray-700">预计Barthel指数将达到90-95分，接近完全独立，但上下楼梯可能仍需少量帮助。</p>
+                </div>
+            </div>
+            
+            <div class="mt-4 bg-yellow-50 p-4 rounded-lg">
+                <h5 class="font-semibold text-yellow-800 mb-2"><i class="fas fa-exclamation-circle mr-2"></i>风险提示</h5>
+                <p class="text-gray-700">根据当前康复速度和患者年龄因素，存在以下风险：</p>
+                <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+                    <li>康复平台期：第4-5周可能出现康复进展缓慢的平台期</li>
+                    <li>跌倒风险：随着活动能力提高，跌倒风险增加</li>
+                    <li>心理因素：长期康复可能导致患者出现焦虑或抑郁情绪</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 患者评估历史记录模块 -->
+        <div class="card mt-6">
+            <div class="card-header">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">评估历史记录</h3>
+                        <p class="text-sm text-gray-600">查看患者所有评估记录和历史数据</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary btn-sm">
+                            <i class="fas fa-filter mr-1"></i>
+                            <span>筛选</span>
+                        </button>
+                        <button class="btn btn-primary btn-sm ml-2">
+                            <i class="fas fa-plus mr-1"></i>
+                            <span>新增评估</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>评估日期</th>
+                            <th>评估类型</th>
+                            <th>评估人员</th>
+                            <th>总分</th>
+                            <th>变化</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2023-09-15</td>
+                            <td>Barthel指数 (BI)</td>
+                            <td>李医生</td>
+                            <td>45/100</td>
+                            <td>-</td>
+                            <td><span class="badge badge-blue">入院评估</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2023-09-22</td>
+                            <td>Barthel指数 (BI)</td>
+                            <td>王治疗师</td>
+                            <td>55/100</td>
+                            <td>
+                                <span class="text-green-600">
+                                    <i class="fas fa-arrow-up mr-1"></i>+10
+                                </span>
+                            </td>
+                            <td><span class="badge badge-green">第一周评估</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-50">
+                            <td>2023-09-29</td>
+                            <td>Barthel指数 (BI)</td>
+                            <td>王治疗师</td>
+                            <td>65/100</td>
+                            <td>
+                                <span class="text-green-600">
+                                    <i class="fas fa-arrow-up mr-1"></i>+10
+                                </span>
+                            </td>
+                            <td><span class="badge badge-green">第二周评估</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2023-09-20</td>
+                            <td>Fugl-Meyer运动功能评定量表 (FMA)</td>
+                            <td>张治疗师</td>
+                            <td>48/100</td>
+                            <td>-</td>
+                            <td><span class="badge badge-blue">初次评估</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2023-09-27</td>
+                            <td>Fugl-Meyer运动功能评定量表 (FMA)</td>
+                            <td>张治疗师</td>
+                            <td>56/100</td>
+                            <td>
+                                <span class="text-green-600">
+                                    <i class="fas fa-arrow-up mr-1"></i>+8
+                                </span>
+                            </td>
+                            <td><span class="badge badge-green">复查评估</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-between items-center mt-4 px-4">
+                <div class="text-sm text-gray-600">
+                    显示 1 至 5 条，共 5 条记录
+                </div>
+                <div class="flex space-x-1">
+                    <button class="px-3 py-1 rounded border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                        上一页
+                    </button>
+                    <button class="px-3 py-1 rounded border border-blue-500 bg-blue-500 text-white">
+                        1
+                    </button>
+                    <button class="px-3 py-1 rounded border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                        下一页
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 选项卡切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const multiScaleComparisonCard = document.getElementById('multiScaleComparisonCard');
+            const rehabilitationTrendCard = document.getElementById('rehabilitationTrendCard');
+            
+            // 导出数据下拉菜单功能
+            const exportButton = document.getElementById('exportButton');
+            const exportMenu = document.getElementById('exportMenu');
+            
+            if (exportButton && exportMenu) {
+                // 点击按钮显示/隐藏下拉菜单
+                exportButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    exportMenu.classList.toggle('hidden');
+                });
+                
+                // 点击页面其他地方隐藏下拉菜单
+                document.addEventListener('click', function(e) {
+                    if (!exportButton.contains(e.target) && !exportMenu.contains(e.target)) {
+                        exportMenu.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // 图表类型切换功能
+            const chartTypeBtns = document.querySelectorAll('.chart-type-btn');
+            let progressChart = null;
+            
+            // 初始化进度图表
+            function initProgressChart(type = 'line') {
+                const ctx = document.getElementById('progressChart').getContext('2d');
+                
+                // 如果图表已存在，先销毁
+                if (progressChart) {
+                    progressChart.destroy();
+                }
+                
+                // 准备数据
+                const labels = ['入院评估', '第一周评估', '第二周评估', '第三周评估', '第四周评估'];
+                const data = [45, 55, 65, null, null];
+                
+                // 根据类型创建不同的图表配置
+                let chartConfig = {
+                    type: type,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Barthel指数总分',
+                            data: data,
+                            backgroundColor: 'rgba(29, 78, 216, 0.2)',
+                            borderColor: 'rgba(29, 78, 216, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            pointBackgroundColor: 'rgba(29, 78, 216, 1)',
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: '分数'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `分数: ${context.raw}/100`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                // 雷达图特殊配置
+                if (type === 'radar') {
+                    chartConfig.data.labels = ['进食', '洗澡', '个人卫生', '穿衣', '控制大便', '控制小便', '如厕', '床椅转移', '平地行走', '上下楼梯'];
+                    chartConfig.data.datasets = [
+                        {
+                            label: '入院评估',
+                            data: [5, 0, 0, 5, 5, 5, 5, 5, 10, 5],
+                            backgroundColor: 'rgba(220, 38, 38, 0.2)',
+                            borderColor: 'rgba(220, 38, 38, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(220, 38, 38, 1)',
+                        },
+                        {
+                            label: '当前评估',
+                            data: [10, 0, 5, 5, 10, 5, 5, 10, 10, 5],
+                            backgroundColor: 'rgba(29, 78, 216, 0.2)',
+                            borderColor: 'rgba(29, 78, 216, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(29, 78, 216, 1)',
+                        }
+                    ];
+                    chartConfig.options.scales = {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    };
+                }
+                
+                // 创建图表
+                progressChart = new Chart(ctx, chartConfig);
+            }
+            
+            // 初始化默认图表
+            initProgressChart('line');
+            
+            // 添加图表类型切换事件
+            if (chartTypeBtns) {
+                chartTypeBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // 移除所有按钮的活动状态
+                        chartTypeBtns.forEach(b => b.classList.remove('active'));
+                        // 添加当前按钮的活动状态
+                        this.classList.add('active');
+                        
+                        // 获取图表类型并重新初始化图表
+                        const chartType = this.getAttribute('data-type');
+                        initProgressChart(chartType);
+                    });
+                });
+            }
+            
+            tabs.forEach((tab, index) => {
+                tab.addEventListener('click', function() {
+                    // 移除所有选项卡的活动状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前选项卡的活动状态
+                    this.classList.add('active');
+                    
+                    // 根据选项卡索引显示/隐藏相应内容
+                    if (index === 3) { // 多量表对比
+                        multiScaleComparisonCard.classList.remove('hidden');
+                        rehabilitationTrendCard.classList.add('hidden');
+                    } else if (index === 4) { // 康复趋势
+                        multiScaleComparisonCard.classList.add('hidden');
+                        rehabilitationTrendCard.classList.remove('hidden');
+                    } else {
+                        multiScaleComparisonCard.classList.add('hidden');
+                        rehabilitationTrendCard.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // 初始化多量表对比图表
+            if (document.getElementById('multiScaleChart')) {
+                const multiCtx = document.getElementById('multiScaleChart').getContext('2d');
+                const multiScaleChart = new Chart(multiCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['自理能力', '移动能力', '认知功能', '沟通能力', '社会参与', '情绪状态'],
+                        datasets: [
+                            {
+                                label: 'Barthel指数',
+                                data: [65, 60, 0, 0, 0, 0],
+                                backgroundColor: 'rgba(29, 78, 216, 0.2)',
+                                borderColor: 'rgba(29, 78, 216, 1)',
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(29, 78, 216, 1)',
+                            },
+                            {
+                                label: 'FIM量表',
+                                data: [70, 65, 50, 75, 45, 60],
+                                backgroundColor: 'rgba(220, 38, 38, 0.2)',
+                                borderColor: 'rgba(220, 38, 38, 1)',
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(220, 38, 38, 1)',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: true
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 100
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 初始化康复趋势预测图表
+            if (document.getElementById('trendPredictionChart')) {
+                const trendCtx = document.getElementById('trendPredictionChart').getContext('2d');
+                const trendPredictionChart = new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['入院', '第1周', '第2周', '第3周', '第4周', '第5周', '第6周', '第7周', '第8周'],
+                        datasets: [
+                            {
+                                label: '实际评分',
+                                data: [45, 55, 65, null, null, null, null, null, null],
+                                backgroundColor: 'rgba(29, 78, 216, 0.2)',
+                                borderColor: 'rgba(29, 78, 216, 1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                pointBackgroundColor: 'rgba(29, 78, 216, 1)',
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            },
+                            {
+                                label: '预测评分',
+                                data: [45, 55, 65, 75, 82, 87, 90, 92, 95],
+                                backgroundColor: 'rgba(220, 38, 38, 0.2)',
+                                borderColor: 'rgba(220, 38, 38, 1)',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                tension: 0.3,
+                                pointBackgroundColor: 'rgba(220, 38, 38, 1)',
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: '分数'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `分数: ${context.raw}/100`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

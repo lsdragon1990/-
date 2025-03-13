@@ -3,156 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据导出</title>
+    <title>数据导出组件</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body>
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" id="modal-backdrop"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                <!-- 标题和关闭按钮 -->
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold">数据导出</h3>
-                    <button class="text-gray-400 hover:text-gray-500">
-                        <i class="fas fa-times"></i>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">数据导出组件</h1>
+        
+        <!-- 导出配置面板 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">导出配置</h2>
+                <div class="flex space-x-2">
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-save"></i> 保存配置
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-redo-alt"></i> 重置
                     </button>
                 </div>
-
-                <!-- 导出选项 -->
-                <div class="space-y-4">
-                    <!-- 时间范围选择 -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">时间范围</label>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <input type="date" class="w-full rounded-lg border-gray-300 shadow-sm">
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 左侧：基本配置 -->
+                <div>
+                    <div class="form-group mb-4">
+                        <label class="text-sm font-medium text-gray-700">数据范围</label>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" id="range-selected" name="data-range" class="mr-2" checked>
+                                <label for="range-selected" class="text-sm text-gray-700">选中的数据 (5项)</label>
                             </div>
-                            <div>
-                                <input type="date" class="w-full rounded-lg border-gray-300 shadow-sm">
+                            <div class="flex items-center">
+                                <input type="radio" id="range-filtered" name="data-range" class="mr-2">
+                                <label for="range-filtered" class="text-sm text-gray-700">当前筛选结果 (28项)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="range-all" name="data-range" class="mr-2">
+                                <label for="range-all" class="text-sm text-gray-700">全部数据 (124项)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="range-custom" name="data-range" class="mr-2">
+                                <label for="range-custom" class="text-sm text-gray-700">自定义范围</label>
                             </div>
                         </div>
                     </div>
-
-                    <!-- 数据类型选择 -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">数据类型</label>
-                        <div class="grid grid-cols-2 gap-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2">治疗记录</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2">评估记录</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2">患者信息</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2">统计数据</span>
-                            </label>
+                    
+                    <div class="form-group mb-4">
+                        <label for="date-range" class="text-sm font-medium text-gray-700">时间范围</label>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <input type="date" id="export-date-from" class="form-control">
+                            <span class="text-gray-500">至</span>
+                            <input type="date" id="export-date-to" class="form-control">
                         </div>
                     </div>
-
-                    <!-- 导出格式选择 -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">导出格式</label>
-                        <div class="grid grid-cols-3 gap-4">
-                            <label class="flex items-center">
-                                <input type="radio" name="format" class="text-blue-600">
-                                <span class="ml-2">Excel</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="format" class="text-blue-600">
-                                <span class="ml-2">PDF</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="format" class="text-blue-600">
-                                <span class="ml-2">CSV</span>
-                            </label>
+                    
+                    <div class="form-group mb-4">
+                        <label class="text-sm font-medium text-gray-700">数据类型</label>
+                        <div class="mt-2 grid grid-cols-2 gap-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="type-basic" class="mr-2" checked>
+                                <label for="type-basic" class="text-sm text-gray-700">基本信息</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="type-treatment" class="mr-2" checked>
+                                <label for="type-treatment" class="text-sm text-gray-700">治疗记录</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="type-assessment" class="mr-2">
+                                <label for="type-assessment" class="text-sm text-gray-700">评估记录</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="type-medical" class="mr-2">
+                                <label for="type-medical" class="text-sm text-gray-700">医嘱信息</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="type-schedule" class="mr-2">
+                                <label for="type-schedule" class="text-sm text-gray-700">排班信息</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="type-billing" class="mr-2">
+                                <label for="type-billing" class="text-sm text-gray-700">费用信息</label>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- 高级选项 -->
-                    <div>
-                        <button class="flex items-center text-sm text-gray-600 hover:text-gray-900">
-                            <i class="fas fa-cog mr-2"></i>
-                            高级选项
-                            <i class="fas fa-chevron-down ml-2"></i>
-                        </button>
-                        <div class="mt-2 space-y-2 pl-6">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2 text-sm">包含删除的记录</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2 text-sm">导出图片附件</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2 text-sm">生成数据摘要</span>
-                            </label>
+                    
+                    <div class="form-group mb-4">
+                        <label class="text-sm font-medium text-gray-700">导出格式</label>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" id="format-excel" name="export-format" class="mr-2" checked>
+                                <label for="format-excel" class="text-sm text-gray-700">Excel (.xlsx)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="format-csv" name="export-format" class="mr-2">
+                                <label for="format-csv" class="text-sm text-gray-700">CSV (.csv)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="format-pdf" name="export-format" class="mr-2">
+                                <label for="format-pdf" class="text-sm text-gray-700">PDF (.pdf)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="format-json" name="export-format" class="mr-2">
+                                <label for="format-json" class="text-sm text-gray-700">JSON (.json)</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- 操作按钮 -->
-                <div class="mt-6 flex justify-end space-x-4">
-                    <a href="dashboard.html" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
-                        取消
-                    </a>
-                    <button onclick="handleExport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        开始导出
+                
+                <!-- 右侧：高级配置 -->
+                <div>
+                    <div class="form-group mb-4">
+                        <label class="text-sm font-medium text-gray-700">字段选择</label>
+                        <div class="mt-2 grid grid-cols-2 gap-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-id" class="mr-2" checked>
+                                <label for="field-id" class="text-sm text-gray-700">患者ID</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-name" class="mr-2" checked>
+                                <label for="field-name" class="text-sm text-gray-700">姓名</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-gender" class="mr-2" checked>
+                                <label for="field-gender" class="text-sm text-gray-700">性别</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-age" class="mr-2" checked>
+                                <label for="field-age" class="text-sm text-gray-700">年龄</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-diagnosis" class="mr-2" checked>
+                                <label for="field-diagnosis" class="text-sm text-gray-700">诊断</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-admission" class="mr-2" checked>
+                                <label for="field-admission" class="text-sm text-gray-700">入院日期</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-discharge" class="mr-2">
+                                <label for="field-discharge" class="text-sm text-gray-700">出院日期</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="field-insurance" class="mr-2">
+                                <label for="field-insurance" class="text-sm text-gray-700">医保信息</label>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="text-sm text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-plus-circle mr-1"></i> 添加更多字段
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label class="text-sm font-medium text-gray-700">高级选项</label>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="option-header" class="mr-2" checked>
+                                <label for="option-header" class="text-sm text-gray-700">包含表头</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="option-summary" class="mr-2" checked>
+                                <label for="option-summary" class="text-sm text-gray-700">生成数据摘要</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="option-attachments" class="mr-2">
+                                <label for="option-attachments" class="text-sm text-gray-700">包含附件</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="option-deleted" class="mr-2">
+                                <label for="option-deleted" class="text-sm text-gray-700">包含已删除记录</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="option-encrypt" class="mr-2">
+                                <label for="option-encrypt" class="text-sm text-gray-700">加密导出文件</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label class="text-sm font-medium text-gray-700">导出方式</label>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" id="method-download" name="export-method" class="mr-2" checked>
+                                <label for="method-download" class="text-sm text-gray-700">直接下载</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="method-email" name="export-method" class="mr-2">
+                                <label for="method-email" class="text-sm text-gray-700">发送到邮箱</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="method-cloud" name="export-method" class="mr-2">
+                                <label for="method-cloud" class="text-sm text-gray-700">保存到云端</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="email-options" class="form-group mb-4 hidden">
+                        <label for="email-address" class="text-sm font-medium text-gray-700">邮箱地址</label>
+                        <input type="email" id="email-address" class="form-control mt-1" placeholder="请输入接收导出文件的邮箱地址">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t pt-4 mt-4">
+                <div class="flex justify-between items-center">
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i> 预计导出文件大小: <span class="font-medium">2.4 MB</span>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-download mr-1"></i> 开始导出
                     </button>
                 </div>
             </div>
         </div>
-    </div>
-
-    <script>
-        // 关闭按钮事件处理
-        document.querySelector('.text-gray-400').addEventListener('click', function() {
-            window.location.href = 'dashboard.html';
-        });
-
-        // 导出处理函数
-        function handleExport() {
-            // 获取选中的数据类型
-            const selectedTypes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-                .map(cb => cb.nextElementSibling.textContent.trim());
+        
+        <!-- 导出历史记录 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">导出历史</h2>
+                <div class="text-sm text-gray-500">最近30天</div>
+            </div>
             
-            // 获取选中的导出格式
-            const format = document.querySelector('input[name="format"]:checked')
-                ?.nextElementSibling.textContent.trim();
-
-            // 获取时间范围
-            const startDate = document.querySelector('input[type="date"]:first-of-type').value;
-            const endDate = document.querySelector('input[type="date"]:last-of-type').value;
-
-            // 获取高级选项
-            const advancedOptions = Array.from(document.querySelectorAll('.pl-6 input[type="checkbox"]:checked'))
-                .map(cb => cb.nextElementSibling.textContent.trim());
-
-            // 这里可以添加导出逻辑
-            console.log('导出数据：', {
-                selectedTypes,
-                format,
-                dateRange: { startDate, endDate },
-                advancedOptions
+            <div class="overflow-x-auto">
+                <table class="table-medical w-full">
+                    <thead>
+                        <tr>
+                            <th>导出时间</th>
+                            <th>文件名</th>
+                            <th>数据类型</th>
+                            <th>格式</th>
+                            <th>大小</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-03-11 15:30</td>
+                            <td>患者治疗记录_20240311</td>
+                            <td>治疗记录</td>
+                            <td>Excel</td>
+                            <td>1.2 MB</td>
+                            <td><span class="status-badge status-badge-success">已完成</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2024-03-10 09:15</td>
+                            <td>康复评估报告_20240310</td>
+                            <td>评估记录</td>
+                            <td>PDF</td>
+                            <td>3.5 MB</td>
+                            <td><span class="status-badge status-badge-success">已完成</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2024-03-05 14:20</td>
+                            <td>月度统计报表_202402</td>
+                            <td>统计数据</td>
+                            <td>Excel</td>
+                            <td>0.8 MB</td>
+                            <td><span class="status-badge status-badge-success">已完成</span></td>
+                            <td>
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 导出模板 -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">导出模板</h2>
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-plus"></i> 新建模板
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-medium text-gray-800">月度治疗记录</h3>
+                        <div class="flex space-x-1">
+                            <button class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">导出当月所有患者的治疗记录，按患者分组</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500">Excel格式</span>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-play mr-1"></i> 使用
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-medium text-gray-800">患者评估报告</h3>
+                        <div class="flex space-x-1">
+                            <button class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">导出选中患者的所有评估记录，包含图表</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500">PDF格式</span>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-play mr-1"></i> 使用
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-medium text-gray-800">医保结算数据</h3>
+                        <div class="flex space-x-1">
+                            <button class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">导出医保患者的治疗费用明细，按日期排序</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500">CSV格式</span>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-play mr-1"></i> 使用
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 导出方式切换
+        document.querySelectorAll('input[name="export-method"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const emailOptions = document.getElementById('email-options');
+                if (this.id === 'method-email') {
+                    emailOptions.classList.remove('hidden');
+                } else {
+                    emailOptions.classList.add('hidden');
+                }
             });
-
-            // 导出完成后返回仪表板
+        });
+        
+        // 导出按钮点击事件
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            // 显示加载状态
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> 导出中...';
+            this.disabled = true;
+            
+            // 模拟导出过程
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-        }
+                // 恢复按钮状态
+                this.innerHTML = '<i class="fas fa-download mr-1"></i> 开始导出';
+                this.disabled = false;
+                
+                // 显示成功提示
+                const toast = document.createElement('div');
+                toast.className = 'toast show';
+                toast.innerHTML = `
+                    <div class="toast-header">
+                        <div class="toast-title">导出成功</div>
+                        <button class="toast-close">&times;</button>
+                    </div>
+                    <div class="toast-body">
+                        数据已成功导出，可在导出历史中查看和下载。
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                
+                // 自动关闭提示
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }, 2000);
+        });
     </script>
 </body>
 </html> 

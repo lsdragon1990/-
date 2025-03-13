@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医保风控组件</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">医保风控组件</h1>
+        
+        <!-- 风控概览 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-semibold text-gray-800">医保风控概览</h2>
+                <div class="flex space-x-2">
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-sync-alt"></i> 刷新数据
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-cog"></i> 设置
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg border p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">医保患者数</p>
+                            <h3 class="text-2xl font-bold text-gray-800">287</h3>
+                            <p class="text-xs text-gray-500 mt-1">占总患者数的 83.9%</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-user-shield text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg border p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">医保总费用</p>
+                            <h3 class="text-2xl font-bold text-gray-800">¥ 428,560</h3>
+                            <p class="text-xs text-gray-500 mt-1">本月累计</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-yuan-sign text-green-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg border p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">风险预警数</p>
+                            <h3 class="text-2xl font-bold text-red-600">24</h3>
+                            <p class="text-xs text-red-500 mt-1">
+                                <i class="fas fa-arrow-up mr-1"></i> 5 较上周
+                            </p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-full">
+                            <i class="fas fa-exclamation-triangle text-red-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg border p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">合规率</p>
+                            <h3 class="text-2xl font-bold text-gray-800">96.8%</h3>
+                            <p class="text-xs text-green-500 mt-1">
+                                <i class="fas fa-arrow-up mr-1"></i> 1.2% 较上月
+                            </p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-check-double text-purple-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-md font-medium text-gray-700 mb-3">医保费用趋势</h3>
+                    <div class="h-64">
+                        <canvas id="insurance-trend-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-md font-medium text-gray-700 mb-3">风险分布</h3>
+                    <div class="h-64">
+                        <canvas id="risk-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 风险预警列表 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">风险预警列表</h2>
+                <div class="flex space-x-2">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索患者..." class="form-control pl-10">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                    <select class="form-control">
+                        <option value="all">所有风险</option>
+                        <option value="high">高风险</option>
+                        <option value="medium">中风险</option>
+                        <option value="low">低风险</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="table-medical w-full">
+                    <thead>
+                        <tr>
+                            <th>患者信息</th>
+                            <th>风险类型</th>
+                            <th>风险等级</th>
+                            <th>当前费用</th>
+                            <th>限额</th>
+                            <th>使用率</th>
+                            <th>预警时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                        <span class="text-blue-600 font-medium">张</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">张明</div>
+                                        <div class="text-xs text-gray-500">ID: 20240301</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>超出治疗频次</td>
+                            <td><span class="status-badge status-badge-danger">高风险</span></td>
+                            <td>¥ 3,850</td>
+                            <td>¥ 4,000</td>
+                            <td>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-red-600 h-2.5 rounded-full" style="width: 96%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">96.3%</span>
+                            </td>
+                            <td>2024-03-15</td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="text-green-600 hover:text-green-800">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                                        <span class="text-green-600 font-medium">李</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">李华</div>
+                                        <div class="text-xs text-gray-500">ID: 20240215</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>项目组合不合规</td>
+                            <td><span class="status-badge status-badge-warning">中风险</span></td>
+                            <td>¥ 2,450</td>
+                            <td>¥ 3,500</td>
+                            <td>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 70%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">70.0%</span>
+                            </td>
+                            <td>2024-03-14</td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="text-green-600 hover:text-green-800">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                                        <span class="text-purple-600 font-medium">王</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">王芳</div>
+                                        <div class="text-xs text-gray-500">ID: 20240128</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>治疗周期超限</td>
+                            <td><span class="status-badge status-badge-danger">高风险</span></td>
+                            <td>¥ 5,120</td>
+                            <td>¥ 5,500</td>
+                            <td>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-red-600 h-2.5 rounded-full" style="width: 93%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">93.1%</span>
+                            </td>
+                            <td>2024-03-12</td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="text-green-600 hover:text-green-800">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
+                                        <span class="text-yellow-600 font-medium">赵</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">赵强</div>
+                                        <div class="text-xs text-gray-500">ID: 20240305</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>单次费用超标</td>
+                            <td><span class="status-badge status-badge-info">低风险</span></td>
+                            <td>¥ 1,850</td>
+                            <td>¥ 3,000</td>
+                            <td>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: 62%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500">61.7%</span>
+                            </td>
+                            <td>2024-03-10</td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="text-green-600 hover:text-green-800">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-4 flex justify-between items-center">
+                <div class="text-sm text-gray-500">显示 1 至 4 条，共 24 条</div>
+                <div class="flex space-x-1">
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50" disabled>上一页</button>
+                    <button class="px-3 py-1 border rounded-md text-sm bg-blue-50 text-blue-600 border-blue-200">1</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">2</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">3</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">...</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">6</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 风控规则配置 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">风控规则配置</h2>
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-plus"></i> 新增规则
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="table-medical w-full">
+                    <thead>
+                        <tr>
+                            <th>规则名称</th>
+                            <th>规则类型</th>
+                            <th>阈值</th>
+                            <th>风险等级</th>
+                            <th>适用范围</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>单次治疗费用上限</td>
+                            <td>费用限额</td>
+                            <td>¥ 500</td>
+                            <td><span class="status-badge status-badge-warning">中风险</span></td>
+                            <td>所有医保患者</td>
+                            <td><span class="status-badge status-badge-success">已启用</span></td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>治疗频次限制</td>
+                            <td>频次限制</td>
+                            <td>每周3次</td>
+                            <td><span class="status-badge status-badge-danger">高风险</span></td>
+                            <td>物理治疗</td>
+                            <td><span class="status-badge status-badge-success">已启用</span></td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>治疗周期限制</td>
+                            <td>周期限制</td>
+                            <td>30天</td>
+                            <td><span class="status-badge status-badge-danger">高风险</span></td>
+                            <td>所有医保患者</td>
+                            <td><span class="status-badge status-badge-success">已启用</span></td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>项目组合限制</td>
+                            <td>组合限制</td>
+                            <td>同日最多3项</td>
+                            <td><span class="status-badge status-badge-warning">中风险</span></td>
+                            <td>所有医保患者</td>
+                            <td><span class="status-badge status-badge-success">已启用</span></td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>总费用上限预警</td>
+                            <td>费用限额</td>
+                            <td>¥ 5,000</td>
+                            <td><span class="status-badge status-badge-danger">高风险</span></td>
+                            <td>所有医保患者</td>
+                            <td><span class="status-badge status-badge-success">已启用</span></td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 医保政策更新 -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">医保政策更新</h2>
+                <span class="text-sm text-gray-500">最近更新: 2024-03-01</span>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="border-l-4 border-blue-500 pl-4 py-2">
+                    <h3 class="font-medium text-gray-800">2024年康复治疗医保报销政策调整</h3>
+                    <p class="text-sm text-gray-600 mt-1">自2024年4月1日起，脑卒中患者康复治疗报销比例提高至85%，治疗周期延长至8周。</p>
+                    <div class="mt-2">
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800">查看详情</a>
+                    </div>
+                </div>
+                
+                <div class="border-l-4 border-green-500 pl-4 py-2">
+                    <h3 class="font-medium text-gray-800">儿童康复项目医保覆盖范围扩大</h3>
+                    <p class="text-sm text-gray-600 mt-1">新增5项儿童康复治疗项目纳入医保报销范围，包括感觉统合训练和言语发育训练。</p>
+                    <div class="mt-2">
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800">查看详情</a>
+                    </div>
+                </div>
+                
+                <div class="border-l-4 border-yellow-500 pl-4 py-2">
+                    <h3 class="font-medium text-gray-800">医保电子凭证使用规范</h3>
+                    <p class="text-sm text-gray-600 mt-1">医保电子凭证使用流程更新，简化了患者认证步骤，提高了结算效率。</p>
+                    <div class="mt-2">
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800">查看详情</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <button class="btn btn-outline-primary">
+                    <i class="fas fa-book-open mr-1"></i> 查看所有政策
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 医保费用趋势图表
+        const insuranceTrendCtx = document.getElementById('insurance-trend-chart').getContext('2d');
+        const insuranceTrendChart = new Chart(insuranceTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                datasets: [{
+                    label: '医保费用',
+                    data: [320450, 345680, 428560, 0, 0, 0],
+                    borderColor: 'rgba(25, 118, 210, 1)',
+                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: '预测费用',
+                    data: [320450, 345680, 428560, 452000, 480000, 510000],
+                    borderColor: 'rgba(200, 200, 200, 1)',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '费用 (元)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '月份'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 风险分布图表
+        const riskDistributionCtx = document.getElementById('risk-distribution-chart').getContext('2d');
+        const riskDistributionChart = new Chart(riskDistributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['高风险', '中风险', '低风险', '正常'],
+                datasets: [{
+                    data: [8, 12, 4, 263],
+                    backgroundColor: [
+                        'rgba(244, 67, 54, 0.8)',
+                        'rgba(255, 152, 0, 0.8)',
+                        'rgba(33, 150, 243, 0.8)',
+                        'rgba(76, 175, 80, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(244, 67, 54, 1)',
+                        'rgba(255, 152, 0, 1)',
+                        'rgba(33, 150, 243, 1)',
+                        'rgba(76, 175, 80, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

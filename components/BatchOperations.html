@@ -3,207 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>批量操作</title>
+    <title>批量操作组件</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body>
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" id="modal-backdrop"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                <!-- 标题和关闭按钮 -->
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold">批量操作</h3>
-                    <button class="text-gray-400 hover:text-gray-500">
-                        <i class="fas fa-times"></i>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">批量操作组件</h1>
+        
+        <!-- 批量操作工具栏 -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center">
+                    <input type="checkbox" id="select-all" class="mr-2">
+                    <label for="select-all" class="text-sm font-medium text-gray-700">全选</label>
+                    <span class="ml-4 text-sm text-gray-500">已选择 <span class="font-medium text-blue-600">5</span> 项</span>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-calendar-alt"></i> 批量排班
                     </button>
-                </div>
-
-                <!-- 已选项目 -->
-                <div class="mb-6">
-                    <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
-                        <span>已选择 3 个项目</span>
-                        <button class="text-blue-600 hover:text-blue-700">清除选择</button>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-3 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span>张三（2024030101）</span>
-                            <button class="text-gray-400 hover:text-gray-500">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span>李四（2024030102）</span>
-                            <button class="text-gray-400 hover:text-gray-500">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span>王五（2024030103）</span>
-                            <button class="text-gray-400 hover:text-gray-500">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 操作类型选择 -->
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">选择操作类型</label>
-                        <select class="w-full rounded-lg border-gray-300 shadow-sm">
-                            <option>批量排班</option>
-                            <option>批量转科</option>
-                            <option>批量分配治疗师</option>
-                            <option>批量修改状态</option>
-                        </select>
-                    </div>
-
-                    <!-- 批量排班选项 -->
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">治疗师</label>
-                            <select class="w-full rounded-lg border-gray-300 shadow-sm">
-                                <option>李治疗师</option>
-                                <option>张治疗师</option>
-                                <option>王治疗师</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">治疗时间</label>
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="date" class="w-full rounded-lg border-gray-300 shadow-sm">
-                                <select class="w-full rounded-lg border-gray-300 shadow-sm">
-                                    <option>上午</option>
-                                    <option>下午</option>
-                                </select>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-check-circle"></i> 批量执行
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-file-export"></i> 导出数据
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-print"></i> 批量打印
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash-alt"></i> 批量删除
+                    </button>
+                    <div class="relative">
+                        <button class="btn btn-sm btn-outline-primary" id="more-actions">
+                            <i class="fas fa-ellipsis-h"></i> 更多操作
+                        </button>
+                        <div id="more-actions-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
+                            <div class="py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-tag mr-2"></i> 批量添加标签
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user-md mr-2"></i> 批量分配治疗师
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-clipboard-list mr-2"></i> 批量生成报告
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-envelope mr-2"></i> 批量发送通知
+                                </a>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">治疗项目</label>
-                            <select class="w-full rounded-lg border-gray-300 shadow-sm">
-                                <option>运动疗法</option>
-                                <option>作业疗法</option>
-                                <option>物理因子治疗</option>
-                            </select>
-                        </div>
                     </div>
-
-                    <!-- 高级选项 -->
-                    <div>
-                        <button class="flex items-center text-sm text-gray-600 hover:text-gray-900">
-                            <i class="fas fa-cog mr-2"></i>
-                            高级选项
-                            <i class="fas fa-chevron-down ml-2"></i>
-                        </button>
-                        <div class="mt-2 space-y-2 pl-6">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2 text-sm">自动分配床位</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2 text-sm">生成治疗计划</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
-                                <span class="ml-2 text-sm">发送通知</span>
-                            </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 批量排班面板 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">批量排班</h2>
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-times"></i> 关闭
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <div class="form-group">
+                    <label for="treatment-date" class="text-sm font-medium text-gray-700">治疗日期</label>
+                    <input type="date" id="treatment-date" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="treatment-time" class="text-sm font-medium text-gray-700">时间段</label>
+                    <select id="treatment-time" class="form-control">
+                        <option value="morning">上午 (08:00-12:00)</option>
+                        <option value="afternoon">下午 (13:00-17:00)</option>
+                        <option value="custom">自定义时间</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="custom-time" class="text-sm font-medium text-gray-700">自定义时间</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="time" id="time-start" class="form-control" disabled>
+                        <span class="text-gray-500">至</span>
+                        <input type="time" id="time-end" class="form-control" disabled>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <div class="form-group">
+                    <label for="therapist" class="text-sm font-medium text-gray-700">治疗师</label>
+                    <select id="therapist" class="form-control">
+                        <option value="">请选择治疗师</option>
+                        <option value="1">张医师</option>
+                        <option value="2">李医师</option>
+                        <option value="3">王医师</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="treatment-room" class="text-sm font-medium text-gray-700">治疗室</label>
+                    <select id="treatment-room" class="form-control">
+                        <option value="">请选择治疗室</option>
+                        <option value="room-1">1号治疗室</option>
+                        <option value="room-2">2号治疗室</option>
+                        <option value="room-3">3号治疗室</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="equipment" class="text-sm font-medium text-gray-700">使用设备</label>
+                    <select id="equipment" class="form-control">
+                        <option value="">请选择设备</option>
+                        <option value="treadmill">跑步机</option>
+                        <option value="ultrasound">超声波</option>
+                        <option value="electrotherapy">电疗设备</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group mb-4">
+                <label for="treatment-note" class="text-sm font-medium text-gray-700">治疗说明</label>
+                <textarea id="treatment-note" class="form-control" rows="3" placeholder="输入适用于所有选中患者的治疗说明..."></textarea>
+            </div>
+            
+            <div class="flex justify-between items-center">
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i> 将为5名患者安排治疗
+                </div>
+                <div class="flex space-x-2">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-calendar-check"></i> 检查冲突
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i> 保存排班
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 批量执行面板 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">批量执行</h2>
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-times"></i> 关闭
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <div class="form-group">
+                    <label class="text-sm font-medium text-gray-700">执行状态</label>
+                    <div class="mt-2 flex space-x-4">
+                        <div class="flex items-center">
+                            <input type="radio" id="status-completed" name="execution-status" class="mr-2" checked>
+                            <label for="status-completed" class="text-sm text-gray-700">已完成</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="status-cancelled" name="execution-status" class="mr-2">
+                            <label for="status-cancelled" class="text-sm text-gray-700">已取消</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="status-rescheduled" name="execution-status" class="mr-2">
+                            <label for="status-rescheduled" class="text-sm text-gray-700">需重排</label>
                         </div>
                     </div>
                 </div>
-
-                <!-- 操作按钮 -->
-                <div class="mt-6 flex justify-end space-x-4">
-                    <button onclick="location.href='/patients/list'" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
-                        返回患者列表
+            </div>
+            
+            <div class="form-group mb-4">
+                <label for="execution-note" class="text-sm font-medium text-gray-700">执行记录</label>
+                <textarea id="execution-note" class="form-control" rows="3" placeholder="输入适用于所有选中治疗项目的执行记录..."></textarea>
+            </div>
+            
+            <div class="form-group mb-4">
+                <label class="text-sm font-medium text-gray-700">快捷记录模板</label>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <button class="px-3 py-1 text-sm border rounded-full hover:bg-blue-50 hover:border-blue-500 transition-colors">
+                        治疗顺利完成
                     </button>
-                    <button onclick="handleBatchOperation()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        确认操作
+                    <button class="px-3 py-1 text-sm border rounded-full hover:bg-blue-50 hover:border-blue-500 transition-colors">
+                        患者配合良好
+                    </button>
+                    <button class="px-3 py-1 text-sm border rounded-full hover:bg-blue-50 hover:border-blue-500 transition-colors">
+                        治疗后症状改善
+                    </button>
+                    <button class="px-3 py-1 text-sm border rounded-full hover:bg-blue-50 hover:border-blue-500 transition-colors">
+                        建议继续治疗
+                    </button>
+                    <button class="px-3 py-1 text-sm border rounded-full hover:bg-blue-50 hover:border-blue-500 transition-colors">
+                        患者未到场
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i> 将为5项治疗记录执行状态
+                </div>
+                <button class="btn btn-primary">
+                    <i class="fas fa-check-circle"></i> 确认执行
+                </button>
+            </div>
+        </div>
+        
+        <!-- 批量导出面板 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">批量导出数据</h2>
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-times"></i> 关闭
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="form-group">
+                    <label class="text-sm font-medium text-gray-700">导出内容</label>
+                    <div class="mt-2 space-y-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="export-basic" class="mr-2" checked>
+                            <label for="export-basic" class="text-sm text-gray-700">基本信息</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="export-treatment" class="mr-2" checked>
+                            <label for="export-treatment" class="text-sm text-gray-700">治疗记录</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="export-assessment" class="mr-2">
+                            <label for="export-assessment" class="text-sm text-gray-700">评估记录</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="export-medical" class="mr-2">
+                            <label for="export-medical" class="text-sm text-gray-700">医嘱信息</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="text-sm font-medium text-gray-700">导出格式</label>
+                    <div class="mt-2 space-y-2">
+                        <div class="flex items-center">
+                            <input type="radio" id="format-excel" name="export-format" class="mr-2" checked>
+                            <label for="format-excel" class="text-sm text-gray-700">Excel (.xlsx)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="format-csv" name="export-format" class="mr-2">
+                            <label for="format-csv" class="text-sm text-gray-700">CSV (.csv)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="format-pdf" name="export-format" class="mr-2">
+                            <label for="format-pdf" class="text-sm text-gray-700">PDF (.pdf)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mb-4">
+                <label for="date-range" class="text-sm font-medium text-gray-700">数据日期范围</label>
+                <div class="flex items-center space-x-2">
+                    <input type="date" id="export-date-from" class="form-control">
+                    <span class="text-gray-500">至</span>
+                    <input type="date" id="export-date-to" class="form-control">
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i> 将导出5名患者的数据
+                </div>
+                <button class="btn btn-primary">
+                    <i class="fas fa-download"></i> 开始导出
+                </button>
+            </div>
+        </div>
+        
+        <!-- 批量打印面板 -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">批量打印</h2>
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-times"></i> 关闭
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="form-group">
+                    <label class="text-sm font-medium text-gray-700">打印内容</label>
+                    <div class="mt-2 space-y-2">
+                        <div class="flex items-center">
+                            <input type="radio" id="print-schedule" name="print-content" class="mr-2" checked>
+                            <label for="print-schedule" class="text-sm text-gray-700">治疗安排表</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="print-record" name="print-content" class="mr-2">
+                            <label for="print-record" class="text-sm text-gray-700">治疗记录单</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="print-assessment" name="print-content" class="mr-2">
+                            <label for="print-assessment" class="text-sm text-gray-700">评估报告</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="print-summary" name="print-content" class="mr-2">
+                            <label for="print-summary" class="text-sm text-gray-700">治疗小结</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="text-sm font-medium text-gray-700">打印选项</label>
+                    <div class="mt-2 space-y-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="option-signature" class="mr-2" checked>
+                            <label for="option-signature" class="text-sm text-gray-700">包含签名栏</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="option-header" class="mr-2" checked>
+                            <label for="option-header" class="text-sm text-gray-700">包含医院抬头</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="option-date" class="mr-2" checked>
+                            <label for="option-date" class="text-sm text-gray-700">显示打印日期</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="option-page-number" class="mr-2">
+                            <label for="option-page-number" class="text-sm text-gray-700">显示页码</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mb-4">
+                <label for="print-date-range" class="text-sm font-medium text-gray-700">数据日期范围</label>
+                <div class="flex items-center space-x-2">
+                    <input type="date" id="print-date-from" class="form-control">
+                    <span class="text-gray-500">至</span>
+                    <input type="date" id="print-date-to" class="form-control">
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i> 将打印5名患者的数据
+                </div>
+                <div class="flex space-x-2">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-eye"></i> 预览
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-print"></i> 开始打印
                     </button>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <script>
-        // 关闭按钮事件处理
-        document.querySelector('.text-gray-400').addEventListener('click', function() {
-            window.location.href = 'patients.html';
+        // 更多操作下拉菜单
+        document.getElementById('more-actions').addEventListener('click', function(e) {
+            e.preventDefault();
+            const dropdown = document.getElementById('more-actions-dropdown');
+            dropdown.classList.toggle('hidden');
         });
-
-        // 清除选择按钮事件处理
-        document.querySelector('.text-blue-600').addEventListener('click', function() {
-            const selectedItems = document.querySelectorAll('.bg-gray-50 .flex');
-            selectedItems.forEach(item => item.remove());
-            document.querySelector('.text-gray-500 span').textContent = '已选择 0 个项目';
+        
+        // 点击页面其他地方关闭下拉菜单
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('more-actions-dropdown');
+            const button = document.getElementById('more-actions');
+            if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
         });
-
-        // 删除单个选择项
-        document.querySelectorAll('.bg-gray-50 .text-gray-400').forEach(button => {
-            button.addEventListener('click', function() {
-                const item = this.parentElement;
-                item.remove();
-                updateSelectedCount();
-            });
-        });
-
-        // 更新选择数量
-        function updateSelectedCount() {
-            const count = document.querySelectorAll('.bg-gray-50 .flex').length;
-            document.querySelector('.text-gray-500 span').textContent = `已选择 ${count} 个项目`;
-        }
-
-        // 批量操作处理函数
-        function handleBatchOperation() {
-            // 获取操作类型
-            const operationType = document.querySelector('select').value;
+        
+        // 自定义时间启用/禁用
+        document.getElementById('treatment-time').addEventListener('change', function() {
+            const timeStart = document.getElementById('time-start');
+            const timeEnd = document.getElementById('time-end');
             
-            // 获取选中的项目
-            const selectedItems = Array.from(document.querySelectorAll('.bg-gray-50 .flex'))
-                .map(item => item.firstElementChild.textContent.trim());
-
-            // 获取治疗师、时间和项目（如果是排班操作）
-            const therapist = document.querySelector('select:nth-of-type(2)')?.value;
-            const date = document.querySelector('input[type="date"]')?.value;
-            const period = document.querySelector('select:nth-of-type(3)')?.value;
-            const treatment = document.querySelector('select:nth-of-type(4)')?.value;
-
-            // 获取高级选项
-            const advancedOptions = Array.from(document.querySelectorAll('.pl-6 input[type="checkbox"]:checked'))
-                .map(cb => cb.nextElementSibling.textContent.trim());
-
-            // 这里可以添加批量操作逻辑
-            console.log('批量操作：', {
-                operationType,
-                selectedItems,
-                therapist,
-                date,
-                period,
-                treatment,
-                advancedOptions
+            if (this.value === 'custom') {
+                timeStart.disabled = false;
+                timeEnd.disabled = false;
+            } else {
+                timeStart.disabled = true;
+                timeEnd.disabled = true;
+            }
+        });
+        
+        // 快捷记录模板点击
+        const templateButtons = document.querySelectorAll('.form-group button');
+        templateButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const executionNote = document.getElementById('execution-note');
+                executionNote.value += (executionNote.value ? '，' : '') + this.textContent.trim();
             });
-
-            // 操作完成后返回对应的一级页面
-            setTimeout(() => {
-                switch(operationType) {
-                    case '批量排班':
-                        location.href = '/schedule/list';
-                        break;
-                    case '批量转科':
-                        location.href = '/patients/list';
-                        break;
-                    case '批量分配治疗师':
-                        location.href = '/treatment/list';
-                        break;
-                    default:
-                        location.href = '/patients/list';
-                }
-            }, 1000);
-        }
+        });
     </script>
 </body>
 </html> 

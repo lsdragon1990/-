@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报表查看组件</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">报表查看组件</h1>
+        
+        <!-- 报表控制面板 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-wrap justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">报表控制面板</h2>
+                <div class="flex space-x-2">
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-save"></i> 保存报表
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-print"></i> 打印
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-file-export"></i> 导出
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="form-group">
+                    <label for="report-type" class="text-sm font-medium text-gray-700">报表类型</label>
+                    <select id="report-type" class="form-control">
+                        <option value="treatment-summary">治疗统计</option>
+                        <option value="patient-analysis">患者分析</option>
+                        <option value="resource-utilization">资源利用率</option>
+                        <option value="financial-report">财务报表</option>
+                        <option value="performance-metrics">绩效指标</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date-range" class="text-sm font-medium text-gray-700">时间范围</label>
+                    <select id="date-range" class="form-control">
+                        <option value="today">今日</option>
+                        <option value="this-week">本周</option>
+                        <option value="this-month" selected>本月</option>
+                        <option value="last-month">上月</option>
+                        <option value="this-quarter">本季度</option>
+                        <option value="this-year">本年度</option>
+                        <option value="custom">自定义</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department" class="text-sm font-medium text-gray-700">科室</label>
+                    <select id="department" class="form-control">
+                        <option value="all">全部科室</option>
+                        <option value="rehabilitation">康复科</option>
+                        <option value="neurology">神经内科</option>
+                        <option value="orthopedics">骨科</option>
+                        <option value="pediatrics">儿科</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="custom-date-range" class="mt-4 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="date-from" class="text-sm font-medium text-gray-700">开始日期</label>
+                        <input type="date" id="date-from" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="date-to" class="text-sm font-medium text-gray-700">结束日期</label>
+                        <input type="date" id="date-to" class="form-control">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button class="btn btn-primary">
+                    <i class="fas fa-sync-alt mr-1"></i> 生成报表
+                </button>
+            </div>
+        </div>
+        
+        <!-- 报表摘要卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500">总治疗次数</p>
+                        <h3 class="text-2xl font-bold text-gray-800">1,248</h3>
+                        <p class="text-xs text-green-600 mt-1">
+                            <i class="fas fa-arrow-up mr-1"></i> 12.5% 较上月
+                        </p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-procedures text-blue-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500">患者总数</p>
+                        <h3 class="text-2xl font-bold text-gray-800">342</h3>
+                        <p class="text-xs text-green-600 mt-1">
+                            <i class="fas fa-arrow-up mr-1"></i> 8.3% 较上月
+                        </p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-user-injured text-green-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-purple-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500">平均治疗时长</p>
+                        <h3 class="text-2xl font-bold text-gray-800">42 分钟</h3>
+                        <p class="text-xs text-red-600 mt-1">
+                            <i class="fas fa-arrow-down mr-1"></i> 3.1% 较上月
+                        </p>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-clock text-purple-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500">治疗完成率</p>
+                        <h3 class="text-2xl font-bold text-gray-800">94.2%</h3>
+                        <p class="text-xs text-green-600 mt-1">
+                            <i class="fas fa-arrow-up mr-1"></i> 2.1% 较上月
+                        </p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-yellow-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 图表区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- 治疗类型分布 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">治疗类型分布</h3>
+                <div class="h-80">
+                    <canvas id="treatment-type-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 每日治疗次数趋势 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">每日治疗次数趋势</h3>
+                <div class="h-80">
+                    <canvas id="daily-treatment-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 患者诊断分布 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">患者诊断分布</h3>
+                <div class="h-80">
+                    <canvas id="diagnosis-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 治疗师工作量 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">治疗师工作量</h3>
+                <div class="h-80">
+                    <canvas id="therapist-workload-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 详细数据表格 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">详细数据</h3>
+                <div class="flex space-x-2">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索..." class="form-control pl-10">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-filter"></i> 筛选
+                    </button>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="table-medical w-full">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>治疗类型</th>
+                            <th>患者数</th>
+                            <th>治疗次数</th>
+                            <th>平均时长</th>
+                            <th>完成率</th>
+                            <th>取消率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-03-01</td>
+                            <td>物理治疗</td>
+                            <td>42</td>
+                            <td>56</td>
+                            <td>45分钟</td>
+                            <td>92.8%</td>
+                            <td>7.2%</td>
+                        </tr>
+                        <tr>
+                            <td>2024-03-01</td>
+                            <td>作业治疗</td>
+                            <td>28</td>
+                            <td>35</td>
+                            <td>40分钟</td>
+                            <td>94.3%</td>
+                            <td>5.7%</td>
+                        </tr>
+                        <tr>
+                            <td>2024-03-01</td>
+                            <td>言语治疗</td>
+                            <td>15</td>
+                            <td>18</td>
+                            <td>30分钟</td>
+                            <td>100%</td>
+                            <td>0%</td>
+                        </tr>
+                        <tr>
+                            <td>2024-03-02</td>
+                            <td>物理治疗</td>
+                            <td>38</td>
+                            <td>52</td>
+                            <td>42分钟</td>
+                            <td>96.2%</td>
+                            <td>3.8%</td>
+                        </tr>
+                        <tr>
+                            <td>2024-03-02</td>
+                            <td>作业治疗</td>
+                            <td>25</td>
+                            <td>32</td>
+                            <td>38分钟</td>
+                            <td>93.8%</td>
+                            <td>6.2%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-4 flex justify-between items-center">
+                <div class="text-sm text-gray-500">显示 1 至 5 条，共 28 条</div>
+                <div class="flex space-x-1">
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50" disabled>上一页</button>
+                    <button class="px-3 py-1 border rounded-md text-sm bg-blue-50 text-blue-600 border-blue-200">1</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">2</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">3</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">...</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">6</button>
+                    <button class="px-3 py-1 border rounded-md text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 报表分析 -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">报表分析</h3>
+            
+            <div class="mb-6">
+                <h4 class="font-medium text-gray-700 mb-2">主要发现</h4>
+                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                    <li>物理治疗是最常见的治疗类型，占总治疗次数的48.2%</li>
+                    <li>脑卒中患者是最大的患者群体，占比35.4%</li>
+                    <li>周二和周四是治疗高峰日，建议增加这两天的人力配置</li>
+                    <li>治疗取消率较上月下降了1.8%，表明排班优化措施有效</li>
+                    <li>平均治疗时长略有下降，需进一步分析原因</li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
+                <h4 class="font-medium text-gray-700 mb-2">改进建议</h4>
+                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                    <li>考虑增加言语治疗师人数，满足不断增长的需求</li>
+                    <li>优化上午9-11点的排班，减少患者等待时间</li>
+                    <li>针对骨科患者群体开发更多专项康复方案</li>
+                    <li>加强治疗师培训，提高治疗效率和质量</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="font-medium text-gray-700 mb-2">预测趋势</h4>
+                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                    <li>根据季节性模式，预计下月治疗需求将增加约8%</li>
+                    <li>儿科康复需求预计将在暑假期间显著增加</li>
+                    <li>老年患者群体将持续增长，建议增强相关专业能力</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 自定义日期范围显示/隐藏
+        document.getElementById('date-range').addEventListener('change', function() {
+            const customDateRange = document.getElementById('custom-date-range');
+            if (this.value === 'custom') {
+                customDateRange.classList.remove('hidden');
+            } else {
+                customDateRange.classList.add('hidden');
+            }
+        });
+        
+        // 治疗类型分布图表
+        const treatmentTypeCtx = document.getElementById('treatment-type-chart').getContext('2d');
+        const treatmentTypeChart = new Chart(treatmentTypeCtx, {
+            type: 'pie',
+            data: {
+                labels: ['物理治疗', '作业治疗', '言语治疗', '康复评定', '其他'],
+                datasets: [{
+                    data: [48.2, 27.5, 12.8, 8.5, 3.0],
+                    backgroundColor: [
+                        'rgba(66, 165, 245, 0.8)',
+                        'rgba(102, 187, 106, 0.8)',
+                        'rgba(255, 183, 77, 0.8)',
+                        'rgba(186, 104, 200, 0.8)',
+                        'rgba(149, 117, 205, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(66, 165, 245, 1)',
+                        'rgba(102, 187, 106, 1)',
+                        'rgba(255, 183, 77, 1)',
+                        'rgba(186, 104, 200, 1)',
+                        'rgba(149, 117, 205, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 每日治疗次数趋势图表
+        const dailyTreatmentCtx = document.getElementById('daily-treatment-chart').getContext('2d');
+        const dailyTreatmentChart = new Chart(dailyTreatmentCtx, {
+            type: 'line',
+            data: {
+                labels: ['3/1', '3/2', '3/3', '3/4', '3/5', '3/6', '3/7', '3/8', '3/9', '3/10', '3/11', '3/12', '3/13', '3/14', '3/15'],
+                datasets: [{
+                    label: '治疗次数',
+                    data: [109, 98, 85, 120, 115, 92, 78, 110, 105, 95, 118, 125, 112, 108, 115],
+                    borderColor: 'rgba(25, 118, 210, 1)',
+                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '治疗次数'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '日期'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 患者诊断分布图表
+        const diagnosisCtx = document.getElementById('diagnosis-chart').getContext('2d');
+        const diagnosisChart = new Chart(diagnosisCtx, {
+            type: 'bar',
+            data: {
+                labels: ['脑卒中', '骨折', '脊髓损伤', '关节置换', '脑外伤', '帕金森', '其他'],
+                datasets: [{
+                    label: '患者数量',
+                    data: [121, 85, 42, 38, 25, 18, 13],
+                    backgroundColor: 'rgba(38, 166, 154, 0.8)',
+                    borderColor: 'rgba(38, 166, 154, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '患者数量'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '诊断类型'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 治疗师工作量图表
+        const therapistWorkloadCtx = document.getElementById('therapist-workload-chart').getContext('2d');
+        const therapistWorkloadChart = new Chart(therapistWorkloadCtx, {
+            type: 'horizontalBar',
+            data: {
+                labels: ['张医师', '李医师', '王医师', '赵医师', '刘医师', '陈医师'],
+                datasets: [{
+                    label: '治疗次数',
+                    data: [185, 162, 145, 138, 125, 110],
+                    backgroundColor: 'rgba(92, 107, 192, 0.8)',
+                    borderColor: 'rgba(92, 107, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '治疗次数'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '治疗师'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
