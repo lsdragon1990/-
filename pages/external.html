@@ -4,68 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>康复信息系统 - 外病区治疗</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Element Plus -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Plus UI 样式 -->
+    <link rel="stylesheet" href="../css/plus-ui-styles.css">
     <style>
+        :root {
+            /* 使用plus-ui变量 */
+            --el-color-primary: #409eff;
+            --el-color-success: #67c23a;
+            --el-color-warning: #e6a23c;
+            --el-color-danger: #f56c6c;
+            --el-color-info: #909399;
+            
+            --menuBg: #304156;
+            --menuColor: #bfcbd9;
+            --menuActiveText: #f4f4f5;
+            --menuHover: #263445;
+            
+            --subMenuBg: #1f2d3d;
+            --subMenuActiveText: #f4f4f5;
+            --subMenuHover: #001528;
+            
+            --fixedHeaderBg: #ffffff;
+            --tableHeaderBg: #f8f8f9;
+            --tableHeaderTextColor: #515a6e;
+        }
+        
         body {
             font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            height: 100%;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
             background-color: #f5f7fa;
         }
         
-        .sidebar {
-            width: 250px;
-            background-color: #fff;
-            border-right: 1px solid #e5e7eb;
+        #app {
             height: 100vh;
+        }
+        
+        .app-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .main-container {
+            height: 100%;
+            transition: margin-left 0.28s;
+            margin-left: 210px;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .main-container.is-collapse {
+            margin-left: 64px;
+        }
+        
+        .sidebar-container {
+            transition: width 0.28s;
+            width: 210px;
+            background-color: var(--menuBg);
+            height: 100%;
             position: fixed;
+            font-size: 0px;
             top: 0;
+            bottom: 0;
             left: 0;
-            z-index: 10;
+            z-index: 1001;
+            overflow: hidden;
+            box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
         }
         
-        .sidebar-header {
-            padding: 1.5rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
+        .sidebar-container .el-menu {
+            border: none;
+            height: 100%;
+            width: 100% !important;
         }
         
-        .sidebar-menu {
-            padding: 1rem 0;
+        .sidebar-container .el-menu-item {
+            height: 56px;
+            line-height: 56px;
+            padding: 0 20px !important;
+            color: var(--menuColor);
+            position: relative;
         }
         
-        .sidebar-menu-item {
-            padding: 0.75rem 1.5rem;
+        .sidebar-container .el-menu-item.is-active {
+            background-color: var(--menuHover) !important;
+            color: var(--menuActiveText) !important;
+        }
+        
+        .sidebar-container .el-menu-item:hover {
+            background-color: var(--menuHover) !important;
+        }
+        
+        .sidebar-container .el-menu-item .el-icon {
+            margin-right: 16px;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        
+        .logo-container {
+            height: 60px !important;
+            line-height: 60px !important;
+            background-color: var(--menuBg) !important;
+            overflow: hidden;
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+        
+        .logo-container span {
+            display: block;
+            color: var(--menuActiveText);
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* 折叠菜单样式 */
+        .sidebar-container.is-collapse {
+            width: 64px;
+        }
+        
+        .sidebar-container.is-collapse .el-menu-item .el-icon {
+            margin-right: 0;
+        }
+        
+        /* 应用容器样式 */
+        .app-container {
+            padding: 20px;
+            padding-top: 80px; /* 为固定头部留出空间 */
+            box-sizing: border-box;
+            height: calc(100% - 60px);
+            overflow: auto;
+        }
+        
+        /* 头部导航栏样式 */
+        .fixed-header {
+            height: 60px;
+            background-color: var(--fixedHeaderBg);
+            box-shadow: 0 1px 4px rgba(0,21,41,.08);
             display: flex;
             align-items: center;
-            color: #4b5563;
-            transition: all 0.2s;
+            padding: 0 15px;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 210px;
+            z-index: 999;
+            transition: left 0.28s;
         }
         
-        .sidebar-menu-item:hover {
-            background-color: #f3f4f6;
-            color: #1d4ed8;
+        .fixed-header.is-collapse {
+            left: 64px;
         }
         
-        .sidebar-menu-item.active {
-            background-color: #e0f2fe;
-            color: #1d4ed8;
-            border-right: 3px solid #1d4ed8;
+        .hamburger-container {
+            line-height: 60px;
+            height: 100%;
+            padding: 0 15px;
+            cursor: pointer;
+            transition: background .3s;
+            color: #606266;
+            font-size: 20px;
         }
         
-        .sidebar-menu-item i {
-            width: 20px;
-            margin-right: 0.75rem;
-            text-align: center;
+        .hamburger-container:hover {
+            background: rgba(0, 0, 0, .025);
         }
         
-        .main-content {
-            margin-left: 250px;
-            padding: 1.5rem;
-        }
-        
+        /* 科室卡片样式 */
         .department-card {
             background-color: #fff;
             border-radius: 0.5rem;
@@ -84,362 +205,349 @@
         .patient-row:hover {
             background-color: #f8fafc;
         }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            
-            .sidebar-menu-item span {
-                display: none;
-            }
-            
-            .sidebar-menu-item i {
-                margin-right: 0;
-                font-size: 1.25rem;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- 侧边栏 -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="flex items-center">
-                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
-                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+    <div id="app">
+        <div class="app-wrapper">
+            <!-- 侧边栏 -->
+            <div class="sidebar-container" :class="{'is-collapse': isCollapse}">
+                <div class="logo-container">
+                    <span v-show="!isCollapse">康复信息系统</span>
+                </div>
+                <el-menu
+                    :default-active="activeMenu"
+                    background-color="var(--menuBg)"
+                    text-color="var(--menuColor)"
+                    active-text-color="var(--menuActiveText)"
+                    :collapse="isCollapse"
+                    :unique-opened="true"
+                >
+                    <el-menu-item index="/dashboard" @click="navigateTo('dashboard.html')">
+                        <el-icon><el-icon-odometer /></el-icon>
+                        <span>工作台</span>
+                    </el-menu-item>
+                    <el-menu-item index="/patients" @click="navigateTo('patients.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>患者管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/orders" @click="navigateTo('orders.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>医嘱管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/assessment" @click="navigateTo('assessment.html')">
+                        <el-icon><el-icon-document-checked /></el-icon>
+                        <span>康复评定</span>
+                    </el-menu-item>
+                    <el-menu-item index="/scheduling" @click="navigateTo('scheduling.html')">
+                        <el-icon><el-icon-calendar /></el-icon>
+                        <span>治疗排班</span>
+                    </el-menu-item>
+                    <el-menu-item index="/treatment" @click="navigateTo('treatment.html')">
+                        <el-icon><el-icon-first-aid-kit /></el-icon>
+                        <span>治疗执行</span>
+                    </el-menu-item>
+                    <el-menu-item index="/billing" @click="navigateTo('billing.html')">
+                        <el-icon><el-icon-money /></el-icon>
+                        <span>费用管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/documents" @click="navigateTo('documents.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>电子文书</span>
+                    </el-menu-item>
+                    <el-menu-item index="/workload" @click="navigateTo('workload.html')">
+                        <el-icon><el-icon-data-line /></el-icon>
+                        <span>工作量统计</span>
+                    </el-menu-item>
+                    <el-menu-item index="/equipment" @click="navigateTo('equipment.html')">
+                        <el-icon><el-icon-suitcase /></el-icon>
+                        <span>设备管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/outpatient" @click="navigateTo('outpatient.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>门诊治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/external" @click="navigateTo('external.html')">
+                        <el-icon><el-icon-office-building /></el-icon>
+                        <span>外病区治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/physical" @click="navigateTo('physical.html')">
+                        <el-icon><el-icon-aim /></el-icon>
+                        <span>理疗治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/reports" @click="navigateTo('reports.html')">
+                        <el-icon><el-icon-pie-chart /></el-icon>
+                        <span>数据报表</span>
+                    </el-menu-item>
+                    <el-menu-item index="/insurance" @click="navigateTo('insurance.html')">
+                        <el-icon><el-icon-umbrella /></el-icon>
+                        <span>医保风控</span>
+                    </el-menu-item>
+                    <el-menu-item index="/settings" @click="navigateTo('settings.html')">
+                        <el-icon><el-icon-setting /></el-icon>
+                        <span>系统设置</span>
+                    </el-menu-item>
+                </el-menu>
             </div>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html" class="sidebar-menu-item">
-                <i class="fas fa-home"></i>
-                <span>工作台</span>
-            </a>
-            <a href="patients.html" class="sidebar-menu-item">
-                <i class="fas fa-user-injured"></i>
-                <span>患者管理</span>
-            </a>
-            <a href="orders.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-list"></i>
-                <span>医嘱管理</span>
-            </a>
-            <a href="assessment.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-check"></i>
-                <span>康复评定</span>
-            </a>
-            <a href="scheduling.html" class="sidebar-menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>治疗排班</span>
-            </a>
-            <a href="treatment.html" class="sidebar-menu-item">
-                <i class="fas fa-procedures"></i>
-                <span>治疗执行</span>
-            </a>
-            <a href="billing.html" class="sidebar-menu-item">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>费用管理</span>
-            </a>
-            <a href="documents.html" class="sidebar-menu-item">
-                <i class="fas fa-file-medical-alt"></i>
-                <span>电子文书</span>
-            </a>
-            <a href="workload.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span>工作量统计</span>
-            </a>
-            <a href="equipment.html" class="sidebar-menu-item">
-                <i class="fas fa-medkit"></i>
-                <span>设备管理</span>
-            </a>
-            <a href="outpatient.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital-user"></i>
-                <span>门诊治疗</span>
-            </a>
-            <a href="external.html" class="sidebar-menu-item active">
-                <i class="fas fa-hospital"></i>
-                <span>外病区治疗</span>
-            </a>
-            <a href="physical.html" class="sidebar-menu-item">
-                <i class="fas fa-hand-holding-medical"></i>
-                <span>理疗治疗</span>
-            </a>
-            <a href="reports.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-pie"></i>
-                <span>数据报表</span>
-            </a>
-            <a href="insurance.html" class="sidebar-menu-item">
-                <i class="fas fa-shield-alt"></i>
-                <span>医保风控</span>
-            </a>
-            <a href="settings.html" class="sidebar-menu-item">
-                <i class="fas fa-cog"></i>
-                <span>系统设置</span>
-            </a>
+
+            <!-- 主容器 -->
+            <div class="main-container" :class="{'is-collapse': isCollapse}">
+                <!-- 头部导航栏 -->
+                <div class="fixed-header" :class="{'is-collapse': isCollapse}">
+                    <div class="d-flex align-center">
+                        <el-icon class="hamburger-container cursor-pointer" @click="toggleSidebar"><el-icon-fold /></el-icon>
+                        <el-breadcrumb separator="/" class="ml-2">
+                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>外病区治疗</el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <div class="right-menu">
+                        <div class="avatar-container">
+                            <el-dropdown>
+                                <span class="avatar-wrapper">
+                                    <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="user-avatar">
+                                    <span class="user-name">张医生</span>
+                                    <el-icon class="el-icon--right"><el-icon-arrow-down /></el-icon>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item>个人中心</el-dropdown-item>
+                                        <el-dropdown-item>修改密码</el-dropdown-item>
+                                        <el-dropdown-item divided>退出登录</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用内容区 -->
+                <div class="app-container">
+                    <!-- 页面标题 -->
+                    <div class="d-flex justify-between align-center mb-4">
+                        <div>
+                            <!-- 移除页面标题 -->
+                        </div>
+                        <div class="d-flex">
+                            <el-button type="primary" class="mr-2">
+                                <el-icon><el-icon-plus /></el-icon> 新增外出治疗
+                            </el-button>
+                            <el-button>
+                                <el-icon><el-icon-printer /></el-icon> 打印治疗单
+                            </el-button>
+                        </div>
+                    </div>
+
+                    <!-- 搜索面板 -->
+                    <div class="plus-card mb-4">
+                        <div class="plus-card-body">
+                            <el-form :inline="true" size="small">
+                                <el-form-item label="病区">
+                                    <el-select placeholder="请选择病区" clearable>
+                                        <el-option label="内科病区" value="internal"></el-option>
+                                        <el-option label="外科病区" value="surgery"></el-option>
+                                        <el-option label="神经内科" value="neurology"></el-option>
+                                        <el-option label="骨科病区" value="orthopedics"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="患者姓名">
+                                    <el-input placeholder="请输入患者姓名" clearable></el-input>
+                                </el-form-item>
+                                <el-form-item label="治疗状态">
+                                    <el-select placeholder="请选择" clearable>
+                                        <el-option label="待治疗" value="pending"></el-option>
+                                        <el-option label="治疗中" value="in-progress"></el-option>
+                                        <el-option label="已完成" value="completed"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="治疗日期">
+                                    <el-date-picker
+                                        type="date"
+                                        placeholder="选择日期">
+                                    </el-date-picker>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary">
+                                        <el-icon><el-icon-search /></el-icon> 搜索
+                                    </el-button>
+                                    <el-button>
+                                        <el-icon><el-icon-refresh /></el-icon> 重置
+                                    </el-button>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </div>
+
+                    <!-- 病区列表 -->
+                    <el-row :gutter="20">
+                        <!-- 内科病区 -->
+                        <el-col :xs="24" :md="12" class="mb-4">
+                            <div class="department-card">
+                                <div class="plus-card-header">
+                                    <h3 class="text-lg font-bold">内科病区</h3>
+                                    <el-tag type="primary">今日治疗: 8</el-tag>
+                                </div>
+                                <div class="plus-card-body p-0">
+                                    <el-table style="width: 100%">
+                                        <el-table-column prop="name" label="患者姓名" width="100"></el-table-column>
+                                        <el-table-column prop="bed" label="床号" width="80"></el-table-column>
+                                        <el-table-column prop="treatment" label="治疗项目"></el-table-column>
+                                        <el-table-column prop="status" label="状态" width="100">
+                                            <template #default="scope">
+                                                <el-tag type="warning" effect="light" size="small">待治疗</el-tag>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="操作" width="150">
+                                            <template #default="scope">
+                                                <el-button size="small" type="primary">开始治疗</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                                <div class="plus-card-footer d-flex justify-between align-center">
+                                    <span class="text-sm text-muted">共8名患者</span>
+                                    <el-button type="text" size="small">查看全部 <el-icon><el-icon-arrow-right /></el-icon></el-button>
+                                </div>
+                            </div>
+                        </el-col>
+
+                        <!-- 外科病区 -->
+                        <el-col :xs="24" :md="12" class="mb-4">
+                            <div class="department-card">
+                                <div class="plus-card-header">
+                                    <h3 class="text-lg font-bold">外科病区</h3>
+                                    <el-tag type="primary">今日治疗: 6</el-tag>
+                                </div>
+                                <div class="plus-card-body p-0">
+                                    <el-table style="width: 100%">
+                                        <el-table-column prop="name" label="患者姓名" width="100"></el-table-column>
+                                        <el-table-column prop="bed" label="床号" width="80"></el-table-column>
+                                        <el-table-column prop="treatment" label="治疗项目"></el-table-column>
+                                        <el-table-column prop="status" label="状态" width="100">
+                                            <template #default="scope">
+                                                <el-tag type="success" effect="light" size="small">已完成</el-tag>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="操作" width="150">
+                                            <template #default="scope">
+                                                <el-button size="small" type="info">查看记录</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                                <div class="plus-card-footer d-flex justify-between align-center">
+                                    <span class="text-sm text-muted">共6名患者</span>
+                                    <el-button type="text" size="small">查看全部 <el-icon><el-icon-arrow-right /></el-icon></el-button>
+                                </div>
+                            </div>
+                        </el-col>
+
+                        <!-- 神经内科 -->
+                        <el-col :xs="24" :md="12" class="mb-4">
+                            <div class="department-card">
+                                <div class="plus-card-header">
+                                    <h3 class="text-lg font-bold">神经内科</h3>
+                                    <el-tag type="primary">今日治疗: 10</el-tag>
+                                </div>
+                                <div class="plus-card-body p-0">
+                                    <el-table style="width: 100%">
+                                        <el-table-column prop="name" label="患者姓名" width="100"></el-table-column>
+                                        <el-table-column prop="bed" label="床号" width="80"></el-table-column>
+                                        <el-table-column prop="treatment" label="治疗项目"></el-table-column>
+                                        <el-table-column prop="status" label="状态" width="100">
+                                            <template #default="scope">
+                                                <el-tag type="primary" effect="light" size="small">治疗中</el-tag>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="操作" width="150">
+                                            <template #default="scope">
+                                                <el-button size="small" type="primary">记录治疗</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                                <div class="plus-card-footer d-flex justify-between align-center">
+                                    <span class="text-sm text-muted">共10名患者</span>
+                                    <el-button type="text" size="small">查看全部 <el-icon><el-icon-arrow-right /></el-icon></el-button>
+                                </div>
+                            </div>
+                        </el-col>
+
+                        <!-- 骨科病区 -->
+                        <el-col :xs="24" :md="12" class="mb-4">
+                            <div class="department-card">
+                                <div class="plus-card-header">
+                                    <h3 class="text-lg font-bold">骨科病区</h3>
+                                    <el-tag type="primary">今日治疗: 12</el-tag>
+                                </div>
+                                <div class="plus-card-body p-0">
+                                    <el-table style="width: 100%">
+                                        <el-table-column prop="name" label="患者姓名" width="100"></el-table-column>
+                                        <el-table-column prop="bed" label="床号" width="80"></el-table-column>
+                                        <el-table-column prop="treatment" label="治疗项目"></el-table-column>
+                                        <el-table-column prop="status" label="状态" width="100">
+                                            <template #default="scope">
+                                                <el-tag type="warning" effect="light" size="small">待治疗</el-tag>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="操作" width="150">
+                                            <template #default="scope">
+                                                <el-button size="small" type="primary">开始治疗</el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                                <div class="plus-card-footer d-flex justify-between align-center">
+                                    <span class="text-sm text-muted">共12名患者</span>
+                                    <el-button type="text" size="small">查看全部 <el-icon><el-icon-arrow-right /></el-icon></el-button>
+                                </div>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <!-- 顶部栏 -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800">外病区治疗</h2>
-                <p class="text-gray-600">管理其他科室住院患者的康复治疗</p>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
-                    <i class="fas fa-file-import mr-2"></i>
-                    导入患者
-                </button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
-                    <i class="fas fa-tasks mr-2"></i>
-                    批量处理
-                </button>
-            </div>
-        </div>
-
-        <!-- 科室选择和筛选 -->
-        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-            <div class="flex flex-wrap items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">全部科室</button>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">神经内科</button>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">骨科</button>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">心内科</button>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">更多</button>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="搜索患者姓名/住院号" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-64">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
-                        <i class="fas fa-filter mr-2"></i>
-                        高级筛选
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 科室卡片 -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- 神经内科 -->
-            <div class="department-card p-4">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-brain text-blue-600"></i>
-                        </div>
-                        <div class="ml-3">
-                            <div class="font-semibold">神经内科</div>
-                            <div class="text-sm text-gray-500">12 名患者</div>
-                        </div>
-                    </div>
-                    <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
-                        分配治疗师
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr class="text-left text-xs font-medium text-gray-500 uppercase">
-                                <th class="pb-2">患者信息</th>
-                                <th class="pb-2">床号</th>
-                                <th class="pb-2">治疗项目</th>
-                                <th class="pb-2">状态</th>
-                                <th class="pb-2"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm">
-                            <tr class="patient-row border-t">
-                                <td class="py-2">
-                                    <div class="flex items-center">
-                                        <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="患者头像" class="w-8 h-8 rounded-full">
-                                        <div class="ml-2">
-                                            <div>刘晓华</div>
-                                            <div class="text-xs text-gray-500">住院号: 2024030104</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-2">3-508</td>
-                                <td class="py-2">运动疗法</td>
-                                <td class="py-2">
-                                    <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">
-                                        待分配
-                                    </span>
-                                </td>
-                                <td class="py-2">
-                                    <button class="text-blue-600 hover:text-blue-800">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="patient-row border-t">
-                                <td class="py-2">
-                                    <div class="flex items-center">
-                                        <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="患者头像" class="w-8 h-8 rounded-full">
-                                        <div class="ml-2">
-                                            <div>王建军</div>
-                                            <div class="text-xs text-gray-500">住院号: 2024030105</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-2">3-510</td>
-                                <td class="py-2">作业疗法</td>
-                                <td class="py-2">
-                                    <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
-                                        已分配
-                                    </span>
-                                </td>
-                                <td class="py-2">
-                                    <button class="text-blue-600 hover:text-blue-800">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 骨科 -->
-            <div class="department-card p-4">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-bone text-green-600"></i>
-                        </div>
-                        <div class="ml-3">
-                            <div class="font-semibold">骨科</div>
-                            <div class="text-sm text-gray-500">8 名患者</div>
-                        </div>
-                    </div>
-                    <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
-                        分配治疗师
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr class="text-left text-xs font-medium text-gray-500 uppercase">
-                                <th class="pb-2">患者信息</th>
-                                <th class="pb-2">床号</th>
-                                <th class="pb-2">治疗项目</th>
-                                <th class="pb-2">状态</th>
-                                <th class="pb-2"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm">
-                            <tr class="patient-row border-t">
-                                <td class="py-2">
-                                    <div class="flex items-center">
-                                        <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="患者头像" class="w-8 h-8 rounded-full">
-                                        <div class="ml-2">
-                                            <div>孙八</div>
-                                            <div class="text-xs text-gray-500">住院号: 2024030106</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-2">4-306</td>
-                                <td class="py-2">运动疗法</td>
-                                <td class="py-2">
-                                    <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
-                                        治疗中
-                                    </span>
-                                </td>
-                                <td class="py-2">
-                                    <button class="text-blue-600 hover:text-blue-800">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="patient-row border-t">
-                                <td class="py-2">
-                                    <div class="flex items-center">
-                                        <img src="https://randomuser.me/api/portraits/women/4.jpg" alt="患者头像" class="w-8 h-8 rounded-full">
-                                        <div class="ml-2">
-                                            <div>周九</div>
-                                            <div class="text-xs text-gray-500">住院号: 2024030107</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-2">4-308</td>
-                                <td class="py-2">物理治疗</td>
-                                <td class="py-2">
-                                    <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">
-                                        待分配
-                                    </span>
-                                </td>
-                                <td class="py-2">
-                                    <button class="text-blue-600 hover:text-blue-800">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- 治疗师分配面板 -->
-        <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-            <h3 class="text-lg font-semibold mb-4">治疗师分配</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="border rounded-lg p-3">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center">
-                            <img src="https://randomuser.me/api/portraits/men/5.jpg" alt="治疗师头像" class="w-10 h-10 rounded-full">
-                            <div class="ml-2">
-                                <div class="font-semibold">陈治疗师</div>
-                                <div class="text-xs text-gray-500">运动治疗</div>
-                            </div>
-                        </div>
-                        <div class="text-sm text-gray-500">5/8</div>
-                    </div>
-                    <div class="w-full h-2 bg-gray-200 rounded-full">
-                        <div class="w-5/8 h-full bg-blue-600 rounded-full"></div>
-                    </div>
-                </div>
-                <div class="border rounded-lg p-3">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center">
-                            <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="治疗师头像" class="w-10 h-10 rounded-full">
-                            <div class="ml-2">
-                                <div class="font-semibold">王治疗师</div>
-                                <div class="text-xs text-gray-500">作业治疗</div>
-                            </div>
-                        </div>
-                        <div class="text-sm text-gray-500">3/8</div>
-                    </div>
-                    <div class="w-full h-2 bg-gray-200 rounded-full">
-                        <div class="w-3/8 h-full bg-blue-600 rounded-full"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 分页 -->
-        <div class="flex justify-between items-center">
-            <div class="text-sm text-gray-600">
-                共 20 条记录
-            </div>
-            <div class="flex items-center space-x-2">
-                <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50" disabled>
-                    上一页
-                </button>
-                <button class="px-3 py-1 bg-blue-600 text-white rounded">1</button>
-                <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">2</button>
-                <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">3</button>
-                <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">
-                    下一页
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Element Plus -->
+    <script src="https://unpkg.com/element-plus@latest/dist/index.full.js"></script>
+    <!-- Element Plus 图标 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    
+    <script>
+        const { createApp, ref } = Vue;
+        
+        const app = createApp({
+            setup() {
+                const isCollapse = ref(false);
+                const activeMenu = ref('/external');
+                
+                const toggleSidebar = () => {
+                    isCollapse.value = !isCollapse.value;
+                };
+                
+                const navigateTo = (url) => {
+                    window.location.href = url;
+                };
+                
+                return {
+                    isCollapse,
+                    activeMenu,
+                    toggleSidebar,
+                    navigateTo
+                };
+            }
+        });
+        
+        // 注册所有Element Plus图标组件
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(`ElIcon${key}`, component);
+        }
+        
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
 </body>
 </html> 

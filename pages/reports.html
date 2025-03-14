@@ -4,70 +4,191 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>康复信息系统 - 数据报表</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Element Plus -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plus UI 样式 -->
+    <link rel="stylesheet" href="../css/plus-ui-styles.css">
     <style>
+        :root {
+            /* 使用plus-ui变量 */
+            --el-color-primary: #409eff;
+            --el-color-success: #67c23a;
+            --el-color-warning: #e6a23c;
+            --el-color-danger: #f56c6c;
+            --el-color-info: #909399;
+            
+            --menuBg: #304156;
+            --menuColor: #bfcbd9;
+            --menuActiveText: #f4f4f5;
+            --menuHover: #263445;
+            
+            --subMenuBg: #1f2d3d;
+            --subMenuActiveText: #f4f4f5;
+            --subMenuHover: #001528;
+            
+            --fixedHeaderBg: #ffffff;
+            --tableHeaderBg: #f8f8f9;
+            --tableHeaderTextColor: #515a6e;
+        }
+        
         body {
             font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            height: 100%;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
             background-color: #f5f7fa;
         }
         
-        .sidebar {
-            width: 250px;
-            background-color: #fff;
-            border-right: 1px solid #e5e7eb;
+        #app {
             height: 100vh;
+        }
+        
+        .app-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .main-container {
+            height: 100%;
+            transition: margin-left 0.28s;
+            margin-left: 210px;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .main-container.is-collapse {
+            margin-left: 64px;
+        }
+        
+        .sidebar-container {
+            transition: width 0.28s;
+            width: 210px;
+            background-color: var(--menuBg);
+            height: 100%;
             position: fixed;
+            font-size: 0px;
             top: 0;
+            bottom: 0;
             left: 0;
-            z-index: 10;
+            z-index: 1001;
+            overflow: hidden;
+            box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
         }
         
-        .sidebar-header {
-            padding: 1.5rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
+        .sidebar-container .el-menu {
+            border: none;
+            height: 100%;
+            width: 100% !important;
         }
         
-        .sidebar-menu {
-            padding: 1rem 0;
+        .sidebar-container .el-menu-item {
+            height: 56px;
+            line-height: 56px;
+            padding: 0 20px !important;
+            color: var(--menuColor);
+            position: relative;
         }
         
-        .sidebar-menu-item {
-            padding: 0.75rem 1.5rem;
+        .sidebar-container .el-menu-item.is-active {
+            background-color: var(--menuHover) !important;
+            color: var(--menuActiveText) !important;
+        }
+        
+        .sidebar-container .el-menu-item:hover {
+            background-color: var(--menuHover) !important;
+        }
+        
+        .sidebar-container .el-menu-item .el-icon {
+            margin-right: 16px;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        
+        .logo-container {
+            height: 60px !important;
+            line-height: 60px !important;
+            background-color: var(--menuBg) !important;
+            overflow: hidden;
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+        
+        .logo-container span {
+            display: block;
+            color: var(--menuActiveText);
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* 折叠菜单样式 */
+        .sidebar-container.is-collapse {
+            width: 64px;
+        }
+        
+        .sidebar-container.is-collapse .el-menu-item .el-icon {
+            margin-right: 0;
+        }
+        
+        /* 应用容器样式 */
+        .app-container {
+            padding: 20px;
+            padding-top: 80px; /* 为固定头部留出空间 */
+            box-sizing: border-box;
+            height: calc(100% - 60px);
+            overflow: auto;
+        }
+        
+        /* 头部导航栏样式 */
+        .fixed-header {
+            height: 60px;
+            background-color: var(--fixedHeaderBg);
+            box-shadow: 0 1px 4px rgba(0,21,41,.08);
             display: flex;
             align-items: center;
-            color: #4b5563;
-            transition: all 0.2s;
+            padding: 0 15px;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 210px;
+            z-index: 999;
+            transition: left 0.28s;
         }
         
-        .sidebar-menu-item:hover {
-            background-color: #f3f4f6;
-            color: #1d4ed8;
+        .fixed-header.is-collapse {
+            left: 64px;
         }
         
-        .sidebar-menu-item.active {
-            background-color: #e0f2fe;
-            color: #1d4ed8;
-            border-right: 3px solid #1d4ed8;
+        .hamburger-container {
+            line-height: 60px;
+            height: 100%;
+            padding: 0 15px;
+            cursor: pointer;
+            transition: background .3s;
+            color: #606266;
+            font-size: 20px;
         }
         
-        .sidebar-menu-item i {
-            width: 20px;
-            margin-right: 0.75rem;
-            text-align: center;
+        .hamburger-container:hover {
+            background: rgba(0, 0, 0, .025);
         }
         
-        .main-content {
-            margin-left: 250px;
-            padding: 1.5rem;
-        }
-        
+        /* 报表卡片样式 */
         .report-card {
             background-color: #fff;
             border-radius: 0.5rem;
@@ -78,387 +199,480 @@
         .report-card:hover {
             transform: translateY(-2px);
         }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            
-            .sidebar-menu-item span {
-                display: none;
-            }
-            
-            .sidebar-menu-item i {
-                margin-right: 0;
-                font-size: 1.25rem;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- 侧边栏 -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="flex items-center">
-                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
-                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+    <div id="app">
+        <div class="app-wrapper">
+            <!-- 侧边栏 -->
+            <div class="sidebar-container" :class="{'is-collapse': isCollapse}">
+                <div class="logo-container">
+                    <span v-show="!isCollapse">康复信息系统</span>
+                </div>
+                <el-menu
+                    :default-active="activeMenu"
+                    background-color="var(--menuBg)"
+                    text-color="var(--menuColor)"
+                    active-text-color="var(--menuActiveText)"
+                    :collapse="isCollapse"
+                    :unique-opened="true"
+                >
+                    <el-menu-item index="/dashboard" @click="navigateTo('dashboard.html')">
+                        <el-icon><el-icon-odometer /></el-icon>
+                        <span>工作台</span>
+                    </el-menu-item>
+                    <el-menu-item index="/patients" @click="navigateTo('patients.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>患者管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/orders" @click="navigateTo('orders.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>医嘱管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/assessment" @click="navigateTo('assessment.html')">
+                        <el-icon><el-icon-document-checked /></el-icon>
+                        <span>康复评定</span>
+                    </el-menu-item>
+                    <el-menu-item index="/scheduling" @click="navigateTo('scheduling.html')">
+                        <el-icon><el-icon-calendar /></el-icon>
+                        <span>治疗排班</span>
+                    </el-menu-item>
+                    <el-menu-item index="/treatment" @click="navigateTo('treatment.html')">
+                        <el-icon><el-icon-first-aid-kit /></el-icon>
+                        <span>治疗执行</span>
+                    </el-menu-item>
+                    <el-menu-item index="/billing" @click="navigateTo('billing.html')">
+                        <el-icon><el-icon-money /></el-icon>
+                        <span>费用管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/documents" @click="navigateTo('documents.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>电子文书</span>
+                    </el-menu-item>
+                    <el-menu-item index="/workload" @click="navigateTo('workload.html')">
+                        <el-icon><el-icon-data-line /></el-icon>
+                        <span>工作量统计</span>
+                    </el-menu-item>
+                    <el-menu-item index="/equipment" @click="navigateTo('equipment.html')">
+                        <el-icon><el-icon-suitcase /></el-icon>
+                        <span>设备管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/outpatient" @click="navigateTo('outpatient.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>门诊治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/external" @click="navigateTo('external.html')">
+                        <el-icon><el-icon-office-building /></el-icon>
+                        <span>外病区治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/physical" @click="navigateTo('physical.html')">
+                        <el-icon><el-icon-aim /></el-icon>
+                        <span>理疗治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/reports" @click="navigateTo('reports.html')">
+                        <el-icon><el-icon-pie-chart /></el-icon>
+                        <span>数据报表</span>
+                    </el-menu-item>
+                    <el-menu-item index="/insurance" @click="navigateTo('insurance.html')">
+                        <el-icon><el-icon-umbrella /></el-icon>
+                        <span>医保风控</span>
+                    </el-menu-item>
+                    <el-menu-item index="/settings" @click="navigateTo('settings.html')">
+                        <el-icon><el-icon-setting /></el-icon>
+                        <span>系统设置</span>
+                    </el-menu-item>
+                </el-menu>
             </div>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html" class="sidebar-menu-item">
-                <i class="fas fa-home"></i>
-                <span>工作台</span>
-            </a>
-            <a href="patients.html" class="sidebar-menu-item">
-                <i class="fas fa-user-injured"></i>
-                <span>患者管理</span>
-            </a>
-            <a href="orders.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-list"></i>
-                <span>医嘱管理</span>
-            </a>
-            <a href="assessment.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-check"></i>
-                <span>康复评定</span>
-            </a>
-            <a href="scheduling.html" class="sidebar-menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>治疗排班</span>
-            </a>
-            <a href="treatment.html" class="sidebar-menu-item">
-                <i class="fas fa-procedures"></i>
-                <span>治疗执行</span>
-            </a>
-            <a href="billing.html" class="sidebar-menu-item">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>费用管理</span>
-            </a>
-            <a href="documents.html" class="sidebar-menu-item">
-                <i class="fas fa-file-medical-alt"></i>
-                <span>电子文书</span>
-            </a>
-            <a href="workload.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span>工作量统计</span>
-            </a>
-            <a href="equipment.html" class="sidebar-menu-item">
-                <i class="fas fa-medkit"></i>
-                <span>设备管理</span>
-            </a>
-            <a href="outpatient.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital-user"></i>
-                <span>门诊治疗</span>
-            </a>
-            <a href="external.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital"></i>
-                <span>外病区治疗</span>
-            </a>
-            <a href="physical.html" class="sidebar-menu-item">
-                <i class="fas fa-hand-holding-medical"></i>
-                <span>理疗治疗</span>
-            </a>
-            <a href="reports.html" class="sidebar-menu-item active">
-                <i class="fas fa-chart-pie"></i>
-                <span>数据报表</span>
-            </a>
-            <a href="insurance.html" class="sidebar-menu-item">
-                <i class="fas fa-shield-alt"></i>
-                <span>医保风控</span>
-            </a>
-            <a href="settings.html" class="sidebar-menu-item">
-                <i class="fas fa-cog"></i>
-                <span>系统设置</span>
-            </a>
-        </div>
-    </div>
 
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <!-- 顶部栏 -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <!-- 移除页面标题 -->
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
-                    <i class="fas fa-download mr-2"></i>
-                    导出报表
-                </button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
-                    <i class="fas fa-print mr-2"></i>
-                    打印报表
-                </button>
-            </div>
-        </div>
-
-        <!-- 时间范围选择 -->
-        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-            <div class="flex flex-wrap items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">本月</button>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">本季度</button>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">本年</button>
-                    <div class="flex items-center space-x-2">
-                        <input type="date" class="px-3 py-2 border border-gray-300 rounded-lg">
-                        <span class="text-gray-500">至</span>
-                        <input type="date" class="px-3 py-2 border border-gray-300 rounded-lg">
+            <!-- 主容器 -->
+            <div class="main-container" :class="{'is-collapse': isCollapse}">
+                <!-- 头部导航栏 -->
+                <div class="fixed-header" :class="{'is-collapse': isCollapse}">
+                    <div class="d-flex align-center">
+                        <el-icon class="hamburger-container cursor-pointer" @click="toggleSidebar"><el-icon-fold /></el-icon>
+                        <el-breadcrumb separator="/" class="ml-2">
+                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>数据报表</el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <div class="right-menu">
+                        <div class="avatar-container">
+                            <el-dropdown>
+                                <span class="avatar-wrapper">
+                                    <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="user-avatar">
+                                    <span class="user-name">张医生</span>
+                                    <el-icon class="el-icon--right"><el-icon-arrow-down /></el-icon>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item>个人中心</el-dropdown-item>
+                                        <el-dropdown-item>修改密码</el-dropdown-item>
+                                        <el-dropdown-item divided>退出登录</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg">
-                        <option>全部科室</option>
-                        <option>康复科</option>
-                        <option>神经内科</option>
-                        <option>骨科</option>
-                    </select>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
-                        <i class="fas fa-filter mr-2"></i>
-                        高级筛选
-                    </button>
-                </div>
-            </div>
-        </div>
 
-        <!-- 数据概览卡片 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div class="report-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">总治疗人次</div>
-                    <i class="fas fa-users text-blue-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">3,856</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-green-500 text-sm mr-1">↑12.5%</span>
-                    <span class="text-gray-500 text-sm">较上月</span>
-                </div>
-            </div>
-            <div class="report-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">平均治疗时长</div>
-                    <i class="fas fa-clock text-green-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">45分钟</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-red-500 text-sm mr-1">↓2.3%</span>
-                    <span class="text-gray-500 text-sm">较上月</span>
-                </div>
-            </div>
-            <div class="report-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">治疗完成率</div>
-                    <i class="fas fa-check-circle text-blue-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">96.8%</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-green-500 text-sm mr-1">↑1.2%</span>
-                    <span class="text-gray-500 text-sm">较上月</span>
-                </div>
-            </div>
-            <div class="report-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">治疗收入</div>
-                    <i class="fas fa-yen-sign text-yellow-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">¥286,520</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-green-500 text-sm mr-1">↑8.6%</span>
-                    <span class="text-gray-500 text-sm">较上月</span>
-                </div>
-            </div>
-        </div>
+                <!-- 应用内容区 -->
+                <div class="app-container">
+                    <!-- 顶部栏 -->
+                    <div class="d-flex justify-between align-center mb-4">
+                        <div>
+                            <!-- 移除页面标题 -->
+                        </div>
+                        <div class="d-flex">
+                            <el-button type="primary" class="mr-2">
+                                <el-icon><el-icon-download /></el-icon>
+                                导出报表
+                            </el-button>
+                            <el-button>
+                                <el-icon><el-icon-printer /></el-icon>
+                                打印报表
+                            </el-button>
+                        </div>
+                    </div>
 
-        <!-- 图表分析区域 -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- 治疗量趋势图 -->
-            <div class="report-card p-4">
-                <h3 class="text-lg font-semibold mb-4">治疗量趋势</h3>
-                <canvas id="treatmentTrend" height="300"></canvas>
-            </div>
-            <!-- 治疗类型分布图 -->
-            <div class="report-card p-4">
-                <h3 class="text-lg font-semibold mb-4">治疗类型分布</h3>
-                <canvas id="treatmentTypes" height="300"></canvas>
-            </div>
-            <!-- 科室治疗量对比图 -->
-            <div class="report-card p-4">
-                <h3 class="text-lg font-semibold mb-4">科室治疗量对比</h3>
-                <canvas id="departmentComparison" height="300"></canvas>
-            </div>
-            <!-- 患者年龄分布图 -->
-            <div class="report-card p-4">
-                <h3 class="text-lg font-semibold mb-4">患者年龄分布</h3>
-                <canvas id="ageDistribution" height="300"></canvas>
-            </div>
-        </div>
+                    <!-- 时间范围选择 -->
+                    <div class="plus-card mb-4">
+                        <div class="plus-card-body">
+                            <div class="d-flex justify-between align-center flex-wrap">
+                                <div class="d-flex align-center mb-2">
+                                    <el-radio-group v-model="timeRange" size="default">
+                                        <el-radio-button label="month">本月</el-radio-button>
+                                        <el-radio-button label="quarter">本季度</el-radio-button>
+                                        <el-radio-button label="year">本年</el-radio-button>
+                                    </el-radio-group>
+                                    <div class="d-flex align-center ml-4">
+                                        <el-date-picker
+                                            v-model="dateRange"
+                                            type="daterange"
+                                            range-separator="至"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期"
+                                            size="default"
+                                        ></el-date-picker>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-center">
+                                    <el-select v-model="department" placeholder="全部科室" class="mr-2">
+                                        <el-option label="全部科室" value="all"></el-option>
+                                        <el-option label="康复科" value="rehab"></el-option>
+                                        <el-option label="神经内科" value="neuro"></el-option>
+                                        <el-option label="骨科" value="ortho"></el-option>
+                                    </el-select>
+                                    <el-button>
+                                        <el-icon><el-icon-filter /></el-icon>
+                                        高级筛选
+                                    </el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- 详细数据表格 -->
-        <div class="report-card overflow-hidden">
-            <div class="px-4 py-3 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">详细数据</h3>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">科室</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">治疗人次</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">平均时长</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">完成率</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">收入</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">环比</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">康复科</td>
-                            <td class="px-6 py-4 whitespace-nowrap">1,256</td>
-                            <td class="px-6 py-4 whitespace-nowrap">48分钟</td>
-                            <td class="px-6 py-4 whitespace-nowrap">97.2%</td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥98,560</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-green-500">↑10.5%</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">神经内科</td>
-                            <td class="px-6 py-4 whitespace-nowrap">986</td>
-                            <td class="px-6 py-4 whitespace-nowrap">42分钟</td>
-                            <td class="px-6 py-4 whitespace-nowrap">95.8%</td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥76,420</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-green-500">↑8.2%</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">骨科</td>
-                            <td class="px-6 py-4 whitespace-nowrap">864</td>
-                            <td class="px-6 py-4 whitespace-nowrap">38分钟</td>
-                            <td class="px-6 py-4 whitespace-nowrap">96.5%</td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥65,280</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-red-500">↓2.1%</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <!-- 数据概览卡片 -->
+                    <el-row :gutter="20" class="mb-4">
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">总治疗人次</div>
+                                    <el-icon class="text-primary" size="20"><el-icon-user /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">3,856</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-success text-sm mr-1">↑12.5%</span>
+                                    <span class="text-muted text-sm">较上月</span>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">平均治疗时长</div>
+                                    <el-icon class="text-success" size="20"><el-icon-timer /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">45分钟</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-danger text-sm mr-1">↓2.3%</span>
+                                    <span class="text-muted text-sm">较上月</span>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">治疗完成率</div>
+                                    <el-icon class="text-primary" size="20"><el-icon-circle-check /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">96.8%</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-success text-sm mr-1">↑1.2%</span>
+                                    <span class="text-muted text-sm">较上月</span>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">治疗收入</div>
+                                    <el-icon class="text-warning" size="20"><el-icon-money /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">¥286,520</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-success text-sm mr-1">↑8.6%</span>
+                                    <span class="text-muted text-sm">较上月</span>
+                                </div>
+                            </div>
+                        </el-col>
+                    </el-row>
+
+                    <!-- 图表分析区域 -->
+                    <el-row :gutter="20" class="mb-4">
+                        <!-- 治疗量趋势图 -->
+                        <el-col :xs="24" :lg="12">
+                            <div class="plus-card p-4">
+                                <h3 class="text-lg font-semibold mb-4">治疗量趋势</h3>
+                                <canvas id="treatmentTrend" height="300"></canvas>
+                            </div>
+                        </el-col>
+                        <!-- 治疗类型分布图 -->
+                        <el-col :xs="24" :lg="12">
+                            <div class="plus-card p-4">
+                                <h3 class="text-lg font-semibold mb-4">治疗类型分布</h3>
+                                <canvas id="treatmentTypes" height="300"></canvas>
+                            </div>
+                        </el-col>
+                        <!-- 科室治疗量对比图 -->
+                        <el-col :xs="24" :lg="12" class="mt-4">
+                            <div class="plus-card p-4">
+                                <h3 class="text-lg font-semibold mb-4">科室治疗量对比</h3>
+                                <canvas id="departmentComparison" height="300"></canvas>
+                            </div>
+                        </el-col>
+                        <!-- 患者年龄分布图 -->
+                        <el-col :xs="24" :lg="12" class="mt-4">
+                            <div class="plus-card p-4">
+                                <h3 class="text-lg font-semibold mb-4">患者年龄分布</h3>
+                                <canvas id="ageDistribution" height="300"></canvas>
+                            </div>
+                        </el-col>
+                    </el-row>
+
+                    <!-- 详细数据表格 -->
+                    <div class="plus-card">
+                        <div class="plus-card-header">
+                            <h3 class="text-lg font-bold">详细数据</h3>
+                        </div>
+                        <div class="plus-card-body p-0">
+                            <el-table :data="tableData" style="width: 100%">
+                                <el-table-column prop="department" label="科室" width="120"></el-table-column>
+                                <el-table-column prop="count" label="治疗人次" width="120"></el-table-column>
+                                <el-table-column prop="avgTime" label="平均时长" width="120"></el-table-column>
+                                <el-table-column prop="completion" label="完成率" width="120"></el-table-column>
+                                <el-table-column prop="income" label="收入" width="150"></el-table-column>
+                                <el-table-column label="环比" width="120">
+                                    <template #default="scope">
+                                        <span :class="scope.row.trend > 0 ? 'text-success' : 'text-danger'">
+                                            {{ scope.row.trend > 0 ? '↑' : '↓' }}{{ Math.abs(scope.row.trend) }}%
+                                        </span>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Element Plus -->
+    <script src="https://unpkg.com/element-plus@latest/dist/index.full.js"></script>
+    <!-- Element Plus 图标 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    
     <script>
-        // 治疗量趋势图
-        const trendCtx = document.getElementById('treatmentTrend').getContext('2d');
-        new Chart(trendCtx, {
-            type: 'line',
-            data: {
-                labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                datasets: [{
-                    label: '治疗人次',
-                    data: [3200, 3400, 3300, 3600, 3500, 3856],
-                    borderColor: '#1d4ed8',
-                    tension: 0.4,
-                    fill: false
-                }]
+        const { createApp, ref } = Vue;
+        
+        const app = createApp({
+            setup() {
+                const isCollapse = ref(false);
+                const activeMenu = ref('/reports');
+                const timeRange = ref('month');
+                const dateRange = ref([]);
+                const department = ref('all');
+                
+                // 表格数据
+                const tableData = ref([
+                    {
+                        department: '康复科',
+                        count: '1,256',
+                        avgTime: '48分钟',
+                        completion: '97.2%',
+                        income: '¥98,560',
+                        trend: 10.5
+                    },
+                    {
+                        department: '神经内科',
+                        count: '986',
+                        avgTime: '42分钟',
+                        completion: '95.8%',
+                        income: '¥76,420',
+                        trend: 8.2
+                    },
+                    {
+                        department: '骨科',
+                        count: '864',
+                        avgTime: '38分钟',
+                        completion: '96.5%',
+                        income: '¥65,280',
+                        trend: -2.1
+                    }
+                ]);
+                
+                const toggleSidebar = () => {
+                    isCollapse.value = !isCollapse.value;
+                    // 触发窗口resize事件，以便任何依赖窗口大小的组件可以调整
+                    window.dispatchEvent(new Event('resize'));
+                };
+                
+                const navigateTo = (url) => {
+                    window.location.href = url;
+                };
+                
+                return {
+                    isCollapse,
+                    activeMenu,
+                    timeRange,
+                    dateRange,
+                    department,
+                    tableData,
+                    toggleSidebar,
+                    navigateTo
+                };
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+            mounted() {
+                // 治疗量趋势图
+                const trendCtx = document.getElementById('treatmentTrend').getContext('2d');
+                new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [{
+                            label: '治疗人次',
+                            data: [3200, 3400, 3300, 3600, 3500, 3856],
+                            borderColor: '#409eff',
+                            tension: 0.4,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+                });
 
-        // 治疗类型分布图
-        const typesCtx = document.getElementById('treatmentTypes').getContext('2d');
-        new Chart(typesCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['运动疗法', '作业疗法', '物理治疗', '言语治疗', '其他'],
-                datasets: [{
-                    data: [35, 25, 20, 15, 5],
-                    backgroundColor: [
-                        '#1d4ed8',
-                        '#15803d',
-                        '#0369a1',
-                        '#854d0e',
-                        '#6b7280'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'right'
+                // 治疗类型分布图
+                const typesCtx = document.getElementById('treatmentTypes').getContext('2d');
+                new Chart(typesCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['运动疗法', '作业疗法', '物理治疗', '言语治疗', '其他'],
+                        datasets: [{
+                            data: [35, 25, 20, 15, 5],
+                            backgroundColor: [
+                                '#409eff',
+                                '#67c23a',
+                                '#e6a23c',
+                                '#f56c6c',
+                                '#909399'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
 
-        // 科室治疗量对比图
-        const deptCtx = document.getElementById('departmentComparison').getContext('2d');
-        new Chart(deptCtx, {
-            type: 'bar',
-            data: {
-                labels: ['康复科', '神经内科', '骨科', '其他科室'],
-                datasets: [{
-                    label: '治疗人次',
-                    data: [1256, 986, 864, 750],
-                    backgroundColor: '#1d4ed8'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+                // 科室治疗量对比图
+                const deptCtx = document.getElementById('departmentComparison').getContext('2d');
+                new Chart(deptCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['康复科', '神经内科', '骨科', '其他科室'],
+                        datasets: [{
+                            label: '治疗人次',
+                            data: [1256, 986, 864, 750],
+                            backgroundColor: '#409eff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+                });
 
-        // 患者年龄分布图
-        const ageCtx = document.getElementById('ageDistribution').getContext('2d');
-        new Chart(ageCtx, {
-            type: 'bar',
-            data: {
-                labels: ['0-18岁', '19-30岁', '31-45岁', '46-60岁', '61-75岁', '75岁以上'],
-                datasets: [{
-                    label: '患者数量',
-                    data: [120, 350, 580, 860, 720, 380],
-                    backgroundColor: '#0369a1'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+                // 患者年龄分布图
+                const ageCtx = document.getElementById('ageDistribution').getContext('2d');
+                new Chart(ageCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['0-18岁', '19-30岁', '31-45岁', '46-60岁', '61-75岁', '75岁以上'],
+                        datasets: [{
+                            label: '患者数量',
+                            data: [120, 350, 580, 860, 720, 380],
+                            backgroundColor: '#67c23a'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                });
             }
         });
+        
+        // 注册所有Element Plus图标组件
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(`ElIcon${key}`, component);
+        }
+        
+        app.use(ElementPlus);
+        app.mount('#app');
     </script>
 </body>
 </html> 

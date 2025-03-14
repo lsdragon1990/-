@@ -144,9 +144,9 @@
         /* 应用容器样式 */
         .app-container {
             padding: 20px;
-            padding-top: 0;
+            padding-top: 80px; /* 为固定头部留出空间 */
             box-sizing: border-box;
-            height: calc(100% - 100px);
+            height: calc(100% - 60px);
             overflow: auto;
         }
         
@@ -244,8 +244,16 @@
             align-items: center;
             padding: 0 15px;
             justify-content: space-between;
-            position: relative;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 210px;
             z-index: 999;
+            transition: left 0.28s;
+        }
+        
+        .fixed-header.is-collapse {
+            left: 64px;
         }
         
         .hamburger-container {
@@ -514,45 +522,74 @@
                     <span v-show="!isCollapse">康复信息系统</span>
                 </div>
                 <el-menu
+                    :default-active="activeMenu"
                     background-color="var(--menuBg)"
                     text-color="var(--menuColor)"
                     active-text-color="var(--menuActiveText)"
-                    default-active="2"
-                    class="el-menu-vertical-demo"
-                    :collapse="isCollapse">
-                    <el-menu-item index="1" @click="navigateTo('dashboard.html')">
+                    :collapse="isCollapse"
+                    :unique-opened="true"
+                >
+                    <el-menu-item index="/dashboard" @click="navigateTo('dashboard.html')">
                         <el-icon><el-icon-odometer /></el-icon>
-                        <span>仪表盘</span>
+                        <span>工作台</span>
                     </el-menu-item>
-                    <el-menu-item index="2" @click="navigateTo('patients.html')">
+                    <el-menu-item index="/patients" @click="navigateTo('patients.html')">
                         <el-icon><el-icon-user /></el-icon>
                         <span>患者管理</span>
                     </el-menu-item>
-                    <el-menu-item index="3" @click="navigateTo('scheduling.html')">
-                        <el-icon><el-icon-calendar /></el-icon>
-                        <span>排班管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="4" @click="navigateTo('assessment.html')">
-                        <el-icon><el-icon-document-checked /></el-icon>
-                        <span>评估管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="5" @click="navigateTo('treatment.html')">
-                        <el-icon><el-icon-first-aid-kit /></el-icon>
-                        <span>治疗记录</span>
-                    </el-menu-item>
-                    <el-menu-item index="6" @click="navigateTo('orders.html')">
+                    <el-menu-item index="/orders" @click="navigateTo('orders.html')">
                         <el-icon><el-icon-document /></el-icon>
                         <span>医嘱管理</span>
                     </el-menu-item>
-                    <el-menu-item index="7" @click="navigateTo('billing.html')">
+                    <el-menu-item index="/assessment" @click="navigateTo('assessment.html')">
+                        <el-icon><el-icon-document-checked /></el-icon>
+                        <span>康复评定</span>
+                    </el-menu-item>
+                    <el-menu-item index="/scheduling" @click="navigateTo('scheduling.html')">
+                        <el-icon><el-icon-calendar /></el-icon>
+                        <span>治疗排班</span>
+                    </el-menu-item>
+                    <el-menu-item index="/treatment" @click="navigateTo('treatment.html')">
+                        <el-icon><el-icon-first-aid-kit /></el-icon>
+                        <span>治疗执行</span>
+                    </el-menu-item>
+                    <el-menu-item index="/billing" @click="navigateTo('billing.html')">
                         <el-icon><el-icon-money /></el-icon>
                         <span>费用管理</span>
                     </el-menu-item>
-                    <el-menu-item index="8" @click="navigateTo('reports.html')">
-                        <el-icon><el-icon-data-analysis /></el-icon>
-                        <span>统计报表</span>
+                    <el-menu-item index="/documents" @click="navigateTo('documents.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>电子文书</span>
                     </el-menu-item>
-                    <el-menu-item index="9" @click="navigateTo('settings.html')">
+                    <el-menu-item index="/workload" @click="navigateTo('workload.html')">
+                        <el-icon><el-icon-data-line /></el-icon>
+                        <span>工作量统计</span>
+                    </el-menu-item>
+                    <el-menu-item index="/equipment" @click="navigateTo('equipment.html')">
+                        <el-icon><el-icon-suitcase /></el-icon>
+                        <span>设备管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/outpatient" @click="navigateTo('outpatient.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>门诊治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/external" @click="navigateTo('external.html')">
+                        <el-icon><el-icon-office-building /></el-icon>
+                        <span>外病区治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/physical" @click="navigateTo('physical.html')">
+                        <el-icon><el-icon-aim /></el-icon>
+                        <span>理疗治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/reports" @click="navigateTo('reports.html')">
+                        <el-icon><el-icon-pie-chart /></el-icon>
+                        <span>数据报表</span>
+                    </el-menu-item>
+                    <el-menu-item index="/insurance" @click="navigateTo('insurance.html')">
+                        <el-icon><el-icon-umbrella /></el-icon>
+                        <span>医保风控</span>
+                    </el-menu-item>
+                    <el-menu-item index="/settings" @click="navigateTo('settings.html')">
                         <el-icon><el-icon-setting /></el-icon>
                         <span>系统设置</span>
                     </el-menu-item>
@@ -562,11 +599,11 @@
             <!-- 主容器 -->
             <div class="main-container" :class="{'is-collapse': isCollapse}">
                 <!-- 头部导航 -->
-                <div class="fixed-header">
+                <div class="fixed-header" :class="{'is-collapse': isCollapse}">
                     <div class="d-flex align-center">
                         <el-icon class="hamburger-container cursor-pointer" @click="toggleSidebar"><el-icon-fold /></el-icon>
                         <el-breadcrumb separator="/" class="ml-2">
-                            <el-breadcrumb-item>首页</el-breadcrumb-item>
+                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                             <el-breadcrumb-item>患者管理</el-breadcrumb-item>
                         </el-breadcrumb>
                     </div>
@@ -575,7 +612,7 @@
                             <el-dropdown>
                                 <span class="avatar-wrapper">
                                     <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="user-avatar">
-                                    <span class="user-name">管理员</span>
+                                    <span class="user-name">张医生</span>
                                     <el-icon class="el-icon--right"><el-icon-arrow-down /></el-icon>
                                 </span>
                                 <template #dropdown>
@@ -829,21 +866,22 @@
             data() {
                 return {
                     isCollapse: false,
+                    activeMenu: '/patients',
+                    viewType: 'card',
+                    activeTab: 'all',
                     searchForm: {
                         name: '',
                         id: '',
                         status: '',
                         treatmentType: ''
                     },
-                    activeTab: 'all',
-                    viewType: 'card',
                     pageSize: 8,
                     currentPage: 1,
                     total: 100,
                     patientList: [
                         {
                             id: 'PT-2023-001',
-                            name: '张三',
+                            name: '陈明宇',
                             age: 45,
                             gender: '男',
                             diagnosis: '脑卒中后遗症',
@@ -851,7 +889,7 @@
                             admissionDate: '2024-02-28',
                             status: 'inpatient',
                             statusText: '住院',
-                            doctor: '李医生',
+                            doctor: '张文清',
                             avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
                             treatmentTypes: [
                                 { label: '物理治疗', value: 'physical', type: 'success' },
@@ -860,7 +898,7 @@
                         },
                         {
                             id: 'PT-2023-002',
-                            name: '李四',
+                            name: '林小红',
                             age: 38,
                             gender: '女',
                             diagnosis: '腰椎间盘突出',
@@ -868,7 +906,7 @@
                             admissionDate: '2024-03-05',
                             status: 'outpatient',
                             statusText: '门诊',
-                            doctor: '王医生',
+                            doctor: '王志强',
                             avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
                             treatmentTypes: [
                                 { label: '物理治疗', value: 'physical', type: 'success' }
@@ -876,7 +914,7 @@
                         },
                         {
                             id: 'PT-2023-003',
-                            name: '王五',
+                            name: '赵建国',
                             age: 62,
                             gender: '男',
                             diagnosis: '脑出血后遗症',
@@ -884,7 +922,7 @@
                             admissionDate: '2024-03-01',
                             status: 'external',
                             statusText: '外病区',
-                            doctor: '刘医生',
+                            doctor: '刘伟东',
                             avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
                             treatmentTypes: [
                                 { label: '物理治疗', value: 'physical', type: 'success' },
@@ -894,7 +932,7 @@
                         },
                         {
                             id: 'PT-2023-004',
-                            name: '赵六',
+                            name: '刘敏',
                             age: 55,
                             gender: '女',
                             diagnosis: '髋关节置换术后',
@@ -902,7 +940,7 @@
                             admissionDate: '2024-02-15',
                             status: 'discharged',
                             statusText: '已出院',
-                            doctor: '张医生',
+                            doctor: '李明华',
                             avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
                             treatmentTypes: [
                                 { label: '物理治疗', value: 'physical', type: 'success' }

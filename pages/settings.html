@@ -4,68 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>康复信息系统 - 系统设置</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Element Plus -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Plus UI 样式 -->
+    <link rel="stylesheet" href="../css/plus-ui-styles.css">
     <style>
+        :root {
+            /* 使用plus-ui变量 */
+            --el-color-primary: #409eff;
+            --el-color-success: #67c23a;
+            --el-color-warning: #e6a23c;
+            --el-color-danger: #f56c6c;
+            --el-color-info: #909399;
+            
+            --menuBg: #304156;
+            --menuColor: #bfcbd9;
+            --menuActiveText: #f4f4f5;
+            --menuHover: #263445;
+            
+            --subMenuBg: #1f2d3d;
+            --subMenuActiveText: #f4f4f5;
+            --subMenuHover: #001528;
+            
+            --fixedHeaderBg: #ffffff;
+            --tableHeaderBg: #f8f8f9;
+            --tableHeaderTextColor: #515a6e;
+        }
+        
         body {
             font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            height: 100%;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
             background-color: #f5f7fa;
         }
         
-        .sidebar {
-            width: 250px;
-            background-color: #fff;
-            border-right: 1px solid #e5e7eb;
+        #app {
             height: 100vh;
+        }
+        
+        .app-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .main-container {
+            height: 100%;
+            transition: margin-left 0.28s;
+            margin-left: 210px;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .main-container.is-collapse {
+            margin-left: 64px;
+        }
+        
+        .sidebar-container {
+            transition: width 0.28s;
+            width: 210px;
+            background-color: var(--menuBg);
+            height: 100%;
             position: fixed;
+            font-size: 0px;
             top: 0;
+            bottom: 0;
             left: 0;
-            z-index: 10;
+            z-index: 1001;
+            overflow: hidden;
+            box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
         }
         
-        .sidebar-header {
-            padding: 1.5rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
+        .sidebar-container .el-menu {
+            border: none;
+            height: 100%;
+            width: 100% !important;
         }
         
-        .sidebar-menu {
-            padding: 1rem 0;
+        .sidebar-container .el-menu-item {
+            height: 56px;
+            line-height: 56px;
+            padding: 0 20px !important;
+            color: var(--menuColor);
+            position: relative;
         }
         
-        .sidebar-menu-item {
-            padding: 0.75rem 1.5rem;
+        .sidebar-container .el-menu-item.is-active {
+            background-color: var(--menuHover) !important;
+            color: var(--menuActiveText) !important;
+        }
+        
+        .sidebar-container .el-menu-item:hover {
+            background-color: var(--menuHover) !important;
+        }
+        
+        .sidebar-container .el-menu-item .el-icon {
+            margin-right: 16px;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        
+        .logo-container {
+            height: 60px !important;
+            line-height: 60px !important;
+            background-color: var(--menuBg) !important;
+            overflow: hidden;
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+        
+        .logo-container span {
+            display: block;
+            color: var(--menuActiveText);
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* 折叠菜单样式 */
+        .sidebar-container.is-collapse {
+            width: 64px;
+        }
+        
+        .sidebar-container.is-collapse .el-menu-item .el-icon {
+            margin-right: 0;
+        }
+        
+        /* 应用容器样式 */
+        .app-container {
+            padding: 20px;
+            padding-top: 80px; /* 为固定头部留出空间 */
+            box-sizing: border-box;
+            height: calc(100% - 60px);
+            overflow: auto;
+        }
+        
+        /* 头部导航栏样式 */
+        .fixed-header {
+            height: 60px;
+            background-color: var(--fixedHeaderBg);
+            box-shadow: 0 1px 4px rgba(0,21,41,.08);
             display: flex;
             align-items: center;
-            color: #4b5563;
-            transition: all 0.2s;
+            padding: 0 15px;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 210px;
+            z-index: 999;
+            transition: left 0.28s;
         }
         
-        .sidebar-menu-item:hover {
-            background-color: #f3f4f6;
-            color: #1d4ed8;
+        .fixed-header.is-collapse {
+            left: 64px;
         }
         
-        .sidebar-menu-item.active {
-            background-color: #e0f2fe;
-            color: #1d4ed8;
-            border-right: 3px solid #1d4ed8;
+        .hamburger-container {
+            line-height: 60px;
+            height: 100%;
+            padding: 0 15px;
+            cursor: pointer;
+            transition: background .3s;
+            color: #606266;
+            font-size: 20px;
         }
         
-        .sidebar-menu-item i {
-            width: 20px;
-            margin-right: 0.75rem;
-            text-align: center;
+        .hamburger-container:hover {
+            background: rgba(0, 0, 0, .025);
         }
         
-        .main-content {
-            margin-left: 250px;
-            padding: 1.5rem;
-        }
-        
+        /* 设置卡片样式 */
         .settings-card {
             background-color: #fff;
             border-radius: 0.5rem;
@@ -86,31 +207,12 @@
         }
         
         .tab-button:hover {
-            color: #1d4ed8;
+            color: var(--el-color-primary);
         }
         
         .tab-button.active {
-            color: #1d4ed8;
-            border-bottom-color: #1d4ed8;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            
-            .sidebar-menu-item span {
-                display: none;
-            }
-            
-            .sidebar-menu-item i {
-                margin-right: 0;
-                font-size: 1.25rem;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
+            color: var(--el-color-primary);
+            border-bottom-color: var(--el-color-primary);
         }
 
         .toggle-checkbox:checked {
@@ -123,560 +225,371 @@
     </style>
 </head>
 <body>
-    <!-- 侧边栏 -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="flex items-center">
-                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
-                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+    <div id="app">
+        <div class="app-wrapper">
+            <!-- 侧边栏 -->
+            <div class="sidebar-container" :class="{'is-collapse': isCollapse}">
+                <div class="logo-container">
+                    <span v-show="!isCollapse">康复信息系统</span>
+                </div>
+                <el-menu
+                    :default-active="activeMenu"
+                    background-color="var(--menuBg)"
+                    text-color="var(--menuColor)"
+                    active-text-color="var(--menuActiveText)"
+                    :collapse="isCollapse"
+                    :unique-opened="true"
+                >
+                    <el-menu-item index="/dashboard" @click="navigateTo('dashboard.html')">
+                        <el-icon><el-icon-odometer /></el-icon>
+                        <span>工作台</span>
+                    </el-menu-item>
+                    <el-menu-item index="/patients" @click="navigateTo('patients.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>患者管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/orders" @click="navigateTo('orders.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>医嘱管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/assessment" @click="navigateTo('assessment.html')">
+                        <el-icon><el-icon-document-checked /></el-icon>
+                        <span>康复评定</span>
+                    </el-menu-item>
+                    <el-menu-item index="/scheduling" @click="navigateTo('scheduling.html')">
+                        <el-icon><el-icon-calendar /></el-icon>
+                        <span>治疗排班</span>
+                    </el-menu-item>
+                    <el-menu-item index="/treatment" @click="navigateTo('treatment.html')">
+                        <el-icon><el-icon-first-aid-kit /></el-icon>
+                        <span>治疗执行</span>
+                    </el-menu-item>
+                    <el-menu-item index="/billing" @click="navigateTo('billing.html')">
+                        <el-icon><el-icon-money /></el-icon>
+                        <span>费用管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/documents" @click="navigateTo('documents.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>电子文书</span>
+                    </el-menu-item>
+                    <el-menu-item index="/workload" @click="navigateTo('workload.html')">
+                        <el-icon><el-icon-data-line /></el-icon>
+                        <span>工作量统计</span>
+                    </el-menu-item>
+                    <el-menu-item index="/equipment" @click="navigateTo('equipment.html')">
+                        <el-icon><el-icon-suitcase /></el-icon>
+                        <span>设备管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/outpatient" @click="navigateTo('outpatient.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>门诊治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/external" @click="navigateTo('external.html')">
+                        <el-icon><el-icon-office-building /></el-icon>
+                        <span>外病区治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/physical" @click="navigateTo('physical.html')">
+                        <el-icon><el-icon-aim /></el-icon>
+                        <span>理疗治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/reports" @click="navigateTo('reports.html')">
+                        <el-icon><el-icon-pie-chart /></el-icon>
+                        <span>数据报表</span>
+                    </el-menu-item>
+                    <el-menu-item index="/insurance" @click="navigateTo('insurance.html')">
+                        <el-icon><el-icon-umbrella /></el-icon>
+                        <span>医保风控</span>
+                    </el-menu-item>
+                    <el-menu-item index="/settings" @click="navigateTo('settings.html')">
+                        <el-icon><el-icon-setting /></el-icon>
+                        <span>系统设置</span>
+                    </el-menu-item>
+                </el-menu>
             </div>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html" class="sidebar-menu-item">
-                <i class="fas fa-home"></i>
-                <span>工作台</span>
-            </a>
-            <a href="patients.html" class="sidebar-menu-item">
-                <i class="fas fa-user-injured"></i>
-                <span>患者管理</span>
-            </a>
-            <a href="orders.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-list"></i>
-                <span>医嘱管理</span>
-            </a>
-            <a href="assessment.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-check"></i>
-                <span>康复评定</span>
-            </a>
-            <a href="scheduling.html" class="sidebar-menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>治疗排班</span>
-            </a>
-            <a href="treatment.html" class="sidebar-menu-item">
-                <i class="fas fa-procedures"></i>
-                <span>治疗执行</span>
-            </a>
-            <a href="billing.html" class="sidebar-menu-item">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>费用管理</span>
-            </a>
-            <a href="documents.html" class="sidebar-menu-item">
-                <i class="fas fa-file-medical-alt"></i>
-                <span>电子文书</span>
-            </a>
-            <a href="workload.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span>工作量统计</span>
-            </a>
-            <a href="equipment.html" class="sidebar-menu-item">
-                <i class="fas fa-medkit"></i>
-                <span>设备管理</span>
-            </a>
-            <a href="outpatient.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital-user"></i>
-                <span>门诊治疗</span>
-            </a>
-            <a href="external.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital"></i>
-                <span>外病区治疗</span>
-            </a>
-            <a href="physical.html" class="sidebar-menu-item">
-                <i class="fas fa-hand-holding-medical"></i>
-                <span>理疗治疗</span>
-            </a>
-            <a href="reports.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-pie"></i>
-                <span>数据报表</span>
-            </a>
-            <a href="insurance.html" class="sidebar-menu-item">
-                <i class="fas fa-shield-alt"></i>
-                <span>医保风控</span>
-            </a>
-            <a href="settings.html" class="sidebar-menu-item active">
-                <i class="fas fa-cog"></i>
-                <span>系统设置</span>
-            </a>
-        </div>
-    </div>
 
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <!-- 顶部栏 -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <!-- 移除页面标题 -->
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
-                    <i class="fas fa-save mr-2"></i>
-                    保存更改
-                </button>
-            </div>
-        </div>
-
-        <!-- 设置选项卡 -->
-        <div class="border-b border-gray-200 mb-6">
-            <div class="flex space-x-8">
-                <button class="tab-button active">用户管理</button>
-                <button class="tab-button">角色权限</button>
-                <button class="tab-button">系统参数</button>
-                <button class="tab-button">数据字典</button>
-                <button class="tab-button">系统集成</button>
-                <button class="tab-button">系统日志</button>
-            </div>
-        </div>
-
-        <!-- 用户管理 -->
-        <div class="settings-card mb-6">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-semibold">用户列表</h3>
-                <button class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center">
-                    <i class="fas fa-plus mr-2"></i>
-                    添加用户
-                </button>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户信息</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">角色</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部门</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">最后登录</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">张文清</div>
-                                        <div class="text-sm text-gray-500">zhang@hospital.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
-                                    医生
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">康复科</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
-                                    启用
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                2024-03-01 10:30
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="text-blue-600 hover:text-blue-800 mr-3">编辑</button>
-                                <button class="text-red-600 hover:text-red-800">禁用</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/1.jpg" alt="">
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">李梦琪</div>
-                                        <div class="text-sm text-gray-500">li@hospital.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-purple-800 bg-purple-100 rounded-full">
-                                    治疗师
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">康复科</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
-                                    启用
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                2024-03-01 09:15
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="text-blue-600 hover:text-blue-800 mr-3">编辑</button>
-                                <button class="text-red-600 hover:text-red-800">禁用</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 角色权限设置 -->
-        <div class="settings-card mb-6">
-            <div class="p-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">角色权限设置</h3>
-            </div>
-            <div class="p-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- 医生角色 -->
-                    <div class="border rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="font-semibold">医生</div>
-                            <button class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">患者管理</span>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">医嘱管理</span>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">康复评定</span>
-                            </div>
-                        </div>
+            <!-- 主容器 -->
+            <div class="main-container" :class="{'is-collapse': isCollapse}">
+                <!-- 头部导航栏 -->
+                <div class="fixed-header" :class="{'is-collapse': isCollapse}">
+                    <div class="d-flex align-center">
+                        <el-icon class="hamburger-container cursor-pointer" @click="toggleSidebar"><el-icon-fold /></el-icon>
+                        <el-breadcrumb separator="/" class="ml-2">
+                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>系统设置</el-breadcrumb-item>
+                        </el-breadcrumb>
                     </div>
-                    <!-- 治疗师角色 -->
-                    <div class="border rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="font-semibold">治疗师</div>
-                            <button class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">治疗执行</span>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">排班管理</span>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">电子文书</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 管理员角色 -->
-                    <div class="border rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="font-semibold">管理员</div>
-                            <button class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">系统设置</span>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">用户管理</span>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-2" checked disabled>
-                                <span class="text-sm text-gray-600">数据管理</span>
-                            </div>
+                    <div class="right-menu">
+                        <div class="avatar-container">
+                            <el-dropdown>
+                                <span class="avatar-wrapper">
+                                    <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="user-avatar">
+                                    <span class="user-name">张医生</span>
+                                    <el-icon class="el-icon--right"><el-icon-arrow-down /></el-icon>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item>个人中心</el-dropdown-item>
+                                        <el-dropdown-item>修改密码</el-dropdown-item>
+                                        <el-dropdown-item divided>退出登录</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- 系统参数配置 -->
-        <div class="settings-card mb-6">
-            <div class="p-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">系统参数配置</h3>
-            </div>
-            <div class="p-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-4">
+                <!-- 应用内容区 -->
+                <div class="app-container">
+                    <!-- 顶部栏 -->
+                    <div class="d-flex justify-between align-center mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">系统名称</label>
-                            <input type="text" value="康复信息管理系统" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <!-- 移除页面标题 -->
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">医院名称</label>
-                            <input type="text" value="XX医院康复科" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">系统版本</label>
-                            <input type="text" value="V1.0.0" class="w-full px-3 py-2 border border-gray-300 rounded-md" readonly>
-                        </div>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">数据备份周期</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                <option>每天</option>
-                                <option>每周</option>
-                                <option>每月</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">日志保留时间</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                <option>30天</option>
-                                <option>60天</option>
-                                <option>90天</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">系统主题</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                <option>默认主题</option>
-                                <option>深色主题</option>
-                                <option>高对比度</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 系统日志 -->
-        <div class="settings-card">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-semibold">系统日志</h3>
-                <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 flex items-center">
-                    <i class="fas fa-download mr-2"></i>
-                    导出日志
-                </button>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作时间</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作用户</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作类型</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作内容</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP地址</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-03-01 10:30</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">张医生</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
-                                    登录
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">用户登录系统</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">192.168.1.100</td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-03-01 10:15</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">系统管理员</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
-                                    修改
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">修改系统参数配置</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">192.168.1.101</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 系统集成配置 -->
-        <div class="settings-card mb-6">
-            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-semibold">系统集成配置</h3>
-                <button class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center">
-                    <i class="fas fa-plus mr-2"></i>
-                    添加接口
-                </button>
-            </div>
-            <div class="p-4">
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- HIS系统集成 -->
-                    <div class="border rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 mr-3">
-                                    <i class="fas fa-hospital"></i>
-                                </span>
-                                <div>
-                                    <div class="font-semibold">HIS系统集成</div>
-                                    <div class="text-sm text-gray-500">医院信息系统数据交换</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full mr-3">
-                                    已连接
-                                </span>
-                                <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle" id="toggle-his" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked>
-                                    <label for="toggle-his" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">接口地址</label>
-                                <input type="text" value="http://hospital.example.com/api/his" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">接口类型</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                    <option>REST API</option>
-                                    <option>SOAP</option>
-                                    <option>WebService</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">认证方式</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                    <option>Token认证</option>
-                                    <option>Basic认证</option>
-                                    <option>OAuth2.0</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Token密钥</label>
-                                <input type="password" value="••••••••••••••••" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            </div>
-                        </div>
-                        <div class="mt-4 flex justify-end space-x-2">
-                            <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">
-                                测试连接
-                            </button>
-                            <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded hover:bg-blue-50">
-                                保存配置
-                            </button>
+                        <div class="d-flex">
+                            <el-button type="primary" class="mr-2">
+                                <el-icon><el-icon-check /></el-icon>
+                                保存设置
+                            </el-button>
+                            <el-button>
+                                <el-icon><el-icon-refresh-right /></el-icon>
+                                重置
+                            </el-button>
                         </div>
                     </div>
 
-                    <!-- LIS系统集成 -->
-                    <div class="border rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-green-100 text-green-600 mr-3">
-                                    <i class="fas fa-flask"></i>
-                                </span>
-                                <div>
-                                    <div class="font-semibold">LIS系统集成</div>
-                                    <div class="text-sm text-gray-500">检验信息系统数据交换</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full mr-3">
-                                    已连接
-                                </span>
-                                <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle" id="toggle-lis" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked>
-                                    <label for="toggle-lis" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
+                    <!-- 设置选项卡 -->
+                    <div class="plus-card mb-4">
+                        <div class="border-b border-gray-200">
+                            <div class="d-flex">
+                                <button class="tab-button active" @click="setActiveTab('general')">基本设置</button>
+                                <button class="tab-button" @click="setActiveTab('security')">安全设置</button>
+                                <button class="tab-button" @click="setActiveTab('notification')">通知设置</button>
+                                <button class="tab-button" @click="setActiveTab('system')">系统设置</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">接口地址</label>
-                                <input type="text" value="http://hospital.example.com/api/lis" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">接口类型</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                    <option>REST API</option>
-                                    <option>SOAP</option>
-                                    <option>WebService</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">认证方式</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                    <option>Token认证</option>
-                                    <option>Basic认证</option>
-                                    <option>OAuth2.0</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Token密钥</label>
-                                <input type="password" value="••••••••••••••••" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            </div>
+                        
+                        <!-- 基本设置 -->
+                        <div v-if="activeTab === 'general'" class="plus-card-body">
+                            <el-form label-width="120px">
+                                <el-form-item label="医院名称">
+                                    <el-input v-model="settings.hospitalName" placeholder="请输入医院名称"></el-input>
+                                </el-form-item>
+                                <el-form-item label="系统名称">
+                                    <el-input v-model="settings.systemName" placeholder="请输入系统名称"></el-input>
+                                </el-form-item>
+                                <el-form-item label="系统Logo">
+                                    <el-upload
+                                        action="#"
+                                        list-type="picture-card"
+                                        :auto-upload="false"
+                                    >
+                                        <el-icon><el-icon-plus /></el-icon>
+                                    </el-upload>
+                                </el-form-item>
+                                <el-form-item label="默认语言">
+                                    <el-select v-model="settings.language" placeholder="请选择默认语言">
+                                        <el-option label="简体中文" value="zh-CN"></el-option>
+                                        <el-option label="English" value="en-US"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="时区设置">
+                                    <el-select v-model="settings.timezone" placeholder="请选择时区">
+                                        <el-option label="(GMT+08:00) 北京时间" value="Asia/Shanghai"></el-option>
+                                        <el-option label="(GMT+00:00) 格林威治标准时间" value="GMT"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-form>
                         </div>
-                        <div class="mt-4 flex justify-end space-x-2">
-                            <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">
-                                测试连接
-                            </button>
-                            <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded hover:bg-blue-50">
-                                保存配置
-                            </button>
+                        
+                        <!-- 安全设置 -->
+                        <div v-if="activeTab === 'security'" class="plus-card-body">
+                            <el-form label-width="200px">
+                                <el-form-item label="启用双因素认证">
+                                    <el-switch v-model="settings.twoFactorAuth"></el-switch>
+                                </el-form-item>
+                                <el-form-item label="密码有效期">
+                                    <el-select v-model="settings.passwordExpiry" placeholder="请选择密码有效期">
+                                        <el-option label="30天" value="30"></el-option>
+                                        <el-option label="60天" value="60"></el-option>
+                                        <el-option label="90天" value="90"></el-option>
+                                        <el-option label="永不过期" value="never"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="密码复杂度要求">
+                                    <el-checkbox-group v-model="settings.passwordRequirements">
+                                        <el-checkbox label="uppercase">必须包含大写字母</el-checkbox>
+                                        <el-checkbox label="lowercase">必须包含小写字母</el-checkbox>
+                                        <el-checkbox label="numbers">必须包含数字</el-checkbox>
+                                        <el-checkbox label="special">必须包含特殊字符</el-checkbox>
+                                    </el-checkbox-group>
+                                </el-form-item>
+                                <el-form-item label="最小密码长度">
+                                    <el-input-number v-model="settings.minPasswordLength" :min="6" :max="20"></el-input-number>
+                                </el-form-item>
+                                <el-form-item label="登录失败锁定">
+                                    <div class="d-flex align-center">
+                                        <span>连续</span>
+                                        <el-input-number v-model="settings.loginAttempts" :min="3" :max="10" class="mx-2" size="small"></el-input-number>
+                                        <span>次登录失败后锁定账户</span>
+                                        <el-input-number v-model="settings.lockTime" :min="5" :max="60" class="mx-2" size="small"></el-input-number>
+                                        <span>分钟</span>
+                                    </div>
+                                </el-form-item>
+                            </el-form>
                         </div>
-                    </div>
-
-                    <!-- PACS系统集成 -->
-                    <div class="border rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-purple-100 text-purple-600 mr-3">
-                                    <i class="fas fa-x-ray"></i>
-                                </span>
-                                <div>
-                                    <div class="font-semibold">PACS系统集成</div>
-                                    <div class="text-sm text-gray-500">影像系统数据交换</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full mr-3">
-                                    配置中
-                                </span>
-                                <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle" id="toggle-pacs" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-pacs" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
+                        
+                        <!-- 通知设置 -->
+                        <div v-if="activeTab === 'notification'" class="plus-card-body">
+                            <el-form label-width="200px">
+                                <el-form-item label="系统通知">
+                                    <el-switch v-model="settings.systemNotifications"></el-switch>
+                                </el-form-item>
+                                <el-form-item label="邮件通知">
+                                    <el-switch v-model="settings.emailNotifications"></el-switch>
+                                </el-form-item>
+                                <el-form-item label="短信通知">
+                                    <el-switch v-model="settings.smsNotifications"></el-switch>
+                                </el-form-item>
+                                <el-form-item label="接收通知类型">
+                                    <el-checkbox-group v-model="settings.notificationTypes">
+                                        <el-checkbox label="appointment">预约提醒</el-checkbox>
+                                        <el-checkbox label="treatment">治疗提醒</el-checkbox>
+                                        <el-checkbox label="assessment">评估提醒</el-checkbox>
+                                        <el-checkbox label="billing">费用提醒</el-checkbox>
+                                        <el-checkbox label="system">系统更新</el-checkbox>
+                                    </el-checkbox-group>
+                                </el-form-item>
+                                <el-form-item label="SMTP服务器设置" v-if="settings.emailNotifications">
+                                    <el-input v-model="settings.smtpServer" placeholder="SMTP服务器地址"></el-input>
+                                </el-form-item>
+                                <el-form-item label="SMTP端口" v-if="settings.emailNotifications">
+                                    <el-input v-model="settings.smtpPort" placeholder="SMTP端口"></el-input>
+                                </el-form-item>
+                                <el-form-item label="发件人邮箱" v-if="settings.emailNotifications">
+                                    <el-input v-model="settings.senderEmail" placeholder="发件人邮箱"></el-input>
+                                </el-form-item>
+                            </el-form>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">接口地址</label>
-                                <input type="text" value="http://hospital.example.com/api/pacs" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">接口类型</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                    <option>REST API</option>
-                                    <option>SOAP</option>
-                                    <option>DICOM</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">认证方式</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                    <option>Token认证</option>
-                                    <option>Basic认证</option>
-                                    <option>OAuth2.0</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Token密钥</label>
-                                <input type="password" placeholder="请输入Token密钥" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            </div>
-                        </div>
-                        <div class="mt-4 flex justify-end space-x-2">
-                            <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">
-                                测试连接
-                            </button>
-                            <button class="px-3 py-1 border border-blue-600 text-blue-600 rounded hover:bg-blue-50">
-                                保存配置
-                            </button>
+                        
+                        <!-- 系统设置 -->
+                        <div v-if="activeTab === 'system'" class="plus-card-body">
+                            <el-form label-width="200px">
+                                <el-form-item label="数据备份频率">
+                                    <el-select v-model="settings.backupFrequency" placeholder="请选择备份频率">
+                                        <el-option label="每天" value="daily"></el-option>
+                                        <el-option label="每周" value="weekly"></el-option>
+                                        <el-option label="每月" value="monthly"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="备份保留时间">
+                                    <el-select v-model="settings.backupRetention" placeholder="请选择保留时间">
+                                        <el-option label="7天" value="7"></el-option>
+                                        <el-option label="30天" value="30"></el-option>
+                                        <el-option label="90天" value="90"></el-option>
+                                        <el-option label="永久" value="forever"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="系统日志级别">
+                                    <el-select v-model="settings.logLevel" placeholder="请选择日志级别">
+                                        <el-option label="错误" value="error"></el-option>
+                                        <el-option label="警告" value="warning"></el-option>
+                                        <el-option label="信息" value="info"></el-option>
+                                        <el-option label="调试" value="debug"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="启用系统维护模式">
+                                    <el-switch v-model="settings.maintenanceMode"></el-switch>
+                                </el-form-item>
+                                <el-form-item label="维护模式消息" v-if="settings.maintenanceMode">
+                                    <el-input type="textarea" v-model="settings.maintenanceMessage" placeholder="系统维护中，请稍后再试..."></el-input>
+                                </el-form-item>
+                                <el-form-item label="系统缓存">
+                                    <el-button type="warning">
+                                        <el-icon><el-icon-delete /></el-icon>
+                                        清除缓存
+                                    </el-button>
+                                </el-form-item>
+                            </el-form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Element Plus -->
+    <script src="https://unpkg.com/element-plus@latest/dist/index.full.js"></script>
+    <!-- Element Plus 图标 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    
+    <script>
+        const { createApp, ref } = Vue;
+        
+        const app = createApp({
+            setup() {
+                const isCollapse = ref(false);
+                const activeMenu = ref('/settings');
+                const activeTab = ref('general');
+                
+                // 设置数据
+                const settings = ref({
+                    hospitalName: '康复医学中心',
+                    systemName: '康复信息系统',
+                    language: 'zh-CN',
+                    timezone: 'Asia/Shanghai',
+                    twoFactorAuth: false,
+                    passwordExpiry: '90',
+                    passwordRequirements: ['uppercase', 'numbers'],
+                    minPasswordLength: 8,
+                    loginAttempts: 5,
+                    lockTime: 30,
+                    systemNotifications: true,
+                    emailNotifications: false,
+                    smsNotifications: false,
+                    notificationTypes: ['appointment', 'treatment'],
+                    smtpServer: '',
+                    smtpPort: '',
+                    senderEmail: '',
+                    backupFrequency: 'daily',
+                    backupRetention: '30',
+                    logLevel: 'info',
+                    maintenanceMode: false,
+                    maintenanceMessage: ''
+                });
+                
+                const setActiveTab = (tab) => {
+                    activeTab.value = tab;
+                };
+                
+                const toggleSidebar = () => {
+                    isCollapse.value = !isCollapse.value;
+                };
+                
+                const navigateTo = (url) => {
+                    window.location.href = url;
+                };
+                
+                return {
+                    isCollapse,
+                    activeMenu,
+                    activeTab,
+                    settings,
+                    setActiveTab,
+                    toggleSidebar,
+                    navigateTo
+                };
+            }
+        });
+        
+        // 注册所有Element Plus图标组件
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(`ElIcon${key}`, component);
+        }
+        
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
 </body>
 </html> 
