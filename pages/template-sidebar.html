@@ -1,0 +1,79 @@
+<!-- 侧边栏模板 -->
+<div class="sidebar-container" :class="{'is-collapse': isCollapse}">
+    <div class="logo-container">
+        <span v-show="!isCollapse">康复信息系统</span>
+    </div>
+    <el-menu
+        :default-active="activeMenu"
+        background-color="var(--menuBg)"
+        text-color="var(--menuColor)"
+        active-text-color="var(--menuActiveText)"
+        :collapse="isCollapse"
+        :unique-opened="true"
+    >
+        <el-menu-item index="/dashboard" @click="navigateTo('dashboard.html')">
+            <el-icon><el-icon-odometer /></el-icon>
+            <span>工作台</span>
+        </el-menu-item>
+        <el-menu-item index="/patients" @click="navigateTo('patients.html')">
+            <el-icon><el-icon-user /></el-icon>
+            <span>患者管理</span>
+        </el-menu-item>
+        <el-menu-item index="/orders" @click="navigateTo('orders.html')">
+            <el-icon><el-icon-document /></el-icon>
+            <span>医嘱管理</span>
+        </el-menu-item>
+        <el-menu-item index="/assessment" @click="navigateTo('assessment.html')">
+            <el-icon><el-icon-document-checked /></el-icon>
+            <span>康复评定</span>
+        </el-menu-item>
+        <el-menu-item index="/scheduling" @click="navigateTo('scheduling.html')">
+            <el-icon><el-icon-calendar /></el-icon>
+            <span>治疗排班</span>
+        </el-menu-item>
+        <el-menu-item index="/treatment" @click="navigateTo('treatment.html')">
+            <el-icon><el-icon-first-aid-kit /></el-icon>
+            <span>治疗执行</span>
+        </el-menu-item>
+        <el-menu-item index="/billing" @click="navigateTo('billing.html')">
+            <el-icon><el-icon-money /></el-icon>
+            <span>费用管理</span>
+        </el-menu-item>
+        <el-menu-item index="/documents" @click="navigateTo('documents.html')">
+            <el-icon><el-icon-document /></el-icon>
+            <span>电子文书</span>
+        </el-menu-item>
+        <el-menu-item index="/workload" @click="navigateTo('workload.html')">
+            <el-icon><el-icon-data-line /></el-icon>
+            <span>工作量统计</span>
+        </el-menu-item>
+        <el-menu-item index="/equipment" @click="navigateTo('equipment.html')">
+            <el-icon><el-icon-suitcase /></el-icon>
+            <span>设备管理</span>
+        </el-menu-item>
+        <el-menu-item index="/outpatient" @click="navigateTo('outpatient.html')">
+            <el-icon><el-icon-user /></el-icon>
+            <span>门诊治疗</span>
+        </el-menu-item>
+        <el-menu-item index="/external" @click="navigateTo('external.html')">
+            <el-icon><el-icon-office-building /></el-icon>
+            <span>外病区治疗</span>
+        </el-menu-item>
+        <el-menu-item index="/physical" @click="navigateTo('physical.html')">
+            <el-icon><el-icon-aim /></el-icon>
+            <span>理疗治疗</span>
+        </el-menu-item>
+        <el-menu-item index="/reports" @click="navigateTo('reports.html')">
+            <el-icon><el-icon-pie-chart /></el-icon>
+            <span>数据报表</span>
+        </el-menu-item>
+        <el-menu-item index="/insurance" @click="navigateTo('insurance.html')">
+            <el-icon><el-icon-umbrella /></el-icon>
+            <span>医保风控</span>
+        </el-menu-item>
+        <el-menu-item index="/settings" @click="navigateTo('settings.html')">
+            <el-icon><el-icon-setting /></el-icon>
+            <span>系统设置</span>
+        </el-menu-item>
+    </el-menu>
+</div> 

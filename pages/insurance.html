@@ -4,68 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>康复信息系统 - 医保风控</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Element Plus -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Plus UI 样式 -->
+    <link rel="stylesheet" href="../css/plus-ui-styles.css">
     <style>
+        :root {
+            /* 使用plus-ui变量 */
+            --el-color-primary: #409eff;
+            --el-color-success: #67c23a;
+            --el-color-warning: #e6a23c;
+            --el-color-danger: #f56c6c;
+            --el-color-info: #909399;
+            
+            --menuBg: #304156;
+            --menuColor: #bfcbd9;
+            --menuActiveText: #f4f4f5;
+            --menuHover: #263445;
+            
+            --subMenuBg: #1f2d3d;
+            --subMenuActiveText: #f4f4f5;
+            --subMenuHover: #001528;
+            
+            --fixedHeaderBg: #ffffff;
+            --tableHeaderBg: #f8f8f9;
+            --tableHeaderTextColor: #515a6e;
+        }
+        
         body {
             font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            height: 100%;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
             background-color: #f5f7fa;
         }
         
-        .sidebar {
-            width: 250px;
-            background-color: #fff;
-            border-right: 1px solid #e5e7eb;
+        #app {
             height: 100vh;
+        }
+        
+        .app-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .main-container {
+            height: 100%;
+            transition: margin-left 0.28s;
+            margin-left: 210px;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .main-container.is-collapse {
+            margin-left: 64px;
+        }
+        
+        .sidebar-container {
+            transition: width 0.28s;
+            width: 210px;
+            background-color: var(--menuBg);
+            height: 100%;
             position: fixed;
+            font-size: 0px;
             top: 0;
+            bottom: 0;
             left: 0;
-            z-index: 10;
+            z-index: 1001;
+            overflow: hidden;
+            box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
         }
         
-        .sidebar-header {
-            padding: 1.5rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
+        .sidebar-container .el-menu {
+            border: none;
+            height: 100%;
+            width: 100% !important;
         }
         
-        .sidebar-menu {
-            padding: 1rem 0;
+        .sidebar-container .el-menu-item {
+            height: 56px;
+            line-height: 56px;
+            padding: 0 20px !important;
+            color: var(--menuColor);
+            position: relative;
         }
         
-        .sidebar-menu-item {
-            padding: 0.75rem 1.5rem;
+        .sidebar-container .el-menu-item.is-active {
+            background-color: var(--menuHover) !important;
+            color: var(--menuActiveText) !important;
+        }
+        
+        .sidebar-container .el-menu-item:hover {
+            background-color: var(--menuHover) !important;
+        }
+        
+        .sidebar-container .el-menu-item .el-icon {
+            margin-right: 16px;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        
+        .logo-container {
+            height: 60px !important;
+            line-height: 60px !important;
+            background-color: var(--menuBg) !important;
+            overflow: hidden;
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+        
+        .logo-container span {
+            display: block;
+            color: var(--menuActiveText);
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* 折叠菜单样式 */
+        .sidebar-container.is-collapse {
+            width: 64px;
+        }
+        
+        .sidebar-container.is-collapse .el-menu-item .el-icon {
+            margin-right: 0;
+        }
+        
+        /* 应用容器样式 */
+        .app-container {
+            padding: 20px;
+            padding-top: 80px; /* 为固定头部留出空间 */
+            box-sizing: border-box;
+            height: calc(100% - 60px);
+            overflow: auto;
+        }
+        
+        /* 头部导航栏样式 */
+        .fixed-header {
+            height: 60px;
+            background-color: var(--fixedHeaderBg);
+            box-shadow: 0 1px 4px rgba(0,21,41,.08);
             display: flex;
             align-items: center;
-            color: #4b5563;
-            transition: all 0.2s;
+            padding: 0 15px;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 210px;
+            z-index: 999;
+            transition: left 0.28s;
         }
         
-        .sidebar-menu-item:hover {
-            background-color: #f3f4f6;
-            color: #1d4ed8;
+        .fixed-header.is-collapse {
+            left: 64px;
         }
         
-        .sidebar-menu-item.active {
-            background-color: #e0f2fe;
-            color: #1d4ed8;
-            border-right: 3px solid #1d4ed8;
+        .hamburger-container {
+            line-height: 60px;
+            height: 100%;
+            padding: 0 15px;
+            cursor: pointer;
+            transition: background .3s;
+            color: #606266;
+            font-size: 20px;
         }
         
-        .sidebar-menu-item i {
-            width: 20px;
-            margin-right: 0.75rem;
-            text-align: center;
+        .hamburger-container:hover {
+            background: rgba(0, 0, 0, .025);
         }
         
-        .main-content {
-            margin-left: 250px;
-            padding: 1.5rem;
-        }
-        
+        /* 医保卡片样式 */
         .insurance-card {
             background-color: #fff;
             border-radius: 0.5rem;
@@ -76,364 +197,421 @@
         .insurance-card:hover {
             transform: translateY(-2px);
         }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            
-            .sidebar-menu-item span {
-                display: none;
-            }
-            
-            .sidebar-menu-item i {
-                margin-right: 0;
-                font-size: 1.25rem;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- 侧边栏 -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="flex items-center">
-                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
-                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+    <div id="app">
+        <div class="app-wrapper">
+            <!-- 侧边栏 -->
+            <div class="sidebar-container" :class="{'is-collapse': isCollapse}">
+                <div class="logo-container">
+                    <span v-show="!isCollapse">康复信息系统</span>
+                </div>
+                <el-menu
+                    :default-active="activeMenu"
+                    background-color="var(--menuBg)"
+                    text-color="var(--menuColor)"
+                    active-text-color="var(--menuActiveText)"
+                    :collapse="isCollapse"
+                    :unique-opened="true"
+                >
+                    <el-menu-item index="/dashboard" @click="navigateTo('dashboard.html')">
+                        <el-icon><el-icon-odometer /></el-icon>
+                        <span>工作台</span>
+                    </el-menu-item>
+                    <el-menu-item index="/patients" @click="navigateTo('patients.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>患者管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/orders" @click="navigateTo('orders.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>医嘱管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/assessment" @click="navigateTo('assessment.html')">
+                        <el-icon><el-icon-document-checked /></el-icon>
+                        <span>康复评定</span>
+                    </el-menu-item>
+                    <el-menu-item index="/scheduling" @click="navigateTo('scheduling.html')">
+                        <el-icon><el-icon-calendar /></el-icon>
+                        <span>治疗排班</span>
+                    </el-menu-item>
+                    <el-menu-item index="/treatment" @click="navigateTo('treatment.html')">
+                        <el-icon><el-icon-first-aid-kit /></el-icon>
+                        <span>治疗执行</span>
+                    </el-menu-item>
+                    <el-menu-item index="/billing" @click="navigateTo('billing.html')">
+                        <el-icon><el-icon-money /></el-icon>
+                        <span>费用管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/documents" @click="navigateTo('documents.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>电子文书</span>
+                    </el-menu-item>
+                    <el-menu-item index="/workload" @click="navigateTo('workload.html')">
+                        <el-icon><el-icon-data-line /></el-icon>
+                        <span>工作量统计</span>
+                    </el-menu-item>
+                    <el-menu-item index="/equipment" @click="navigateTo('equipment.html')">
+                        <el-icon><el-icon-suitcase /></el-icon>
+                        <span>设备管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/outpatient" @click="navigateTo('outpatient.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>门诊治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/external" @click="navigateTo('external.html')">
+                        <el-icon><el-icon-office-building /></el-icon>
+                        <span>外病区治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/physical" @click="navigateTo('physical.html')">
+                        <el-icon><el-icon-aim /></el-icon>
+                        <span>理疗治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/reports" @click="navigateTo('reports.html')">
+                        <el-icon><el-icon-pie-chart /></el-icon>
+                        <span>数据报表</span>
+                    </el-menu-item>
+                    <el-menu-item index="/insurance" @click="navigateTo('insurance.html')">
+                        <el-icon><el-icon-umbrella /></el-icon>
+                        <span>医保风控</span>
+                    </el-menu-item>
+                    <el-menu-item index="/settings" @click="navigateTo('settings.html')">
+                        <el-icon><el-icon-setting /></el-icon>
+                        <span>系统设置</span>
+                    </el-menu-item>
+                </el-menu>
             </div>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html" class="sidebar-menu-item">
-                <i class="fas fa-home"></i>
-                <span>工作台</span>
-            </a>
-            <a href="patients.html" class="sidebar-menu-item">
-                <i class="fas fa-user-injured"></i>
-                <span>患者管理</span>
-            </a>
-            <a href="orders.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-list"></i>
-                <span>医嘱管理</span>
-            </a>
-            <a href="assessment.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-check"></i>
-                <span>康复评定</span>
-            </a>
-            <a href="scheduling.html" class="sidebar-menu-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>治疗排班</span>
-            </a>
-            <a href="treatment.html" class="sidebar-menu-item">
-                <i class="fas fa-procedures"></i>
-                <span>治疗执行</span>
-            </a>
-            <a href="billing.html" class="sidebar-menu-item">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>费用管理</span>
-            </a>
-            <a href="documents.html" class="sidebar-menu-item">
-                <i class="fas fa-file-medical-alt"></i>
-                <span>电子文书</span>
-            </a>
-            <a href="workload.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span>工作量统计</span>
-            </a>
-            <a href="equipment.html" class="sidebar-menu-item">
-                <i class="fas fa-medkit"></i>
-                <span>设备管理</span>
-            </a>
-            <a href="outpatient.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital-user"></i>
-                <span>门诊治疗</span>
-            </a>
-            <a href="external.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital"></i>
-                <span>外病区治疗</span>
-            </a>
-            <a href="physical.html" class="sidebar-menu-item">
-                <i class="fas fa-hand-holding-medical"></i>
-                <span>理疗治疗</span>
-            </a>
-            <a href="reports.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-pie"></i>
-                <span>数据报表</span>
-            </a>
-            <a href="insurance.html" class="sidebar-menu-item active">
-                <i class="fas fa-shield-alt"></i>
-                <span>医保风控</span>
-            </a>
-            <a href="settings.html" class="sidebar-menu-item">
-                <i class="fas fa-cog"></i>
-                <span>系统设置</span>
-            </a>
+
+            <!-- 主容器 -->
+            <div class="main-container" :class="{'is-collapse': isCollapse}">
+                <!-- 头部导航栏 -->
+                <div class="fixed-header" :class="{'is-collapse': isCollapse}">
+                    <div class="d-flex align-center">
+                        <el-icon class="hamburger-container cursor-pointer" @click="toggleSidebar"><el-icon-fold /></el-icon>
+                        <el-breadcrumb separator="/" class="ml-2">
+                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>医保风控</el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <div class="right-menu">
+                        <div class="avatar-container">
+                            <el-dropdown>
+                                <span class="avatar-wrapper">
+                                    <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="user-avatar">
+                                    <span class="user-name">张医生</span>
+                                    <el-icon class="el-icon--right"><el-icon-arrow-down /></el-icon>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item>个人中心</el-dropdown-item>
+                                        <el-dropdown-item>修改密码</el-dropdown-item>
+                                        <el-dropdown-item divided>退出登录</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用内容区 -->
+                <div class="app-container">
+                    <!-- 顶部栏 -->
+                    <div class="d-flex justify-between align-center mb-4">
+                        <div>
+                            <!-- 移除页面标题 -->
+                        </div>
+                        <div class="d-flex">
+                            <el-button type="primary" class="mr-2">
+                                <el-icon><el-icon-setting /></el-icon>
+                                限额设置
+                            </el-button>
+                            <el-button>
+                                <el-icon><el-icon-download /></el-icon>
+                                导出记录
+                            </el-button>
+                        </div>
+                    </div>
+
+                    <!-- 医保风控概览 -->
+                    <el-row :gutter="20" class="mb-4">
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">本月医保总额</div>
+                                    <el-icon class="text-primary" size="20"><el-icon-money /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">¥256,800</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-muted text-sm">限额：¥300,000</span>
+                                    <div class="ml-2 flex-1">
+                                        <el-progress :percentage="85" :show-text="false"></el-progress>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">超限预警</div>
+                                    <el-icon class="text-warning" size="20"><el-icon-warning /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">12</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-warning text-sm mr-1">↑3</span>
+                                    <span class="text-muted text-sm">较上月</span>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">待审核记录</div>
+                                    <el-icon class="text-success" size="20"><el-icon-document-checked /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">28</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-danger text-sm mr-1">↑8</span>
+                                    <span class="text-muted text-sm">较上月</span>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :xs="24" :sm="12" :md="6">
+                            <div class="plus-card p-4">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <div class="text-muted">合规率</div>
+                                    <el-icon class="text-primary" size="20"><el-icon-circle-check /></el-icon>
+                                </div>
+                                <div class="text-2xl font-bold">96.8%</div>
+                                <div class="d-flex align-center mt-2">
+                                    <span class="text-success text-sm mr-1">↑1.2%</span>
+                                    <span class="text-muted text-sm">较上月</span>
+                                </div>
+                            </div>
+                        </el-col>
+                    </el-row>
+
+                    <!-- 医保限额设置 -->
+                    <div class="plus-card p-4 mb-4">
+                        <h3 class="text-lg font-semibold mb-4">医保限额设置</h3>
+                        <el-row :gutter="20">
+                            <el-col :xs="24" :md="8">
+                                <div class="space-y-4">
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">运动疗法</span>
+                                        <span class="font-semibold">¥120/次</span>
+                                    </div>
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">作业疗法</span>
+                                        <span class="font-semibold">¥100/次</span>
+                                    </div>
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">物理治疗</span>
+                                        <span class="font-semibold">¥80/次</span>
+                                    </div>
+                                </div>
+                            </el-col>
+                            <el-col :xs="24" :md="8">
+                                <div class="space-y-4">
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">言语治疗</span>
+                                        <span class="font-semibold">¥150/次</span>
+                                    </div>
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">吞咽治疗</span>
+                                        <span class="font-semibold">¥120/次</span>
+                                    </div>
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">认知训练</span>
+                                        <span class="font-semibold">¥100/次</span>
+                                    </div>
+                                </div>
+                            </el-col>
+                            <el-col :xs="24" :md="8">
+                                <div class="space-y-4">
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">每月总限额</span>
+                                        <span class="font-semibold">¥300,000</span>
+                                    </div>
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">单人月限额</span>
+                                        <span class="font-semibold">¥5,000</span>
+                                    </div>
+                                    <div class="d-flex justify-between align-center">
+                                        <span class="text-muted">单次治疗限额</span>
+                                        <span class="font-semibold">¥500</span>
+                                    </div>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </div>
+
+                    <!-- 超限预警 -->
+                    <div class="plus-card mb-4">
+                        <div class="plus-card-header border-bottom">
+                            <h3 class="text-lg font-semibold">超限预警</h3>
+                        </div>
+                        <div class="plus-card-body">
+                            <el-table :data="warningData" style="width: 100%" border>
+                                <el-table-column label="患者信息" min-width="180">
+                                    <template #default="scope">
+                                        <div class="d-flex align-center">
+                                            <el-avatar :size="32" :src="scope.row.avatar"></el-avatar>
+                                            <div class="ml-2">
+                                                <div class="font-medium">{{ scope.row.name }}</div>
+                                                <div class="text-muted text-sm">{{ scope.row.id }}</div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="warningType" label="预警类型"></el-table-column>
+                                <el-table-column prop="currentAmount" label="当前金额"></el-table-column>
+                                <el-table-column prop="limit" label="限额"></el-table-column>
+                                <el-table-column label="超限比例" width="180">
+                                    <template #default="scope">
+                                        <div>{{ scope.row.overRate }}%</div>
+                                        <el-progress :percentage="scope.row.overRate" :color="scope.row.progressColor"></el-progress>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="150">
+                                    <template #default>
+                                        <el-button type="primary" size="small" link>查看详情</el-button>
+                                        <el-button type="success" size="small" link>处理</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </div>
+
+                    <!-- 待审核记录 -->
+                    <div class="plus-card">
+                        <div class="plus-card-header border-bottom">
+                            <h3 class="text-lg font-semibold">待审核记录</h3>
+                        </div>
+                        <div class="plus-card-body">
+                            <el-table :data="reviewData" style="width: 100%" border>
+                                <el-table-column label="患者信息" min-width="180">
+                                    <template #default="scope">
+                                        <div class="d-flex align-center">
+                                            <el-avatar :size="32" :src="scope.row.avatar"></el-avatar>
+                                            <div class="ml-2">
+                                                <div class="font-medium">{{ scope.row.name }}</div>
+                                                <div class="text-muted text-sm">{{ scope.row.id }}</div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="treatmentItem" label="治疗项目"></el-table-column>
+                                <el-table-column prop="treatmentTime" label="治疗时间"></el-table-column>
+                                <el-table-column prop="cost" label="费用"></el-table-column>
+                                <el-table-column label="状态" width="120">
+                                    <template #default="scope">
+                                        <el-tag :type="scope.row.statusType">{{ scope.row.status }}</el-tag>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作" width="150">
+                                    <template #default>
+                                        <el-button type="primary" size="small" link>审核</el-button>
+                                        <el-button type="info" size="small" link>详情</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <!-- 顶部栏 -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800">医保风控</h2>
-                <p class="text-gray-600">管理医保限额和规范治疗记录</p>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
-                    <i class="fas fa-cog mr-2"></i>
-                    限额设置
-                </button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
-                    <i class="fas fa-download mr-2"></i>
-                    导出记录
-                </button>
-            </div>
-        </div>
-
-        <!-- 医保风控概览 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div class="insurance-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">本月医保总额</div>
-                    <i class="fas fa-yen-sign text-blue-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">¥256,800</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-gray-500 text-sm">限额：¥300,000</span>
-                    <div class="ml-2 flex-1 h-1 bg-gray-200 rounded-full">
-                        <div class="w-4/5 h-full bg-blue-600 rounded-full"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="insurance-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">超限预警</div>
-                    <i class="fas fa-exclamation-triangle text-yellow-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">12</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-yellow-500 text-sm mr-1">↑3</span>
-                    <span class="text-gray-500 text-sm">较上月</span>
-                </div>
-            </div>
-            <div class="insurance-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">待审核记录</div>
-                    <i class="fas fa-clipboard-check text-green-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">28</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-red-500 text-sm mr-1">↑8</span>
-                    <span class="text-gray-500 text-sm">较上月</span>
-                </div>
-            </div>
-            <div class="insurance-card p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="text-gray-600">合规率</div>
-                    <i class="fas fa-check-circle text-blue-500"></i>
-                </div>
-                <div class="text-2xl font-bold text-gray-800">96.8%</div>
-                <div class="flex items-center mt-2">
-                    <span class="text-green-500 text-sm mr-1">↑1.2%</span>
-                    <span class="text-gray-500 text-sm">较上月</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 医保限额设置 -->
-        <div class="insurance-card p-4 mb-6">
-            <h3 class="text-lg font-semibold mb-4">医保限额设置</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">运动疗法</span>
-                        <span class="font-semibold">¥120/次</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">作业疗法</span>
-                        <span class="font-semibold">¥100/次</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">物理治疗</span>
-                        <span class="font-semibold">¥80/次</span>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">言语治疗</span>
-                        <span class="font-semibold">¥150/次</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">认知训练</span>
-                        <span class="font-semibold">¥130/次</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">康复评定</span>
-                        <span class="font-semibold">¥200/次</span>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">单日限额</span>
-                        <span class="font-semibold">¥500/天</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">月度限额</span>
-                        <span class="font-semibold">¥10,000/月</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">年度限额</span>
-                        <span class="font-semibold">¥100,000/年</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 超限预警列表 -->
-        <div class="insurance-card overflow-hidden mb-6">
-            <div class="px-4 py-3 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">超限预警</h3>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">患者信息</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">预警类型</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">当前金额</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">限额</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">超限比例</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">陈明宇</div>
-                                        <div class="text-sm text-gray-500">住院号: 2024030101</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">
-                                    月度限额
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥11,280</td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥10,000</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-red-500">+12.8%</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="text-blue-600 hover:text-blue-800 mr-3">查看</button>
-                                <button class="text-red-600 hover:text-red-800">处理</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/1.jpg" alt="">
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">林雨婷</div>
-                                        <div class="text-sm text-gray-500">住院号: 2024030102</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">
-                                    日限额
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥580</td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥500</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-red-500">+16.0%</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="text-blue-600 hover:text-blue-800 mr-3">查看</button>
-                                <button class="text-red-600 hover:text-red-800">处理</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 待审核记录 -->
-        <div class="insurance-card overflow-hidden">
-            <div class="px-4 py-3 border-b border-gray-200">
-                <h3 class="text-lg font-semibold">待审核记录</h3>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">患者信息</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">治疗项目</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">治疗时间</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">费用</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">黄志强</div>
-                                        <div class="text-sm text-gray-500">住院号: 2024030103</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">运动疗法</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2024-03-01 09:30</td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥120</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
-                                    待审核
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="text-green-600 hover:text-green-800 mr-3">通过</button>
-                                <button class="text-red-600 hover:text-red-800">驳回</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/2.jpg" alt="">
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">刘晓华</div>
-                                        <div class="text-sm text-gray-500">住院号: 2024030104</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">物理治疗</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2024-03-01 10:00</td>
-                            <td class="px-6 py-4 whitespace-nowrap">¥80</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
-                                    待审核
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="text-green-600 hover:text-green-800 mr-3">通过</button>
-                                <button class="text-red-600 hover:text-red-800">驳回</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Element Plus -->
+    <script src="https://unpkg.com/element-plus@latest/dist/index.full.js"></script>
+    <!-- Element Plus 图标 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    <!-- 页面脚本 -->
+    <script>
+        const { createApp, ref } = Vue;
+        
+        const app = createApp({
+            setup() {
+                const isCollapse = ref(false);
+                const activeMenu = ref('/insurance');
+                
+                // 表格数据
+                const warningData = ref([
+                    {
+                        name: '张三',
+                        id: 'P202403001',
+                        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+                        warningType: '单人月限额',
+                        currentAmount: '¥5,680',
+                        limit: '¥5,000',
+                        overRate: 113.6,
+                        progressColor: '#f56c6c'
+                    },
+                    {
+                        name: '李四',
+                        id: 'P202403002',
+                        avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
+                        warningType: '单次治疗限额',
+                        currentAmount: '¥580',
+                        limit: '¥500',
+                        overRate: 116,
+                        progressColor: '#e6a23c'
+                    }
+                ]);
+                
+                const reviewData = ref([
+                    {
+                        name: '王五',
+                        id: 'P202403003',
+                        avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
+                        treatmentItem: '运动疗法',
+                        treatmentTime: '2024-03-01 10:30',
+                        cost: '¥120',
+                        status: '待审核',
+                        statusType: 'warning'
+                    },
+                    {
+                        name: '赵六',
+                        id: 'P202403004',
+                        avatar: 'https://randomuser.me/api/portraits/men/4.jpg',
+                        treatmentItem: '作业疗法',
+                        treatmentTime: '2024-03-01 14:00',
+                        cost: '¥100',
+                        status: '待审核',
+                        statusType: 'warning'
+                    }
+                ]);
+                
+                const toggleSidebar = () => {
+                    isCollapse.value = !isCollapse.value;
+                    // 触发窗口resize事件，以便任何依赖窗口大小的组件可以调整
+                    window.dispatchEvent(new Event('resize'));
+                };
+                
+                const navigateTo = (url) => {
+                    window.location.href = url;
+                };
+                
+                return {
+                    isCollapse,
+                    activeMenu,
+                    warningData,
+                    reviewData,
+                    toggleSidebar,
+                    navigateTo
+                };
+            }
+        });
+        
+        // 注册所有Element Plus图标组件
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(`ElIcon${key}`, component);
+        }
+        
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
 </body>
 </html> 

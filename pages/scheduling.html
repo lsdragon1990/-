@@ -4,13 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>康复信息系统 - 治疗排班</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Element Plus -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Plus UI 样式 -->
+    <link rel="stylesheet" href="../css/plus-ui-styles.css">
     <style>
+        :root {
+            /* 使用plus-ui变量 */
+            --el-color-primary: #409eff;
+            --el-color-success: #67c23a;
+            --el-color-warning: #e6a23c;
+            --el-color-danger: #f56c6c;
+            --el-color-info: #909399;
+            
+            --menuBg: #304156;
+            --menuColor: #bfcbd9;
+            --menuActiveText: #f4f4f5;
+            --menuHover: #263445;
+            
+            --subMenuBg: #1f2d3d;
+            --subMenuActiveText: #f4f4f5;
+            --subMenuHover: #001528;
+            
+            --fixedHeaderBg: #ffffff;
+            --tableHeaderBg: #f8f8f9;
+            --tableHeaderTextColor: #515a6e;
+        }
+        
         body {
             font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
             background-color: #f5f7fa;
@@ -129,6 +151,7 @@
             border-left: 2px solid #854d0e;
         }
         
+        /* 治疗师排班表样式 */
         .therapist-schedule {
             background-color: #fff;
             border-radius: 0.5rem;
@@ -200,280 +223,361 @@
     </style>
 </head>
 <body>
-    <!-- 侧边栏 -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="flex items-center">
-                <i class="fas fa-heartbeat text-blue-600 text-2xl mr-3"></i>
-                <h1 class="text-xl font-bold text-gray-800">康复系统</h1>
+    <div id="app">
+        <div class="app-wrapper">
+            <!-- 侧边栏 -->
+            <div class="sidebar-container" :class="{'is-collapse': isCollapse}">
+                <div class="logo-container">
+                    <span v-show="!isCollapse">康复信息系统</span>
+                </div>
+                <el-menu
+                    :default-active="activeMenu"
+                    background-color="var(--menuBg)"
+                    text-color="var(--menuColor)"
+                    active-text-color="var(--menuActiveText)"
+                    :collapse="isCollapse"
+                    :unique-opened="true"
+                >
+                    <el-menu-item index="/dashboard" @click="navigateTo('dashboard.html')">
+                        <el-icon><el-icon-odometer /></el-icon>
+                        <span>工作台</span>
+                    </el-menu-item>
+                    <el-menu-item index="/patients" @click="navigateTo('patients.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>患者管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/orders" @click="navigateTo('orders.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>医嘱管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/assessment" @click="navigateTo('assessment.html')">
+                        <el-icon><el-icon-document-checked /></el-icon>
+                        <span>康复评定</span>
+                    </el-menu-item>
+                    <el-menu-item index="/scheduling" @click="navigateTo('scheduling.html')">
+                        <el-icon><el-icon-calendar /></el-icon>
+                        <span>治疗排班</span>
+                    </el-menu-item>
+                    <el-menu-item index="/treatment" @click="navigateTo('treatment.html')">
+                        <el-icon><el-icon-first-aid-kit /></el-icon>
+                        <span>治疗执行</span>
+                    </el-menu-item>
+                    <el-menu-item index="/billing" @click="navigateTo('billing.html')">
+                        <el-icon><el-icon-money /></el-icon>
+                        <span>费用管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/documents" @click="navigateTo('documents.html')">
+                        <el-icon><el-icon-document /></el-icon>
+                        <span>电子文书</span>
+                    </el-menu-item>
+                    <el-menu-item index="/workload" @click="navigateTo('workload.html')">
+                        <el-icon><el-icon-data-line /></el-icon>
+                        <span>工作量统计</span>
+                    </el-menu-item>
+                    <el-menu-item index="/equipment" @click="navigateTo('equipment.html')">
+                        <el-icon><el-icon-suitcase /></el-icon>
+                        <span>设备管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="/outpatient" @click="navigateTo('outpatient.html')">
+                        <el-icon><el-icon-user /></el-icon>
+                        <span>门诊治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/external" @click="navigateTo('external.html')">
+                        <el-icon><el-icon-office-building /></el-icon>
+                        <span>外病区治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/physical" @click="navigateTo('physical.html')">
+                        <el-icon><el-icon-aim /></el-icon>
+                        <span>理疗治疗</span>
+                    </el-menu-item>
+                    <el-menu-item index="/reports" @click="navigateTo('reports.html')">
+                        <el-icon><el-icon-pie-chart /></el-icon>
+                        <span>数据报表</span>
+                    </el-menu-item>
+                    <el-menu-item index="/insurance" @click="navigateTo('insurance.html')">
+                        <el-icon><el-icon-umbrella /></el-icon>
+                        <span>医保风控</span>
+                    </el-menu-item>
+                    <el-menu-item index="/settings" @click="navigateTo('settings.html')">
+                        <el-icon><el-icon-setting /></el-icon>
+                        <span>系统设置</span>
+                    </el-menu-item>
+                </el-menu>
             </div>
-        </div>
-        <div class="sidebar-menu">
-            <a href="dashboard.html" class="sidebar-menu-item">
-                <i class="fas fa-home"></i>
-                <span>工作台</span>
-            </a>
-            <a href="patients.html" class="sidebar-menu-item">
-                <i class="fas fa-user-injured"></i>
-                <span>患者管理</span>
-            </a>
-            <a href="orders.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-list"></i>
-                <span>医嘱管理</span>
-            </a>
-            <a href="assessment.html" class="sidebar-menu-item">
-                <i class="fas fa-clipboard-check"></i>
-                <span>康复评定</span>
-            </a>
-            <a href="scheduling.html" class="sidebar-menu-item active">
-                <i class="fas fa-calendar-alt"></i>
-                <span>治疗排班</span>
-            </a>
-            <a href="treatment.html" class="sidebar-menu-item">
-                <i class="fas fa-procedures"></i>
-                <span>治疗执行</span>
-            </a>
-            <a href="billing.html" class="sidebar-menu-item">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>费用管理</span>
-            </a>
-            <a href="documents.html" class="sidebar-menu-item">
-                <i class="fas fa-file-medical-alt"></i>
-                <span>电子文书</span>
-            </a>
-            <a href="workload.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span>工作量统计</span>
-            </a>
-            <a href="equipment.html" class="sidebar-menu-item">
-                <i class="fas fa-medkit"></i>
-                <span>设备管理</span>
-            </a>
-            <a href="outpatient.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital-user"></i>
-                <span>门诊治疗</span>
-            </a>
-            <a href="external.html" class="sidebar-menu-item">
-                <i class="fas fa-hospital"></i>
-                <span>外病区治疗</span>
-            </a>
-            <a href="physical.html" class="sidebar-menu-item">
-                <i class="fas fa-hand-holding-medical"></i>
-                <span>理疗治疗</span>
-            </a>
-            <a href="reports.html" class="sidebar-menu-item">
-                <i class="fas fa-chart-pie"></i>
-                <span>数据报表</span>
-            </a>
-            <a href="insurance.html" class="sidebar-menu-item">
-                <i class="fas fa-shield-alt"></i>
-                <span>医保风控</span>
-            </a>
-            <a href="settings.html" class="sidebar-menu-item">
-                <i class="fas fa-cog"></i>
-                <span>系统设置</span>
-            </a>
+
+            <!-- 主容器 -->
+            <div class="main-container" :class="{'is-collapse': isCollapse}">
+                <!-- 头部导航 -->
+                <div class="fixed-header" :class="{'is-collapse': isCollapse}">
+                    <div class="d-flex align-center">
+                        <el-icon class="hamburger-container cursor-pointer" @click="toggleSidebar"><el-icon-fold /></el-icon>
+                        <el-breadcrumb separator="/" class="ml-2">
+                            <el-breadcrumb-item>首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>治疗排班</el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <div class="right-menu">
+                        <div class="avatar-container">
+                            <el-dropdown>
+                                <span class="avatar-wrapper">
+                                    <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="user-avatar">
+                                    <span class="user-name">管理员</span>
+                                    <el-icon class="el-icon--right"><el-icon-arrow-down /></el-icon>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item>个人中心</el-dropdown-item>
+                                        <el-dropdown-item>修改密码</el-dropdown-item>
+                                        <el-dropdown-item divided>退出登录</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 内容区域 -->
+                <div class="app-container">
+                    <!-- 页面标题 -->
+                    <div class="d-flex justify-between align-center mb-4">
+                        <div>
+                            <!-- 移除页面标题 -->
+                        </div>
+                        <div class="d-flex">
+                            <el-button type="primary" class="mr-2">
+                                <el-icon><el-icon-plus /></el-icon>
+                                新建排班
+                            </el-button>
+                            <el-button>
+                                <el-icon><el-icon-printer /></el-icon>
+                                打印日程表
+                            </el-button>
+                        </div>
+                    </div>
+
+                    <!-- 视图切换和日期选择 -->
+                    <div class="plus-card mb-4">
+                        <div class="plus-card-body">
+                            <div class="d-flex justify-between align-center">
+                                <div class="d-flex align-center">
+                                    <el-radio-group v-model="viewType" size="small">
+                                        <el-radio-button label="week">周视图</el-radio-button>
+                                        <el-radio-button label="month">月视图</el-radio-button>
+                                    </el-radio-group>
+                                    <div class="d-flex align-center ml-2">
+                                        <el-button icon="el-icon-arrow-left" circle size="small"></el-button>
+                                        <span class="mx-2">2024年3月第1周</span>
+                                        <el-button icon="el-icon-arrow-right" circle size="small"></el-button>
+                                    </div>
+                                    <el-button type="primary" plain size="small" class="ml-2">今天</el-button>
+                                </div>
+                                <div class="d-flex align-center">
+                                    <el-input placeholder="搜索治疗师或患者..." prefix-icon="el-icon-search" size="small" style="width: 220px;"></el-input>
+                                    <el-button size="small" class="ml-2">
+                                        <el-icon><el-icon-filter /></el-icon>
+                                        筛选
+                                    </el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 治疗师排班表 -->
+                    <div class="therapist-schedule">
+                        <div class="therapist-row bg-gray-50">
+                            <div class="therapist-info font-semibold">治疗师</div>
+                            <div class="time-slot text-center font-semibold">8:00</div>
+                            <div class="time-slot text-center font-semibold">9:00</div>
+                            <div class="time-slot text-center font-semibold">10:00</div>
+                            <div class="time-slot text-center font-semibold">11:00</div>
+                            <div class="time-slot text-center font-semibold">14:00</div>
+                            <div class="time-slot text-center font-semibold">15:00</div>
+                            <div class="time-slot text-center font-semibold">16:00</div>
+                            <div class="time-slot text-center font-semibold">17:00</div>
+                        </div>
+                        
+                        <!-- 治疗师1 -->
+                        <div class="therapist-row">
+                            <div class="therapist-info">
+                                <div class="d-flex align-center">
+                                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="治疗师头像" class="user-avatar mr-2">
+                                    <div>
+                                        <div class="font-semibold">张治疗师</div>
+                                        <div class="text-sm text-muted">运动治疗</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">王小明</div>
+                                <div class="text-xs text-muted">运动疗法</div>
+                            </div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">李芳</div>
+                                <div class="text-xs text-muted">平衡训练</div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">张伟</div>
+                                <div class="text-xs text-muted">运动疗法</div>
+                            </div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">赵敏</div>
+                                <div class="text-xs text-muted">平衡训练</div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot available"></div>
+                        </div>
+                        
+                        <!-- 治疗师2 -->
+                        <div class="therapist-row">
+                            <div class="therapist-info">
+                                <div class="d-flex align-center">
+                                    <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="治疗师头像" class="user-avatar mr-2">
+                                    <div>
+                                        <div class="font-semibold">王治疗师</div>
+                                        <div class="text-sm text-muted">作业治疗</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">陈明</div>
+                                <div class="text-xs text-muted">手功能训练</div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">刘华</div>
+                                <div class="text-xs text-muted">日常活动训练</div>
+                            </div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">周杰</div>
+                                <div class="text-xs text-muted">手功能训练</div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">孙芳</div>
+                                <div class="text-xs text-muted">日常活动训练</div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot available"></div>
+                        </div>
+                        
+                        <!-- 治疗师3 -->
+                        <div class="therapist-row">
+                            <div class="therapist-info">
+                                <div class="d-flex align-center">
+                                    <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="治疗师头像" class="user-avatar mr-2">
+                                    <div>
+                                        <div class="font-semibold">李治疗师</div>
+                                        <div class="text-sm text-muted">物理治疗</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">吴凯</div>
+                                <div class="text-xs text-muted">电疗</div>
+                            </div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">郑红</div>
+                                <div class="text-xs text-muted">超声波治疗</div>
+                            </div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">黄磊</div>
+                                <div class="text-xs text-muted">电疗</div>
+                            </div>
+                            <div class="time-slot available"></div>
+                            <div class="time-slot occupied">
+                                <div class="text-xs">马丽</div>
+                                <div class="text-xs text-muted">超声波治疗</div>
+                            </div>
+                            <div class="time-slot available"></div>
+                        </div>
+                    </div>
+
+                    <!-- 冲突提示 -->
+                    <div class="plus-card mt-4">
+                        <div class="plus-card-header">
+                            <h3 class="text-lg font-bold">排班冲突检测</h3>
+                        </div>
+                        <div class="plus-card-body">
+                            <div class="mb-2 p-3 bg-danger-light rounded">
+                                <div class="d-flex justify-between align-center">
+                                    <div class="d-flex align-center">
+                                        <span class="conflict-indicator mr-2">
+                                            <el-icon><el-icon-warning /></el-icon>
+                                            冲突
+                                        </span>
+                                        <span>王小明 - 10:00 物理治疗与作业治疗时间冲突</span>
+                                    </div>
+                                    <el-button size="small" type="danger">
+                                        调整排班
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-warning-light rounded">
+                                <div class="d-flex justify-between align-center">
+                                    <div class="d-flex align-center">
+                                        <span class="conflict-indicator mr-2" style="background-color: #fef9c3; color: #854d0e;">
+                                            <el-icon><el-icon-info-filled /></el-icon>
+                                            提醒
+                                        </span>
+                                        <span>李芳 - 15:00 治疗设备使用时间重叠</span>
+                                    </div>
+                                    <el-button size="small" type="warning">
+                                        查看详情
+                                    </el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <!-- 顶部栏 -->
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800">治疗排班</h2>
-                <p class="text-gray-600">管理治疗师排班和患者治疗安排</p>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
-                    <i class="fas fa-plus mr-2"></i>
-                    新建排班
-                </button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
-                    <i class="fas fa-print mr-2"></i>
-                    打印日程表
-                </button>
-            </div>
-        </div>
-
-        <!-- 视图切换和日期选择 -->
-        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-            <div class="flex flex-wrap justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <div class="flex space-x-2">
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">周视图</button>
-                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">月视图</button>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button class="p-2 rounded-lg border border-gray-300 hover:bg-gray-50">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <span class="text-lg font-semibold">2024年3月第1周</span>
-                        <button class="p-2 rounded-lg border border-gray-300 hover:bg-gray-50">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50">
-                        今天
-                    </button>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="搜索治疗师或患者..." class="w-64 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-                    </div>
-                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                        <i class="fas fa-filter mr-2"></i>
-                        筛选
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 治疗师排班表 -->
-        <div class="therapist-schedule">
-            <div class="therapist-row bg-gray-50">
-                <div class="therapist-info font-semibold">治疗师</div>
-                <div class="time-slot text-center font-semibold">8:00</div>
-                <div class="time-slot text-center font-semibold">9:00</div>
-                <div class="time-slot text-center font-semibold">10:00</div>
-                <div class="time-slot text-center font-semibold">11:00</div>
-                <div class="time-slot text-center font-semibold">14:00</div>
-                <div class="time-slot text-center font-semibold">15:00</div>
-                <div class="time-slot text-center font-semibold">16:00</div>
-                <div class="time-slot text-center font-semibold">17:00</div>
-            </div>
-            
-            <!-- 治疗师1 -->
-            <div class="therapist-row">
-                <div class="therapist-info">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="治疗师头像" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <div class="font-semibold">张治疗师</div>
-                            <div class="text-sm text-gray-500">运动治疗</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">王小明</div>
-                    <div class="text-xs text-gray-500">运动疗法</div>
-                </div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">李芳</div>
-                    <div class="text-xs text-gray-500">平衡训练</div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">张伟</div>
-                    <div class="text-xs text-gray-500">运动疗法</div>
-                </div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">赵敏</div>
-                    <div class="text-xs text-gray-500">平衡训练</div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot available"></div>
-            </div>
-            
-            <!-- 治疗师2 -->
-            <div class="therapist-row">
-                <div class="therapist-info">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="治疗师头像" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <div class="font-semibold">王治疗师</div>
-                            <div class="text-sm text-gray-500">作业治疗</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">陈明</div>
-                    <div class="text-xs text-gray-500">手功能训练</div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">刘华</div>
-                    <div class="text-xs text-gray-500">日常活动训练</div>
-                </div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">周杰</div>
-                    <div class="text-xs text-gray-500">手功能训练</div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">孙芳</div>
-                    <div class="text-xs text-gray-500">日常活动训练</div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot available"></div>
-            </div>
-            
-            <!-- 治疗师3 -->
-            <div class="therapist-row">
-                <div class="therapist-info">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="治疗师头像" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <div class="font-semibold">李治疗师</div>
-                            <div class="text-sm text-gray-500">物理治疗</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot available"></div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">吴凯</div>
-                    <div class="text-xs text-gray-500">电疗</div>
-                </div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">郑红</div>
-                    <div class="text-xs text-gray-500">超声波治疗</div>
-                </div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">黄磊</div>
-                    <div class="text-xs text-gray-500">电疗</div>
-                </div>
-                <div class="time-slot available"></div>
-                <div class="time-slot occupied">
-                    <div class="text-xs">马丽</div>
-                    <div class="text-xs text-gray-500">超声波治疗</div>
-                </div>
-                <div class="time-slot available"></div>
-            </div>
-        </div>
-
-        <!-- 冲突提示 -->
-        <div class="mt-6 bg-white p-4 rounded-lg shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">排班冲突检测</h3>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                    <div class="flex items-center">
-                        <span class="conflict-indicator mr-3">
-                            <i class="fas fa-exclamation-triangle mr-1"></i>
-                            冲突
-                        </span>
-                        <span class="text-gray-800">王小明 - 10:00 物理治疗与作业治疗时间冲突</span>
-                    </div>
-                    <button class="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700">
-                        调整排班
-                    </button>
-                </div>
-                <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                    <div class="flex items-center">
-                        <span class="conflict-indicator mr-3" style="background-color: #fef9c3; color: #854d0e;">
-                            <i class="fas fa-exclamation-circle mr-1"></i>
-                            提醒
-                        </span>
-                        <span class="text-gray-800">李芳 - 15:00 治疗设备使用时间重叠</span>
-                    </div>
-                    <button class="px-3 py-1 text-sm bg-yellow-600 text-white rounded hover:bg-yellow-700">
-                        查看详情
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Element Plus -->
+    <script src="https://unpkg.com/element-plus@latest/dist/index.full.js"></script>
+    <!-- Element Plus 图标 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    
+    <script>
+        const { createApp, ref } = Vue;
+        
+        const app = createApp({
+            setup() {
+                const isCollapse = ref(false);
+                const activeMenu = ref('/scheduling');
+                const viewType = ref('week');
+                
+                const toggleSidebar = () => {
+                    isCollapse.value = !isCollapse.value;
+                };
+                
+                const navigateTo = (url) => {
+                    window.location.href = url;
+                };
+                
+                return {
+                    isCollapse,
+                    activeMenu,
+                    viewType,
+                    toggleSidebar,
+                    navigateTo
+                };
+            }
+        });
+        
+        // 注册所有Element Plus图标组件
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(`ElIcon${key}`, component);
+        }
+        
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
 </body>
 </html> 
